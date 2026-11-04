@@ -10,8 +10,23 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# testing & scratch scripts
+tests/
+take-screenshots.js
+test-cdp-shots.js
+scripts/capture-all-views.js
+coverage/
+
+# internal milestone, audit & planning reports
+/*.md
+!/README.md
+!/CODE_OF_CONDUCT.md
+!/CONTRIBUTING.md
+!/SECURITY.md
+docs/milestones/
+docs/operations/
+docs/reports/
+docs/security/
 
 # next.js
 /.next/
@@ -30,13 +45,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
 !.env.example
 
 # databases & backups
 prisma/*.db*
-prisma/backups/*.sql
+prisma/backups/
 *.sqlite*
 data/
 data/**

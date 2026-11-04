@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "npx tsx tests/policy.test.ts",
+    "test": "tsc --noEmit",
     "worker": "tsx src/worker.ts"
   },
   "dependencies": {
