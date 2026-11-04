@@ -1,0 +1,121 @@
+name: Mandate Production CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master, release/*]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    name: Code Quality & Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Clients
+        run: |
+          npx prisma generate --schema=prisma/schema.postgresql.prisma
+          npx prisma generate --schema=prisma/schema.prisma
+
+      - name: TypeScript Strict Type Check
+        run: npm run typecheck
+
+      - name: ESLint Linting
+        run: npm run lint
+
+  postgresql-integration-and-finance:
+    name: PostgreSQL Integration & Financial Concurrency Gates
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgrespassword
+          POSTGRES_DB: mandate_prod
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/mandate_prod?schema=public
+      MANDATE_DATABASE_TYPE: postgres
+      NEAR_NETWORK: testnet
+      OUTLAYER_API_BASE_URL: https://testnet-api.outlayer.ai
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Apply Versioned PostgreSQL Migrations
+        run: npx prisma migrate deploy --schema=prisma/schema.postgresql.prisma
+
+      - name: Verify Migration Status
+        run: npx prisma migrate status --schema=prisma/schema.postgresql.prisma
+
+      - name: Run Milestone 13.7 Production Infrastructure Suite
+        run: npx tsx tests/milestone-13-7-production-infrastructure.ts
+
+      - name: Run Milestone 12 & 13 Regression Tests
+        run: |
+          npx tsx tests/milestone-13-6-production-reliability.ts
+          npx tsx tests/milestone-13-5-e2e-fulfillment.ts
+          npx tsx tests/milestone-13-4-orchestration.ts
+
+  build-and-containerize:
+    name: Production Build Verification
+    needs: [quality-gate, postgresql-integration-and-finance]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Clients
+        run: |
+          npx prisma generate --schema=prisma/schema.postgresql.prisma
+          npx prisma generate --schema=prisma/schema.prisma
+
+      - name: Build Next.js Production Bundle
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NODE_ENV: production
+        run: npm run build
+

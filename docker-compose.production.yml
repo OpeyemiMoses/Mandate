@@ -1,0 +1,128 @@
+# ==============================================================================
+# MANDATE — Production Deployment Architecture
+# Milestone 13.7: Production Infrastructure & Distributed Coordination
+# ==============================================================================
+
+version: "3.8"
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Primary PostgreSQL 16+ Database
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: mandate_postgres_prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: mandate_prod
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - mandate_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mandate_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+  # ----------------------------------------------------------------------------
+  # 2. Mandate Web Application (Next.js 14, Multi-Tenant API & UI)
+  # ----------------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mandate_web_prod
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/mandate_prod?schema=public
+      MANDATE_DATABASE_TYPE: postgres
+      NEAR_NETWORK: testnet
+      OUTLAYER_API_BASE_URL: https://testnet-api.outlayer.ai
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://telemetry:4318/v1/traces
+      NEXT_TELEMETRY_DISABLED: "1"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+  # ----------------------------------------------------------------------------
+  # 3. Mandate Autonomous Background Worker & Task Orchestrator
+  # ----------------------------------------------------------------------------
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mandate_worker_prod
+    restart: unless-stopped
+    command: ["npm", "run", "worker"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      web:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/mandate_prod?schema=public
+      MANDATE_DATABASE_TYPE: postgres
+      NEAR_NETWORK: testnet
+      OUTLAYER_API_BASE_URL: https://testnet-api.outlayer.ai
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://telemetry:4318/v1/traces
+      WORKER_CONCURRENCY: "4"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+  # ----------------------------------------------------------------------------
+  # 4. OpenTelemetry Collector & Observability Sink
+  # ----------------------------------------------------------------------------
+  telemetry:
+    image: otel/opentelemetry-collector-contrib:0.95.0
+    container_name: mandate_telemetry_prod
+    restart: unless-stopped
+    ports:
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+volumes:
+  mandate_pg_data:
+    driver: local
+

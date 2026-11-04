@@ -1,0 +1,621 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --glowing-card-border-subtle: linear-gradient(145deg, rgba(255,59,48,0.42) 0%, rgba(255,59,48,0.12) 40%, rgba(38,38,46,0.75) 100%);
+  --glowing-card-border-medium: linear-gradient(145deg, rgba(255,59,48,0.72) 0%, rgba(255,59,48,0.22) 45%, rgba(38,38,46,0.75) 100%);
+  --glowing-card-border-strong: linear-gradient(145deg, #FF3B30 0%, rgba(255,59,48,0.4) 50%, rgba(45,45,55,0.6) 100%);
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
+  --glowing-card-border-subtle: linear-gradient(145deg, rgba(255,59,48,0.3) 0%, rgba(255,59,48,0.08) 40%, rgba(226,232,240,0.95) 100%);
+  --glowing-card-border-medium: linear-gradient(145deg, rgba(255,59,48,0.5) 0%, rgba(255,59,48,0.14) 45%, rgba(226,232,240,0.95) 100%);
+  --glowing-card-border-strong: linear-gradient(145deg, #FF3B30 0%, rgba(255,59,48,0.35) 50%, rgba(226,232,240,0.95) 100%);
+}
+
+body {
+  background-color: #0B0B0B;
+  color: #E5E7EB;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* =========================================================================
+   PREMIUM LIGHT MODE STYLES & CONTRAST REFINEMENT
+========================================================================= */
+html.light body {
+  background-color: #F8F9FA !important;
+  color: #0F172A !important;
+}
+
+/* Page Backgrounds in Light Mode */
+html.light .bg-\[\#0B0B0B\],
+html.light .bg-\[\#09090B\],
+html.light .bg-\[\#08080A\],
+html.light .bg-\[\#0E0E12\],
+html.light .bg-zinc-950,
+html.light .bg-slate-950 {
+  background-color: #F8F9FA !important;
+}
+
+html.light header,
+html.light header.bg-\[\#0B0B0B\]\/85,
+html.light header.bg-\[\#0B0B0B\]\/90,
+html.light div.bg-\[\#0B0B0B\]\/95 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #E2E8F0 !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Sidenav in Light Mode */
+html.light aside,
+html.light aside.bg-\[\#0B0B0B\] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Card & Surface Overrides in Light Mode - Crisp Pure White with Slate Borders */
+html.light .bg-\[\#141417\],
+html.light .bg-\[\#141418\],
+html.light .bg-\[\#111114\],
+html.light .bg-\[\#121215\],
+html.light .bg-\[\#151518\],
+html.light .bg-\[\#141113\],
+html.light .bg-\[\#141419\],
+html.light .bg-\[\#161214\],
+html.light .bg-\[\#181316\],
+html.light .bg-\[\#191215\],
+html.light .bg-\[\#171214\],
+html.light .bg-\[\#15151B\],
+html.light .bg-\[\#161418\],
+html.light .bg-\[\#121216\],
+html.light .bg-\[\#18181E\],
+html.light .bg-\[\#18181D\],
+html.light .bg-\[\#1A1A22\],
+html.light .bg-\[\#1B171B\],
+html.light .bg-\[\#131114\],
+html.light .bg-\[\#0F0F12\],
+html.light .bg-\[\#0F0F13\],
+html.light .bg-\[\#14141A\],
+html.light .bg-\[\#1A1A1E\],
+html.light .bg-\[\#1E1E24\],
+html.light .bg-\[\#252530\],
+html.light .bg-\[\#0E0E11\],
+html.light .bg-\[\#22191D\],
+html.light .bg-\[\#1A1A20\],
+html.light .bg-\[\#18181C\],
+html.light .bg-\[\#09090C\],
+html.light .bg-\[\#0B0B0E\],
+html.light .bg-\[\#1F1F24\],
+html.light .bg-\[\#1C1C24\],
+html.light .bg-\[\#18181F\],
+html.light .bg-\[\#0F0F14\],
+html.light .bg-\[\#27272A\],
+html.light .bg-\[\#232329\],
+html.light .bg-\[\#1A1416\],
+html.light .bg-\[\#19191D\],
+html.light .bg-\[\#181820\],
+html.light .bg-\[\#111014\],
+html.light .bg-\[\#121013\],
+html.light .bg-\[\#111115\],
+html.light .bg-\[\#151519\],
+html.light .bg-\[\#101014\],
+html.light .bg-zinc-900,
+html.light .bg-slate-900 {
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.04), 0 1px 3px -1px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light .bg-white {
+  background-color: #FFFFFF !important;
+}
+
+/* Secondary muted wells / nested boxes in Light Mode */
+html.light .bg-\[\#1E1113\],
+html.light .bg-\[\#221417\] {
+  background-color: #FEF2F2 !important;
+  border-color: #FECACA !important;
+}
+
+html.light .phone-step-row {
+  background-color: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+html.light .phone-step-row span {
+  color: #0F172A !important;
+}
+
+/* Hardcoded dark linear gradients in Light Mode */
+html.light [class*="from-[#1C1215]"],
+html.light [class*="from-[#1C1315]"],
+html.light [class*="from-[#1E1114]"],
+html.light [class*="from-[#201315]"],
+html.light [class*="from-[#161214]"],
+html.light [class*="from-[#3A3A44]"],
+html.light [class*="from-[#161214]"],
+html.light [class*="from-[#0D0D10]"],
+html.light [class*="to-[#09090B]"] {
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Typography in Light Mode - Deep Slate Crystal Clear Readability */
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5,
+html.light h6,
+html.light strong,
+html.light b,
+html.light th,
+html.light dt {
+  color: #0F172A !important;
+}
+
+html.light p,
+html.light li,
+html.light dd,
+html.light td,
+html.light label {
+  color: #334155 !important;
+}
+
+/* Universal text-white and text-white/* resolution in light mode */
+html.light .text-white:not(button.bg-\[\#FF3B30\]):not(button.bg-\[\#FF3B30\] *):not(a.bg-\[\#FF3B30\]):not(a.bg-\[\#FF3B30\] *):not(button.bg-\[\#E63228\]):not(button.bg-\[\#E63228\] *):not(a.bg-\[\#E63228\]):not(a.bg-\[\#E63228\] *):not(button.bg-emerald-600):not(button.bg-emerald-600 *):not(a.bg-emerald-600):not(a.bg-emerald-600 *):not(.btn-primary):not(.btn-primary *):not(.mandate-card-surface *):not(.text-white-forced):not(pre *):not(code) {
+  color: #0F172A !important;
+}
+
+html.light [class*="text-white/"]:not(button.bg-\[\#FF3B30\] *):not(a.bg-\[\#FF3B30\] *):not(button.bg-\[\#E63228\] *):not(a.bg-\[\#E63228\] *):not(button.bg-emerald-600 *):not(a.bg-emerald-600 *):not(.btn-primary *):not(.mandate-card-surface *):not(.text-white-forced):not(pre *):not(code) {
+  color: #334155 !important;
+}
+
+html.light .text-\[\#E5E7EB\],
+html.light .text-\[\#D4D4D8\],
+html.light .text-\[\#E4E4E7\],
+html.light .text-zinc-100,
+html.light .text-zinc-200,
+html.light .text-slate-100,
+html.light .text-slate-200,
+html.light .text-gray-100,
+html.light .text-gray-200 {
+  color: #0F172A !important;
+}
+
+html.light .text-\[\#A1A1AA\],
+html.light .text-\[\#8E8E93\],
+html.light .text-zinc-400,
+html.light .text-zinc-500,
+html.light .text-slate-400,
+html.light .text-slate-500,
+html.light .text-gray-400,
+html.light .text-gray-500 {
+  color: #475569 !important;
+}
+
+html.light .text-\[\#71717A\],
+html.light .text-\[\#52525B\],
+html.light .text-zinc-600,
+html.light .text-slate-600,
+html.light .text-gray-600 {
+  color: #64748B !important;
+}
+
+html.light .docs-content * {
+  color: #334155;
+}
+
+html.light .docs-content h1,
+html.light .docs-content h2,
+html.light .docs-content h3,
+html.light .docs-content h4,
+html.light .docs-content strong,
+html.light .docs-content b,
+html.light .docs-content th {
+  color: #0F172A !important;
+}
+
+/* High Contrast Accent Status Colors in Light Mode */
+html.light .text-amber-400,
+html.light .text-amber-400\/90,
+html.light .text-amber-300 {
+  color: #B45309 !important;
+}
+
+html.light .text-emerald-400,
+html.light .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html.light .text-purple-400,
+html.light .text-purple-300 {
+  color: #7E22CE !important;
+}
+
+html.light .text-sky-400,
+html.light .text-sky-300,
+html.light .text-blue-400 {
+  color: #0284C7 !important;
+}
+
+html.light .text-cyan-400,
+html.light .text-cyan-300 {
+  color: #0E7490 !important;
+}
+
+/* EXCEPTION: Solid colored buttons & metallic cards MUST keep crisp white text */
+html.light button.bg-\[\#FF3B30\],
+html.light button.bg-\[\#FF3B30\] *,
+html.light a.bg-\[\#FF3B30\],
+html.light a.bg-\[\#FF3B30\] *,
+html.light button.bg-\[\#E63228\],
+html.light button.bg-\[\#E63228\] *,
+html.light a.bg-\[\#E63228\],
+html.light a.bg-\[\#E63228\] *,
+html.light div.bg-\[\#FF3B30\].text-white,
+html.light div.bg-\[\#FF3B30\].text-white *,
+html.light div.bg-\[\#E63228\].text-white,
+html.light div.bg-\[\#E63228\].text-white *,
+html.light .bg-\[\#FF3B30\].text-white,
+html.light .bg-\[\#E63228\].text-white,
+html.light .btn-primary,
+html.light .btn-primary *,
+html.light button.bg-emerald-600,
+html.light button.bg-emerald-600 *,
+html.light a.bg-emerald-600,
+html.light a.bg-emerald-600 *,
+html.light .mandate-card-surface,
+html.light .mandate-card-surface *,
+html.light .text-white-forced,
+html.light .text-white-forced * {
+  color: #FFFFFF !important;
+}
+
+/* Clean Borders in Light Mode */
+html.light .border-white\/5,
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20,
+html.light .border-white\/\[0\.03\],
+html.light .border-white\/\[0\.04\],
+html.light .border-white\/\[0\.06\],
+html.light .border-white\/\[0\.08\],
+html.light .border-\[\#1A1A1E\],
+html.light .border-\[\#1F1F24\],
+html.light .border-\[\#1E1E24\],
+html.light .border-\[\#222227\],
+html.light .border-\[\#22222A\],
+html.light .border-\[\#232329\],
+html.light .border-\[\#1A1A20\],
+html.light .border-\[\#24242E\],
+html.light .border-\[\#2E2E38\],
+html.light .border-\[\#1A1A22\],
+html.light .border-\[\#26262F\],
+html.light .border-\[\#27272A\],
+html.light .border-\[\#2A2A34\],
+html.light .border-\[\#2B2B36\],
+html.light .border-\[\#383842\],
+html.light .border-\[\#2E2E36\],
+html.light .border-\[\#26262E\],
+html.light .border-\[\#23232C\],
+html.light .border-\[\#333342\],
+html.light .border-\[\#2B2B32\],
+html.light .border-\[\#2A2A35\],
+html.light .border-\[\#23232A\],
+html.light .border-\[\#222228\],
+html.light .border-\[\#16161B\],
+html.light .border-zinc-800,
+html.light .border-zinc-700,
+html.light .border-slate-800,
+html.light .border-slate-700 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Form inputs & controls in Light Mode */
+html.light input:not([type="checkbox"]):not([type="radio"]),
+html.light textarea,
+html.light select {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+  border-color: #FF3B30 !important;
+  box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.15) !important;
+}
+
+/* Tables in Light Mode */
+html.light table {
+  border-color: #E2E8F0 !important;
+}
+
+html.light th {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+  border-color: #E2E8F0 !important;
+}
+
+html.light td {
+  color: #334155 !important;
+  border-color: #E2E8F0 !important;
+}
+
+html.light tbody tr:hover {
+  background-color: #F8FAFC !important;
+}
+
+/* Code blocks keep sleek terminal dark contrast in light mode */
+html.light pre,
+html.light pre code {
+  background-color: #0F172A !important;
+  color: #F1F5F9 !important;
+}
+
+html.light code:not(pre code) {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Soft ambient shadows for light mode */
+html.light .shadow-\[0_16px_48px_rgba\(0\,0\,0\,0\.7\)\],
+html.light .shadow-\[0_25px_70px_rgba\(0\,0\,0\,0\.85\)\],
+html.light .shadow-2xl {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Custom subtle scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0B0B;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #F8F9FA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #22222A;
+  border-radius: 3px;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #32323E;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* =========================================================================
+   UNIVERSAL ANIMATIONS & DYNAMIC ELEMENT ENTRANCE EFFECTS
+========================================================================= */
+@keyframes riseIn {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulseSubtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+/* =========================================================================
+   SCROLL REVEAL ANIMATIONS (REVEAL ON SCROLL)
+========================================================================= */
+/* Hero section animates immediately on page load */
+#top,
+header {
+  animation: riseIn 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Sections and cards below the fold start prepared for scroll reveal */
+.reveal-on-scroll,
+section:not(#top),
+.glowing-card {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.reveal-pop,
+.glowing-card {
+  transform: scale(0.95) translateY(18px);
+}
+
+.reveal-on-scroll.reveal-left {
+  transform: translateX(-32px);
+}
+
+.reveal-on-scroll.reveal-right {
+  transform: translateX(32px);
+}
+
+/* Triggered by IntersectionObserver when scrolled into viewport */
+.reveal-on-scroll.revealed,
+section:not(#top).revealed,
+.glowing-card.revealed {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) translateX(0) !important;
+}
+
+/* Staggered cascades for child cards in grids */
+.grid > div:nth-child(1) { animation-delay: 40ms; }
+.grid > div:nth-child(2) { animation-delay: 80ms; }
+.grid > div:nth-child(3) { animation-delay: 120ms; }
+.grid > div:nth-child(4) { animation-delay: 160ms; }
+.grid > div:nth-child(5) { animation-delay: 200ms; }
+.grid > div:nth-child(6) { animation-delay: 240ms; }
+.grid > div:nth-child(7) { animation-delay: 280ms; }
+.grid > div:nth-child(8) { animation-delay: 320ms; }
+.grid > div:nth-child(9) { animation-delay: 360ms; }
+
+/* Explicit Animation Utilities */
+.animate-rise {
+  animation: riseIn 0.52s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.animate-pop {
+  animation: popIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.45s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.animate-float {
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 3s ease-in-out infinite;
+}
+
+/* Progressive Stagger Delays for Element Cascades */
+.stagger-1 { animation-delay: 40ms !important; }
+.stagger-2 { animation-delay: 80ms !important; }
+.stagger-3 { animation-delay: 120ms !important; }
+.stagger-4 { animation-delay: 160ms !important; }
+.stagger-5 { animation-delay: 200ms !important; }
+.stagger-6 { animation-delay: 240ms !important; }
+.stagger-7 { animation-delay: 280ms !important; }
+.stagger-8 { animation-delay: 320ms !important; }
+.stagger-9 { animation-delay: 360ms !important; }
+.stagger-10 { animation-delay: 400ms !important; }
+.stagger-11 { animation-delay: 440ms !important; }
+.stagger-12 { animation-delay: 480ms !important; }
+.stagger-13 { animation-delay: 520ms !important; }
+.stagger-14 { animation-delay: 560ms !important; }
+.stagger-15 { animation-delay: 600ms !important; }
+.stagger-16 { animation-delay: 640ms !important; }
+
+/* Table Rows Smooth Entrance Cascade */
+tbody tr {
+  animation: riseIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+tbody tr:nth-child(1) { animation-delay: 30ms; }
+tbody tr:nth-child(2) { animation-delay: 60ms; }
+tbody tr:nth-child(3) { animation-delay: 90ms; }
+tbody tr:nth-child(4) { animation-delay: 120ms; }
+tbody tr:nth-child(5) { animation-delay: 150ms; }
+tbody tr:nth-child(6) { animation-delay: 180ms; }
+tbody tr:nth-child(7) { animation-delay: 210ms; }
+tbody tr:nth-child(8) { animation-delay: 240ms; }
+
+/* Interactive Hover & Tactile Click Effects for All Elements (No vertical rise) */
+.hover-pop {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, opacity 0.2s ease !important;
+}
+
+.hover-pop:hover {
+  transform: none !important;
+}
+
+.hover-pop:active {
+  transform: scale(0.985) !important;
+}
+
+.btn-pop {
+  transition: box-shadow 0.16s ease, filter 0.16s ease !important;
+}
+
+.btn-pop:hover {
+  transform: none !important;
+  filter: brightness(1.05);
+}
+
+.btn-pop:active {
+  transform: scale(0.96) !important;
+}
+
+/* Universal Button & Link Tactile Feel Across the Product */
+button:not(:disabled),
+a[role="button"] {
+  transition: box-shadow 0.16s ease, background-color 0.16s ease, filter 0.16s ease;
+}
+
+button:not(:disabled):hover,
+a[role="button"]:hover {
+  transform: none;
+}
+
+button:not(:disabled):active,
+a[role="button"]:active {
+  transform: scale(0.96);
+}

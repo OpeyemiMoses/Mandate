@@ -1,0 +1,2099 @@
+// Prisma Schema for Mandate
+// Multi-User, Multi-Agent Funding & OutLayer TEE Custody
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// User / Account Owner
+model User {
+  id                String         @id @default(cuid())
+  nearAccountId     String         @unique // e.g. alice.testnet
+  displayName       String?        // Human display name e.g. "Alex Chen"
+  email             String?        // Alert notifications email
+  bio               String?        // Role / Organization
+  role              String         @default("OWNER")
+  twoFactorEnabled  Boolean        @default(false)
+  emailAlerts       Boolean        @default(true)
+  authChallenge     String?        // Cryptographic nonce challenge for verification
+  sessionToken      String?        @unique
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  agents            Agent[]
+  mandates          Mandate[]
+  approvals         ApprovalRequest[]
+  auditLogs         AuditLog[]
+  fundingRequests   FundingRecord[]
+  withdrawals       WithdrawalRecord[]
+  executions        AgentExecution[]
+  executionEvents   ExecutionEvent[]
+  integrationConnections IntegrationConnection[]
+  toolInvocations       ToolInvocation[]
+  objectives            Objective[]
+  planApprovals         ObjectivePlanApproval[]
+  discoveries           CapabilityDiscovery[]
+  oauthSessions         OAuthSession[]
+  coordinationRuns      CoordinationRun[]
+  governancePolicies    GovernancePolicy[]
+  policyVersionsCreated PolicyVersion[]
+  policyEvaluations     PolicyEvaluation[]
+  policyViolations      PolicyViolation[]
+  policyExceptions      PolicyException[]
+  policyReviews         PolicyReview[]
+  executionRecords      ExecutionRecord[]
+  backgroundJobs        BackgroundJob[]        @relation("UserBackgroundJobs")
+  deadLetterRecords     DeadLetterRecord[]     @relation("UserDeadLetters")
+  operationalAlerts     OperationalAlert[]     @relation("UserOperationalAlerts")
+  reconciliationRuns    ReconciliationRun[]    @relation("UserReconciliationRuns")
+  incidents             Incident[]             @relation("UserIncidents")
+  executionDiscrepancies ExecutionDiscrepancy[] @relation("UserDiscrepancies")
+  recoveryPlans         RecoveryPlan[]         @relation("UserRecoveryPlans")
+  capabilityProfiles    AgentCapabilityProfile[]
+  objectiveCheckpoints  ObjectiveCheckpoint[]
+}
+
+// AI Agent (Users can create multiple agents: Research, Operations, Trading)
+model Agent {
+  id                String         @id @default(cuid())
+  name              String         // e.g. "Research Agent", "Operations Agent"
+  description       String?
+  purpose           String?        // Target domain / purpose
+  type              String         @default("research_procurement") // research_procurement, etc.
+  version           String         @default("1.0.0")
+  configuration     String?        @default("{}") // JSON agent configuration
+  metadata          String?        @default("{}") // JSON metadata
+  status            String         @default("ACTIVE") // ACTIVE, PAUSED, REVOKED
+  colorVariant      String?        @default("red") // red, gold, white, emerald, cyan, purple
+  executionCount    Int            @default(0)
+  lastExecutedAt    DateTime?
+  
+  userId            String
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Dedicated OutLayer TEE Custody Wallet
+  wallet            Wallet?
+
+  capabilityProfile AgentCapabilityProfile?
+
+  mandates          Mandate[]
+  tasks             Task[]
+  executions        AgentExecution[]
+  toolAccess        AgentToolAccess[]
+  toolInvocations   ToolInvocation[]
+  agentAssignments  AgentAssignment[]
+  handoffsSent      AgentHandoff[]            @relation("HandoffSourceAgent")
+  handoffsReceived  AgentHandoff[]            @relation("HandoffDestinationAgent")
+  artifactsProduced SharedObjectiveArtifact[]
+  executionRecords  ExecutionRecord[]
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+// Dedicated OutLayer TEE Custody Wallet (One per Agent)
+model Wallet {
+  id                String         @id @default(cuid())
+  walletId          String         @unique // OutLayer UUID
+  apiKey            String         // OutLayer wk_ API key (never exposed to client/LLM)
+  nearAccountId     String         @unique // Dedicated 64-char implicit or bound account
+  controllerPubkey  String?
+  isFrozen          Boolean        @default(false)
+  handoffUrl        String?
+  network           String         @default("testnet")
+  balanceYocto      String         @default("0") // Atomic yoctoNEAR
+  onChainBalanceYocto String?      // Live verified NEAR RPC balance
+  discrepancyYocto    String?      // Stored vs on-chain discrepancy if any
+  discrepancyStatus   String       @default("BALANCED") // BALANCED, DISCREPANCY_DETECTED, PENDING_RECONCILIATION
+  lastReconciledAt    DateTime?
+  initializationStatus String      @default("UNINITIALIZED") // UNINITIALIZED, INITIALIZING, READY
+  isInitialized        Boolean     @default(false)
+  
+  agentId           String         @unique // Strict 1:1 agent-to-wallet isolation
+  agent             Agent          @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  mandates          Mandate[]
+  fundingRecords    FundingRecord[]
+  withdrawalRecords WithdrawalRecord[]
+}
+
+// User-to-Agent Funding Transactions
+model FundingRecord {
+  id                String         @id @default(cuid())
+  txHash            String         @unique
+  senderAccountId   String         // User's connected NEAR account
+  receiverAccountId String         // Agent's dedicated custody account
+  amountYocto       String         // Atomic yoctoNEAR deposit
+  status            String         @default("PENDING") // PENDING, CONFIRMED, FAILED
+  blockHeight       Int?
+  
+  userId            String
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId          String
+  wallet            Wallet         @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime       @default(now())
+  confirmedAt       DateTime?
+}
+
+// Agent-to-User Withdrawal Transactions (Unused Funds)
+model WithdrawalRecord {
+  id                String         @id @default(cuid())
+  txHash            String?        @unique
+  fromAccountId     String         // Agent's custody wallet
+  toAccountId       String         // Authenticated user's NEAR account
+  amountYocto       String         // Withdrawn amount in yoctoNEAR
+  status            String         @default("REQUESTED") // REQUESTED, SUBMITTED, CONFIRMED, FAILED
+  outlayerRequestId String?
+
+  userId            String
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId          String
+  wallet            Wallet         @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime       @default(now())
+  confirmedAt       DateTime?
+}
+
+// Spending Mandates
+model Mandate {
+  id                    String            @id @default(cuid())
+  name                  String
+  description           String?
+  status                String            @default("ACTIVE") // ACTIVE, PAUSED, REVOKED, EXPIRED
+  
+  // Atomic budget fields (all in yoctoNEAR integer strings)
+  totalBudgetYocto      String            // e.g. 5000000000000000000000000 (5 NEAR)
+  spentYocto            String            @default("0")
+  reservedYocto         String            @default("0")
+  perTxLimitYocto       String            // e.g. 100000000000000000000000 (0.1 NEAR)
+  approvalThresholdYocto String           // e.g. 50000000000000000000000 (0.05 NEAR)
+  
+  // Constraints
+  allowedRecipientsJson String            // JSON string array: ["researcher.near", "oracle.testnet"]
+  expiresAt             DateTime
+  policyVersion         Int               @default(1)
+
+  // Foreign keys (User, Agent & Wallet isolation)
+  userId                String
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentId               String
+  agent                 Agent             @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  walletId              String
+  wallet                Wallet            @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  tasks                 Task[]
+  approvals             ApprovalRequest[]
+  auditLogs             AuditLog[]
+  transactions          TransactionRecord[]
+  executions            AgentExecution[]
+  objectives            Objective[]
+  coordinationRuns      CoordinationRun[]
+  executionRecords      ExecutionRecord[]
+}
+
+// Tasks proposed by AI Agent
+model Task {
+  id                  String             @id @default(cuid())
+  title               String
+  description         String?
+  rawPrompt           String?            // Original user natural language instruction
+  taskType            String             @default("PROCUREMENT") // RESEARCH, PROCUREMENT, ANALYSIS
+  requiresPayment     Boolean            @default(true)
+  status              String             @default("PENDING") // DRAFT, PENDING, RESEARCHING, ANALYZING, RECOMMENDATION_READY, PAYMENT_PROPOSED, AWAITING_APPROVAL, EXECUTING, COMPLETED, FAILED, CANCELLED
+  aiPlannerModel      String             @default("DeepSeek-V3")
+  
+  // Proposed payment intent
+  proposedRecipient   String?
+  proposedAmountYocto String?            @default("0")
+  idempotencyKey      String             @unique
+  planStepsJson       String             // JSON string array of AI task steps
+
+  agentId             String
+  agent               Agent              @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  mandateId           String
+  mandate             Mandate            @relation(fields: [mandateId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  approval            ApprovalRequest?
+  transaction         TransactionRecord?
+  researchSession     ResearchSession?
+  execution           AgentExecution?
+  auditLogs           AuditLog[]
+  executionRecords    ExecutionRecord[]
+}
+
+// Research and Procurement Sessions
+model ResearchSession {
+  id                   String            @id @default(cuid())
+  taskId               String            @unique
+  task                 Task              @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  query                String
+  extractedCriteria    String            // JSON: requirements, budget limit, criteria
+  searchQueriesUsed    String            // JSON string array of queries executed
+  sourcesReviewedJson  String            // JSON: array of { url, title, snippet, retrievedAt, verified }
+  candidateOptionsJson String            // JSON: array of { provider, name, priceNear, features, pros, cons, delivery, confidence }
+  comparisonJson       String            // JSON: side-by-side comparison matrix
+  recommendationJson   String            // JSON: { selectedProvider, rationale, evidenceSummary, alternativesConsidered }
+  reasoningSummary     String?           // Freeform narrative reasoning
+  requiresPayment      Boolean           @default(false)
+  proposedRecipient    String?
+  proposedAmountYocto  String?
+  providerOrderRef     String?
+  deliveryProof        String?
+  completedAt          DateTime?
+  createdAt            DateTime          @default(now())
+}
+
+// Human-in-the-Loop Approval Gate
+model ApprovalRequest {
+  id                  String             @id @default(cuid())
+  status              String             @default("PENDING") // PENDING, APPROVED, REJECTED, TIMED_OUT, REVOKED
+  amountYocto         String
+  recipient           String
+  reason              String?            // Why approval was triggered (e.g. Exceeds 0.050 NEAR)
+  
+  // Binding & Integrity fields for Milestone 7
+  actionPayloadHash   String?            // SHA-256 hash of exact action params for tamper-proofing
+  policyId            String?            // Binding to GovernancePolicy
+  policyVersion       Int?               // Policy version at evaluation time
+  mandateVersion      Int?               // Mandate policyVersion at evaluation time
+  expiresAt           DateTime?          // Time-bound expiration
+  revokedAt           DateTime?
+  revocationReason    String?
+  
+  taskId              String?            @unique
+  task                Task?              @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  executionId         String?            // Associated Universal Agent Execution
+  mandateId           String
+  mandate             Mandate            @relation(fields: [mandateId], references: [id], onDelete: Cascade)
+  approverId          String?
+  approver            User?              @relation(fields: [approverId], references: [id])
+
+  createdAt           DateTime           @default(now())
+  decidedAt           DateTime?
+}
+
+// Onchain Transaction Execution Records
+model TransactionRecord {
+  id                  String             @id @default(cuid())
+  txHash              String?            @unique
+  chain               String             @default("near")
+  recipient           String
+  amountYocto         String
+  status              String             @default("SUBMITTED") // SUBMITTED, CONFIRMING, CONFIRMED, FAILED, RECONCILIATION_REQUIRED
+  outlayerRequestId   String?
+  rawResponseJson     String?
+  blockHash           String?
+  blockHeight         Int?
+  gasBurnt            String?
+  tokensBurnt         String?
+  error               String?
+  retryCount          Int                @default(0)
+  lastCheckedAt       DateTime?
+  reconciledAt        DateTime?
+  reconciliationNotes String?
+
+  taskId              String?            @unique
+  task                Task?              @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  executionId         String?
+  execution           AgentExecution?    @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  mandateId           String
+  mandate             Mandate            @relation(fields: [mandateId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime           @default(now())
+  confirmedAt         DateTime?
+}
+
+// Immutable-style Audit Log for all security decisions & transfers
+model AuditLog {
+  id                  String             @id @default(cuid())
+  sequenceNumber      Int                @default(0) // Monotonic sequence number per user
+  eventType           String             // WALLET_CONNECTED, AGENT_CREATED, AGENT_PAUSED, AGENT_RESUMED, WALLET_PROVISIONED, AGENT_FUNDED, WITHDRAWAL_SETTLED, MANDATE_CREATED, POLICY_EVALUATED, APPROVAL_GRANTED, APPROVAL_REJECTED
+  verdict             String?            // ALLOWED, BLOCKED, REQUIRES_APPROVAL, SUCCESS, FAILED
+  reasonCode          String?            // e.g. RECIPIENT_NOT_ALLOWED, PAYMENT_LIMIT_EXCEEDED
+  description         String?            // Human-readable summary
+  detailsJson         String             // Full context payload, snapshot of rules, yoctoNEAR values
+
+  // Cryptographic Hash Chain Linkage
+  prevHash            String?            // SHA-256 hash of previous user event
+  currentHash         String?            // SHA-256 hash of this event canonical payload + prevHash
+
+  // Entity References
+  agentId             String?
+  agentWalletAddress  String?
+  proposalId          String?
+  txHash              String?
+  mandateId           String?
+  mandate             Mandate?           @relation(fields: [mandateId], references: [id], onDelete: Cascade)
+  taskId              String?
+  task                Task?              @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId              String?
+  user                User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime           @default(now())
+
+  @@index([userId, sequenceNumber])
+  @@index([userId, createdAt])
+  @@index([eventType])
+}
+
+// Universal Agent Execution Instance
+model AgentExecution {
+  id               String               @id @default(cuid())
+  agentId          String
+  agent            Agent                @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mandateId        String?
+  mandate          Mandate?             @relation(fields: [mandateId], references: [id], onDelete: SetNull)
+  taskId           String?              @unique
+  task             Task?                @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  status           String               @default("QUEUED") // QUEUED, INITIALIZING, RUNNING, PAUSE_REQUESTED, PAUSED, COMPLETED, FAILED, CANCEL_REQUESTED, CANCELLED, WAITING_FOR_APPROVAL
+  inputJson        String               // Input payload/prompt
+  outputJson       String?              // Structured output
+  currentStep      String?
+  contextJson      String?              @default("{}") // Persistent context state
+  errorDetails     String?
+  retryCount       Int                  @default(0)
+  maxRetries       Int                  @default(3)
+  idempotencyKey   String?              @unique
+  lockToken        String?              // Concurrency locking token
+  lockedAt         DateTime?            // Lock timestamp for concurrency
+
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  events           ExecutionEvent[]
+  transactions     TransactionRecord[]
+
+  @@index([agentId, status])
+  @@index([userId, status])
+  @@index([status])
+}
+
+// Fine-grained Runtime Events per Execution
+model ExecutionEvent {
+  id            String          @id @default(cuid())
+  executionId   String
+  execution     AgentExecution  @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  agentId       String
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventType     String          // execution.created, execution.queued, execution.initialized, execution.started, execution.step_started, execution.step_completed, execution.pause_requested, execution.paused, execution.resumed, execution.approval_required, execution.completed, execution.failed, execution.cancelled
+  metadataJson  String          @default("{}")
+  timestamp     DateTime        @default(now())
+
+  @@index([executionId, timestamp])
+  @@index([agentId, eventType])
+  @@index([userId, timestamp])
+}
+
+// User-connected external integrations & credentials
+model IntegrationConnection {
+  id                   String           @id @default(cuid())
+  userId               String
+  user                 User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerId           String           // e.g. "near_rpc", "duckduckgo", "rest_api", "mcp_server", "slack"
+  adapterType          String           @default("rest") // rest, mcp, custom, oauth
+  name                 String           // e.g. "NEAR Public RPC", "Custom Analytics REST"
+  status               String           @default("ACTIVE") // CONNECTED, AUTHENTICATED, ACTIVE, DEGRADED, AUTH_EXPIRED, SCOPE_MISSING, RATE_LIMITED, UNAVAILABLE, DISABLED, REVOKED
+  authType             String           @default("NONE") // NONE, API_KEY, BEARER_TOKEN, BASIC, OAUTH
+  encryptedCredentials String?          // Encrypted AES-256-GCM
+  credentialVersion    Int              @default(1)
+  grantedScopesJson    String           @default("[]") // JSON string array of granted scopes
+  verifiedScopesJson   String           @default("[]") // Scopes verified through live operation checks
+  configJson           String           @default("{}") // Base URLs, headers, endpoints
+  healthMetadataJson   String           @default("{}") // Latency, failure counter, last check details
+  lastVerifiedAt       DateTime?
+  expiresAt            DateTime?
+  revokedAt            DateTime?
+  disconnectedAt       DateTime?
+
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  invocations          ToolInvocation[]
+  operationPermissions IntegrationOperationPermission[]
+  operationExecutions  IntegrationOperationExecution[]
+
+  @@index([userId, status])
+  @@index([providerId])
+}
+
+// Granular operation-level permissions per integration connection
+model IntegrationOperationPermission {
+  id                    String                @id @default(cuid())
+  connectionId          String
+  connection            IntegrationConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  operationId           String                // Unique operation key within the integration
+  permissionLevel       String                @default("READ") // READ, PROPOSE, RESTRICTED_EXECUTION, USER_ONLY
+  riskClassification    String                @default("LOW")  // LOW, MEDIUM, HIGH, CRITICAL
+  isEnabled             Boolean               @default(true)
+  requiresApproval      Boolean               @default(false)
+  allowedAgentTypesJson String                @default("[\"*\"]") // JSON string array of agent IDs/types allowed
+  
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  @@unique([connectionId, operationId])
+  @@index([connectionId, isEnabled])
+}
+
+// Audit record of integration operation executions
+model IntegrationOperationExecution {
+  id                  String                 @id @default(cuid())
+  executionId         String                 @unique // UUID
+  connectionId        String
+  connection          IntegrationConnection  @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  agentId             String?
+  operationId         String
+  status              String                 @default("SUCCESS") // SUCCESS, FAILED, BLOCKED, TIMEOUT, RATE_LIMITED
+  durationMs          Int
+  requestMetadataJson String                 @default("{}") // Sanitized & redacted
+  resultMetadataJson  String?                // Sanitized & redacted
+  errorCode           String?
+  errorMessage        String?
+
+  createdAt           DateTime               @default(now())
+
+  @@index([connectionId, createdAt])
+  @@index([operationId, status])
+}
+
+// Ephemeral OAuth 2.0 PKCE Session state
+model OAuthSession {
+  id           String    @id @default(cuid())
+  state        String    @unique
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeVerifier String?
+  redirectUri  String
+  expiresAt    DateTime
+  isUsed       Boolean   @default(false)
+
+  createdAt    DateTime  @default(now())
+
+  @@index([state])
+  @@index([userId, isUsed])
+}
+
+// Explicit Tool Permissions granted to an Agent by its Owner
+model AgentToolAccess {
+  id                    String         @id @default(cuid())
+  agentId               String
+  agent                 Agent          @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  toolId                String         // Unique tool identifier
+  permissionLevel       String         @default("READ") // READ, PROPOSE, RESTRICTED_EXECUTION, USER_ONLY
+  isEnabled             Boolean        @default(true)
+  allowedOperationsJson String         @default("[\"*\"]") // JSON string array
+  maxCallsPerExecution  Int?
+
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  @@unique([agentId, toolId])
+  @@index([agentId, isEnabled])
+}
+
+// Auditable log of all tool invocations made by agents
+model ToolInvocation {
+  id                  String                 @id @default(cuid())
+  invocationId        String                 @unique // UUID
+  executionId         String?
+  agentId             String
+  agent               Agent                  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  userId              String
+  user                User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connectionId        String?
+  connection          IntegrationConnection? @relation(fields: [connectionId], references: [id], onDelete: SetNull)
+
+  toolId              String
+  toolVersion         String
+  operation           String
+  permissionLevel     String                 // READ, PROPOSE, RESTRICTED_EXECUTION, USER_ONLY
+  riskClassification  String                 // LOW, MEDIUM, HIGH, CRITICAL
+  status              String                 @default("SUCCESS") // SUCCESS, FAILED, BLOCKED, TIMEOUT, RATE_LIMITED
+  durationMs          Int
+  inputJson           String                 // Sanitized & redacted
+  outputJson          String?                // Sanitized & redacted
+  errorDetails        String?
+  idempotencyKey      String?
+
+  createdAt           DateTime               @default(now())
+
+  @@index([agentId, createdAt])
+  @@index([userId, createdAt])
+  @@index([toolId, status])
+  @@index([executionId])
+}
+
+// =================================================================
+// MILESTONE 3: UNIVERSAL OBJECTIVE ENGINE MODELS
+// =================================================================
+
+// High-level user-defined outcome
+model Objective {
+  id                    String                    @id @default(cuid())
+  userId                String                    // Owner ID
+  user                  User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title                 String
+  description           String?
+  originalPrompt        String                    // Natural language prompt as entered by user
+  structuredGoalJson    String?                   // Interpreted structured goal
+  category              String                    @default("CUSTOM") // RESEARCH, FINANCE, TREASURY, PROCUREMENT, OPERATIONS, COMMERCE, COMMUNICATION, MONITORING, DEVELOPMENT, CUSTOM
+  status                String                    @default("DRAFT") // DRAFT, ACTIVE, PLANNING, READY, RUNNING, AWAITING_APPROVAL, PAUSED, COMPLETED, FAILED, CANCELLED, REQUIRES_INTERVENTION
+  priority              String                    @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  version               Int                       @default(1) // Optimistic concurrency version
+  
+  mandateId             String?
+  mandate               Mandate?                  @relation(fields: [mandateId], references: [id], onDelete: SetNull)
+  
+  planningStatus        String                    @default("UNPLANNED") // UNPLANNED, PLANNING, PLANNED, FAILED
+  executionStatus       String                    @default("NOT_STARTED") // NOT_STARTED, RUNNING, PAUSED, COMPLETED, FAILED, CANCELLED
+  completionEvidenceJson String                   @default("{}")
+  failureReason         String?
+  deadlineAt            DateTime?
+
+  assignedAgentsJson    String                    @default("[]") // JSON string array of agent IDs
+  constraintsJson       String                    @default("{}") // Budget constraints, deadlines, quality, restrictions
+  metadataJson          String                    @default("{}")
+  progressPercent       Int                       @default(0) // Derived from verified step completion
+  
+  startedAt             DateTime?
+  completedAt           DateTime?
+  lastEvaluatedAt       DateTime?
+  lastCheckpointAt      DateTime?
+  currentCheckpointNumber Int                     @default(0)
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  plans                 ObjectivePlan[]
+  steps                 ObjectivePlanStep[]
+  criteria              ObjectiveSuccessCriteria[]
+  events                ObjectiveEvent[]
+  checkpoints           ObjectiveCheckpoint[]
+  discoveries           CapabilityDiscovery[]
+  coordinationRuns      CoordinationRun[]
+  artifacts             SharedObjectiveArtifact[]
+  handoffs              AgentHandoff[]
+
+  @@index([userId, status])
+  @@index([category])
+  @@index([mandateId])
+}
+
+// Versioned, structured executable plan for an Objective
+model ObjectivePlan {
+  id                 String                  @id @default(cuid())
+  objectiveId        String
+  objective          Objective               @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  version            Int                     @default(1)
+  summary            String
+  status             String                  @default("DRAFT") // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, SUPERSEDED, ACTIVE, COMPLETED, FAILED
+  riskClassification String                  @default("LOW") // LOW, MEDIUM, HIGH, CRITICAL
+  estimatedCostNear  String?
+  estimatedCostYocto String?
+  planHash           String?                 // Canonical SHA-256 fingerprint of plan content
+  requiresApproval   Boolean                 @default(true)
+  planJson           String?                 // Full serialized plan payload
+  
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+
+  steps              ObjectivePlanStep[]
+  approvals          ObjectivePlanApproval[]
+  coordinationRuns   CoordinationRun[]
+
+  @@unique([objectiveId, version])
+  @@index([objectiveId, status])
+  @@index([planHash])
+}
+
+// Individual structured executable step within an Objective Plan
+model ObjectivePlanStep {
+  id                      String         @id @default(cuid())
+  stepId                  String         // Machine identifier e.g. "step_1_research"
+  objectiveId             String
+  objective               Objective      @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  planId                  String
+  plan                    ObjectivePlan  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  
+  title                   String
+  description             String
+  order                   Int            // Execution sequence
+  status                  String         @default("PENDING") // PENDING, READY, RUNNING, WAITING_APPROVAL, COMPLETED, FAILED, BLOCKED, SKIPPED
+  taskType                String         @default("EXECUTION") // RESEARCH, ANALYSIS, EXECUTION, PAYMENT, VERIFICATION
+  
+  agentType               String         // Required agent type e.g. "research_procurement"
+  assignedAgentId         String?        // Specific assigned agent instance
+  requiredCapabilitiesJson String        @default("[]") // JSON array of required capabilities
+  requiredToolsJson       String         @default("[]") // JSON array of required tool IDs
+  dependenciesJson        String         @default("[]") // JSON array of stepIds required before execution
+  preconditionsJson       String         @default("[]")
+  completionConditionsJson String        @default("[]")
+  
+  riskClassification      String         @default("LOW")
+  estimatedCostNear       String?
+  estimatedCostYocto      String?
+  executionId             String?        // Linked runtime AgentExecution ID
+  inputJson               String?        // Structured input passed to execution
+  outputJson              String?        // Structured result received from execution
+  errorDetails            String?
+  
+  startedAt               DateTime?
+  completedAt             DateTime?
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+
+  // Milestone 13.4 Orchestration & Verification Extensions
+  version                 Int            @default(1)
+  retryCount              Int            @default(0)
+  maxRetries              Int            @default(3)
+  verificationStatus      String         @default("UNVERIFIED") // UNVERIFIED, AGENT_REPORTED, SYSTEM_VALIDATED, INDEPENDENTLY_VERIFIED, REJECTED
+  resultFingerprint       String?
+  evidenceReferencesJson  String         @default("[]")
+  toolExecutionsJson      String         @default("[]")
+  failureStage            String?
+  lastTransitionReason    String?
+  leaseGeneration         Int            @default(1)
+
+  taskEvents              ObjectiveTaskEvent[]
+  taskResults             ObjectiveTaskResult[]
+
+  @@unique([planId, stepId])
+  @@index([objectiveId, status])
+  @@index([planId, order])
+}
+
+// Structured transition event stream for individual objective plan steps (Milestone 13.4)
+model ObjectiveTaskEvent {
+  id              String             @id @default(cuid())
+  objectiveId     String
+  planId          String
+  stepId          String
+  stepRecordId    String?
+  step            ObjectivePlanStep? @relation(fields: [stepRecordId], references: [id], onDelete: Cascade)
+  fromStatus      String
+  toStatus        String
+  actorId         String?
+  actorRole       String             // USER, AGENT, SYSTEM, WORKER
+  reason          String?
+  taskVersion     Int
+  leaseGeneration Int?
+  metadataJson    String             @default("{}")
+  timestamp       DateTime           @default(now())
+
+  @@index([objectiveId, stepId])
+  @@index([planId, stepId])
+  @@index([timestamp])
+}
+
+// Durable structured task execution result and verification record (Milestone 13.4)
+model ObjectiveTaskResult {
+  id                      String             @id @default(cuid())
+  objectiveId             String
+  planId                  String
+  stepId                  String
+  stepRecordId            String?
+  step                    ObjectivePlanStep? @relation(fields: [stepRecordId], references: [id], onDelete: Cascade)
+  agentId                 String
+  executionAttempt        Int                @default(1)
+  status                  String             // COMPLETED, FAILED, REJECTED
+  structuredOutputJson    String             @default("{}")
+  evidenceReferencesJson  String             @default("[]")
+  toolExecutionsJson      String             @default("[]")
+  resultFingerprint       String             // SHA-256 canonical hash of output + evidence
+  verificationStatus      String             // AGENT_REPORTED, SYSTEM_VALIDATED, INDEPENDENTLY_VERIFIED
+  verifiedBy              String?            // SYSTEM, VERIFIER_AGENT, USER
+  verificationDetailsJson String             @default("{}")
+  errorDetails            String?
+  startedAt               DateTime
+  completedAt             DateTime
+  createdAt               DateTime           @default(now())
+
+  @@unique([planId, stepId, executionAttempt])
+  @@index([objectiveId, stepId])
+  @@index([agentId])
+}
+
+// Measurable, verifiable success criterion for an Objective
+model ObjectiveSuccessCriteria {
+  id                 String     @id @default(cuid())
+  objectiveId        String
+  objective          Objective  @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  criterionId        String     // e.g. "crit_providers_identified"
+  description        String
+  measurementType    String     // NUMERIC, BOOLEAN, EVENT_BASED, EVIDENCE_BASED, TIME_BASED, USER_CONFIRMED
+  target             String     // Target threshold/condition
+  verificationMethod String     // TOOL_RESULT, ON_CHAIN_VERIFICATION, EXTERNAL_EVIDENCE, USER_CONFIRMATION
+  currentState       String     @default("NOT_MET") // MET, NOT_MET, PARTIALLY_MET, FAILED
+  evidenceJson       String     @default("{}")
+  lastEvaluatedAt    DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  @@unique([objectiveId, criterionId])
+  @@index([objectiveId, currentState])
+}
+
+// Event stream for Objective lifecycle
+model ObjectiveEvent {
+  id           String     @id @default(cuid())
+  objectiveId  String
+  objective    Objective  @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  eventType    String     // objective.created, objective.activated, objective.paused, etc.
+  actorId      String?
+  actorRole    String?    // USER, AGENT, SYSTEM, OPERATOR
+  fromStatus   String?
+  toStatus     String?
+  reason       String?
+  version      Int?
+  metadataJson String     @default("{}")
+  auditLogId   String?    // Link to cryptographic audit ledger record
+  timestamp    DateTime   @default(now())
+
+  @@index([objectiveId, timestamp])
+}
+
+// Version-bound approval decision record for an Objective Plan
+model ObjectivePlanApproval {
+  id              String        @id @default(cuid())
+  planId          String
+  plan            ObjectivePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  version         Int
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  decision        String        // APPROVED, REJECTED, REVISION_REQUESTED
+  comment         String?
+  constraintsJson String?       // Permitted constraint edits at approval time
+  createdAt       DateTime      @default(now())
+
+  @@index([planId, version])
+  @@index([userId])
+}
+
+// Durable, point-in-time state checkpoint for an Objective (Milestone 13.6)
+model ObjectiveCheckpoint {
+  id                      String        @id @default(cuid())
+  checkpointNumber        Int           // Monotonic checkpoint sequence per objective (1, 2, 3...)
+  objectiveId             String
+  objective               Objective     @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  userId                  String        // Tenant isolation
+  user                    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Objective lifecycle state and version
+  objectiveStatus         String
+  objectiveVersion        Int
+  orchestrationRound      Int           @default(1)
+  
+  // Plan and Approval state
+  planId                  String?
+  planVersion             Int?
+  planHash                String?
+  approvalState           String?       @default("NONE") // NONE, PENDING, APPROVED, REJECTED
+  approvalPayloadHash     String?
+  
+  // Structured state snapshots (JSON serialized, secrets strictly excluded)
+  taskStatesJson          String        @default("[]") // [{ stepId, status, version, order, retryCount, failureStage, verificationStatus }]
+  assignmentsJson         String        @default("[]") // [{ stepId, agentId, capabilityVersion, leaseGeneration, leaseToken, leaseExpiresAt }]
+  dependencyEvidenceJson  String        @default("[]") // [{ stepId, resultFingerprint, evidenceReferences }]
+  executionReferencesJson String        @default("[]") // [{ stepId, executionId, toolInvocations }]
+  recoveryStateJson       String        @default("{}") // { retries, circuitBreaker, failedSteps }
+  
+  // Checkpoint integrity & fencing
+  checkpointHash          String        // Canonical SHA-256 fingerprint of the checkpoint payload
+  triggerReason           String        // e.g. "TASK_COMPLETED", "ORCHESTRATION_ROUND_COMPLETED", "LIFECYCLE_TRANSITION"
+  actorId                 String?
+  actorRole               String?       // USER, AGENT, SYSTEM, WORKER
+  workerId                String?
+  leaseGeneration         Int?
+  
+  createdAt               DateTime      @default(now())
+
+  @@unique([objectiveId, checkpointNumber])
+  @@index([objectiveId, createdAt])
+  @@index([userId, objectiveId])
+  @@index([checkpointHash])
+}
+
+// =================================================================
+// MILESTONE 4: UNIVERSAL DISCOVERY & CAPABILITY MATCHING MODELS
+// =================================================================
+
+// Auditable record of a capability discovery and readiness evaluation run
+model CapabilityDiscovery {
+  id                        String            @id @default(cuid())
+  userId                    String
+  user                      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  objectiveId               String?
+  objective                 Objective?        @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  
+  status                    String            @default("COMPLETED") // RUNNING, COMPLETED, FAILED
+  overallReadiness          String            @default("UNSUPPORTED") // READY, READY_WITH_APPROVALS, NEEDS_CONFIGURATION, NEEDS_USER_INPUT, PARTIALLY_SUPPORTED, UNSUPPORTED, BLOCKED
+  coverageScore             Float             @default(0.0) // 0.0 to 1.0 (or 0-100)
+  summary                   String?
+  
+  readinessDetailsJson      String            @default("{}") // Structured readiness rationale and flags
+  coverageDetailsJson       String            @default("{}") // Full coverage analysis summary
+  missingCapabilitiesJson   String            @default("[]") // Array of missing capability descriptors
+  blockedCapabilitiesJson   String            @default("[]") // Array of blocked capabilities
+  authRequiredJson          String            @default("[]") // Array of capabilities requiring user auth
+  unsupportedOperationsJson String            @default("[]") // Array of operations lacking tools
+  
+  matches                   CapabilityMatch[]
+  
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([objectiveId, createdAt])
+  @@index([overallReadiness])
+}
+
+// Requirement-to-Capability Match Record
+model CapabilityMatch {
+  id                  String              @id @default(cuid())
+  discoveryId         String
+  discovery           CapabilityDiscovery @relation(fields: [discoveryId], references: [id], onDelete: Cascade)
+  
+  requirementId       String              // Name or ID of requested capability/requirement
+  capabilityId        String              // Matched capability/tool ID
+  agentId             String?             // Assigned/suggested agent if applicable
+  toolId              String?             // Registry tool ID
+  integrationId       String?             // Connected user integration ID
+  
+  matchScore          Float               @default(1.0) // 0.0 to 1.0 ranking aid
+  matchReason         String?
+  coverageStatus      String              @default("COVERED") // COVERED, PARTIALLY_COVERED, MISSING, BLOCKED, AUTH_REQUIRED, USER_ACTION_REQUIRED
+  permissionStatus    String              @default("GRANTED") // GRANTED, ELEVATION_REQUIRED, USER_APPROVAL_REQUIRED, DENIED
+  riskClassification  String              @default("LOW") // LOW, MEDIUM, HIGH, CRITICAL
+  detailsJson         String              @default("{}")
+  
+  createdAt           DateTime            @default(now())
+
+  @@index([discoveryId, requirementId])
+  @@index([capabilityId])
+  @@index([coverageStatus])
+}
+
+// =================================================================
+// MILESTONE 6: UNIVERSAL MULTI-AGENT COORDINATION MODELS
+// =================================================================
+
+// Multi-Agent Coordination Run scoped to User, Objective, and Plan Version
+model CoordinationRun {
+  id                    String                   @id @default(cuid())
+  userId                String
+  user                  User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  objectiveId           String
+  objective             Objective                @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  planId                String
+  plan                  ObjectivePlan            @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planVersion           Int                      // Exact approved plan version
+  mandateId             String?
+  mandate               Mandate?                 @relation(fields: [mandateId], references: [id], onDelete: SetNull)
+
+  status                String                   @default("PENDING") // PENDING, PLANNING, ACTIVE, PAUSED, COMPLETED, FAILED, CANCELLED
+  concurrencyLimit      Int                      @default(5)
+  activeTasksCount      Int                      @default(0)
+  completedTasksCount   Int                      @default(0)
+  failedTasksCount      Int                      @default(0)
+  totalTasksCount       Int                      @default(0)
+  
+  configJson            String                   @default("{}") // Priority, execution limits, retry strategy
+  errorDetails          String?
+  
+  startedAt             DateTime?
+  completedAt           DateTime?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+
+  tasks                 CoordinationTask[]
+  assignments           AgentAssignment[]
+  handoffs              AgentHandoff[]
+  artifacts             SharedObjectiveArtifact[]
+  leases                TaskLease[]
+  events                CoordinationEvent[]
+
+  @@index([userId, status])
+  @@index([objectiveId, status])
+  @@index([planId, planVersion])
+  @@index([status, createdAt])
+}
+
+// Dependency-aware Coordination Task within a Multi-Agent Graph
+model CoordinationTask {
+  id                      String             @id @default(cuid())
+  runId                   String
+  run                     CoordinationRun    @relation(fields: [runId], references: [id], onDelete: Cascade)
+  stepId                  String             // Maps to ObjectivePlanStep.stepId or machine task name
+  title                   String
+  description             String?
+  order                   Int                @default(1)
+  priority                Int                @default(100) // Lower = higher priority
+  
+  agentType               String             // e.g. "research_procurement", "finance_treasury", "operations_execution"
+  requiredCapabilitiesJson String            @default("[]") // Descriptors of required capabilities
+  requiredToolsJson       String             @default("[]")
+  dependenciesJson        String             @default("[]") // Array of stepIds/taskIds that must be COMPLETED
+  
+  status                  String             @default("PENDING") // PENDING, READY, ASSIGNED, RUNNING, WAITING_HANDOFF, WAITING_APPROVAL, COMPLETED, FAILED, BLOCKED, CANCELLED
+  retryCount              Int                @default(0)
+  maxRetries              Int                @default(3)
+  
+  assignedAgentId         String?            // Assigned Agent ID
+  executionId             String?            // Runtime AgentExecution instance ID
+  inputJson               String?            // Prepared input payload
+  outputJson              String?            // Structured verified output
+  errorDetails            String?
+  
+  // Financial authority link
+  financialRequired       Boolean            @default(false)
+  estimatedCostNear       String?
+  reservedAmountYocto     String?            // Reserved via atomic CAS
+  
+  startedAt               DateTime?
+  completedAt             DateTime?
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+
+  assignment              AgentAssignment?
+  handoffsProduced        AgentHandoff[]     @relation("HandoffSourceTask")
+  handoffsConsumed        AgentHandoff[]     @relation("HandoffDestinationTask")
+  lease                   TaskLease?
+  events                  CoordinationEvent[]
+
+  @@unique([runId, stepId])
+  @@index([runId, status])
+  @@index([assignedAgentId, status])
+  @@index([priority, order])
+}
+
+// =================================================================
+// MILESTONE 13.3: AGENT CAPABILITY REGISTRY & GOVERNED ASSIGNMENT
+// =================================================================
+
+// Validated, server-controlled capability profile for an Agent instance
+model AgentCapabilityProfile {
+  id                          String      @id @default(cuid())
+  agentId                     String      @unique
+  agent                       Agent       @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  userId                      String
+  user                        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  agentType                   String      // research_procurement, finance_treasury, etc.
+  supportedTaskTypesJson      String      @default("[]") // JSON array of TaskType: ["RESEARCH", "ANALYSIS", "EXECUTION", "PAYMENT", "VERIFICATION"]
+  supportedToolsJson          String      @default("[]") // JSON array of verified tool IDs
+  supportedIntegrationsJson   String      @default("[\"outlayer_tee\", \"near_testnet\"]")
+  supportedNetworksJson       String      @default("[\"near:testnet\"]")
+  requiredPermissionsJson     String      @default("[]")
+  financialEligibility        Boolean     @default(false)
+  maxAuthorizedTaskRisk       String      @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status                      String      @default("ACTIVE") // ACTIVE, PAUSED, REVOKED
+  capabilityVersion           Int         @default(1)
+  
+  registeredAt                DateTime    @default(now())
+  lastVerifiedAt              DateTime    @default(now())
+  updatedAt                   DateTime    @updatedAt
+
+  @@index([userId, status])
+  @@index([agentType, status])
+}
+
+// Formal Agent Assignment with capabilities, lifecycle, and reassignment trail
+model AgentAssignment {
+  id                        String             @id @default(cuid())
+  runId                     String?
+  run                       CoordinationRun?   @relation(fields: [runId], references: [id], onDelete: Cascade)
+  taskId                    String?            @unique
+  task                      CoordinationTask?  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  agentId                   String
+  agent                     Agent              @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  
+  // Objective Plan Step Binding (Milestone 13.3)
+  objectiveId               String?
+  objectiveVersion          Int?
+  planId                    String?
+  planVersion               Int?
+  planHash                  String?
+  stepId                    String?
+  capabilityVersion         Int?
+  policyVersion             Int?
+
+  // Lease Fencing & Monotonic Versioning
+  leaseToken                String?
+  leaseExpiresAt            DateTime?
+  leaseGeneration           Int                @default(1)
+  delegationHistoryJson     String             @default("[]")
+
+  assignedCapabilitiesJson  String             @default("[]") // Snapshot of matched capabilities
+  status                    String             @default("ASSIGNED") // ASSIGNED, ACTIVE, REASSIGNED, RELEASED, FAILED
+  
+  reassignedFromAgentId     String?            // ID of previous agent if reassigned
+  reassignmentReason        String?            // Reason (timeout, crash, capability mismatch)
+  
+  assignedAt                DateTime           @default(now())
+  releasedAt                DateTime?
+
+  @@index([runId, agentId])
+  @@index([agentId, status])
+  @@index([objectiveId, stepId])
+}
+
+// Structured, Schema-Validated Agent-to-Agent Handoff Protocol
+model AgentHandoff {
+  id                    String            @id @default(cuid())
+  runId                 String?
+  run                   CoordinationRun?  @relation(fields: [runId], references: [id], onDelete: Cascade)
+  objectiveId           String
+  objective             Objective         @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  
+  sourceAgentId         String
+  sourceAgent           Agent             @relation("HandoffSourceAgent", fields: [sourceAgentId], references: [id], onDelete: Cascade)
+  destinationAgentId    String
+  destinationAgent      Agent             @relation("HandoffDestinationAgent", fields: [destinationAgentId], references: [id], onDelete: Cascade)
+  
+  taskId                String?           // Source task that produced this handoff
+  sourceTask            CoordinationTask? @relation("HandoffSourceTask", fields: [taskId], references: [id], onDelete: Cascade)
+  targetTaskId          String?           // Downstream target task
+  targetTask            CoordinationTask? @relation("HandoffDestinationTask", fields: [targetTaskId], references: [id], onDelete: SetNull)
+  
+  // Governed Delegation Parameters (Milestone 13.3)
+  stepId                String?
+  planVersion           Int?
+  planHash              String?
+  reason                String?
+  delegationType        String            @default("TASK_RESPONSIBILITY") // TASK_RESPONSIBILITY, DATA_HANDOFF
+
+  outputReference       String            @default("") // URI / ID of produced artifact or execution output
+  structuredPayload     String            @default("{}") // Serialized payload
+  schemaVersion         String            @default("1.0.0")
+  evidenceReferences    String            @default("[]") // Evidence hashes/URLs
+  
+  status                String            @default("PENDING") // PENDING, ACCEPTED, REJECTED, COMPLETED, FAILED
+  validationError       String?
+  idempotencyKey        String?           @unique
+  
+  acceptedAt            DateTime?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([runId, status])
+  @@index([sourceAgentId, destinationAgentId])
+  @@index([taskId])
+  @@index([targetTaskId])
+  @@index([objectiveId, stepId])
+}
+
+// Controlled, Version-Preserved Shared Objective Context & Artifact Store
+model SharedObjectiveArtifact {
+  id                          String           @id @default(cuid())
+  runId                       String
+  run                         CoordinationRun  @relation(fields: [runId], references: [id], onDelete: Cascade)
+  objectiveId                 String
+  objective                   Objective        @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  
+  artifactId                  String           // Unique key within run, e.g. "procurement_recommendation"
+  version                     Int              @default(1)
+  title                       String
+  contentType                 String           @default("application/json") // application/json, text/markdown
+  dataJson                    String           // Canonical payload data
+  dataHash                    String           // SHA-256 integrity hash
+  
+  producingAgentId            String
+  producingAgent              Agent            @relation(fields: [producingAgentId], references: [id], onDelete: Cascade)
+  producingTaskId             String?
+  
+  evidenceReferencesJson      String           @default("[]") // URLs, transaction hashes, receipts
+  allowedReaderAgentTypesJson String           @default("[\"*\"]") // Wildcard or specific agent types
+  allowedWriterAgentTypesJson String           @default("[]") // Types permitted to create next version
+  isSealed                    Boolean          @default(false) // Sealed artifacts cannot be overwritten
+  
+  createdAt                   DateTime         @default(now())
+  updatedAt                   DateTime         @updatedAt
+
+  @@unique([runId, artifactId, version])
+  @@index([runId, artifactId])
+  @@index([objectiveId])
+  @@index([producingAgentId])
+}
+
+// Database-backed Distributed Task Lease for Concurrency & Multi-Instance Safety
+model TaskLease {
+  id              String            @id @default(cuid())
+  taskId          String            @unique
+  task            CoordinationTask  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  runId           String
+  run             CoordinationRun   @relation(fields: [runId], references: [id], onDelete: Cascade)
+  
+  workerId        String            // Instance identifier (host + process ID + random token)
+  leaseToken      String            // Concurrency token held by current worker
+  leaseGeneration Int               @default(0) // Strictly monotonic fencing counter
+  acquiredAt      DateTime          @default(now())
+  expiresAt       DateTime          // Heartbeat TTL (e.g. now + 30s)
+  heartbeatCount  Int               @default(0)
+  isReleased      Boolean           @default(false)
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([runId, workerId])
+  @@index([expiresAt, isReleased])
+}
+
+// Unified Audit Event Log for Coordination Run
+model CoordinationEvent {
+  id              String            @id @default(cuid())
+  runId           String
+  run             CoordinationRun   @relation(fields: [runId], references: [id], onDelete: Cascade)
+  objectiveId     String
+  taskId          String?
+  task            CoordinationTask? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  agentId         String?
+  
+  eventType       String            // coordination.run_created, coordination.agent_assigned, etc.
+  metadataJson    String            @default("{}")
+  auditLogId      String?           // Cryptographic linkage to AuditLog
+  timestamp       DateTime          @default(now())
+
+  @@index([runId, timestamp])
+  @@index([objectiveId, eventType])
+  @@index([taskId])
+  @@index([agentId])
+}
+
+// ==========================================
+// MILESTONE 7: UNIVERSAL POLICY & COMPLIANCE GOVERNANCE
+// ==========================================
+
+model GovernancePolicy {
+  id                  String             @id @default(cuid())
+  name                String             // Human-readable policy name
+  description         String?
+  scope               String             @default("USER") // USER, AGENT, OBJECTIVE, COORDINATION_RUN, MANDATE, INTEGRATION, TOOL, RESOURCE
+  targetId            String?            // Optional ID of target depending on scope, or null for user-wide
+  priority            Int                @default(100) // Lower number = higher precedence (1 = highest, e.g. system policies)
+  isSystem            Boolean            @default(false) // System policies cannot be overridden by user configurations
+  status              String             @default("ACTIVE") // ACTIVE, SUSPENDED, EXPIRED, REVOKED
+  version             Int                @default(1) // Incremented on rule update
+  expiresAt           DateTime?          // Optional time window expiry
+  revokedAt           DateTime?          // Explicit revocation timestamp
+  revokedReason       String?            // Reason for policy revocation
+
+  userId              String
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rules               PolicyRule[]
+  versions            PolicyVersion[]
+  evaluations         PolicyEvaluation[]
+  violations          PolicyViolation[]
+  exceptions          PolicyException[]
+  reviews             PolicyReview[]
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([userId, status])
+  @@index([scope, targetId])
+  @@index([priority, isSystem])
+}
+
+model PolicyVersion {
+  id                  String             @id @default(cuid())
+  policyId            String
+  policy              GovernancePolicy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  version             Int
+  snapshotJson        String             // Full JSON snapshot of policy configuration and rules at this version
+  changeReason        String?
+  createdByUserId     String
+  createdByUser       User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdAt           DateTime           @default(now())
+
+  @@unique([policyId, version])
+  @@index([policyId])
+}
+
+model PolicyRule {
+  id                  String             @id @default(cuid())
+  policyId            String
+  policy              GovernancePolicy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  
+  ruleType            String             // CAPABILITY_RESTRICTION, ALLOWED_TOOLS, DENIED_TOOLS, ALLOWED_INTEGRATIONS, ALLOWED_OPERATIONS, RECIPIENT_ALLOWLIST, RECIPIENT_BLOCKLIST, SPENDING_THRESHOLD, TRANSACTION_LIMIT, FREQUENCY_LIMIT, TIME_WINDOW, OBJECTIVE_RESTRICTION, COORDINATION_RESTRICTION, REQUIRED_EVIDENCE, APPROVAL_REQUIREMENT, PROHIBITED_ACTION
+  operator            String             // EQUALS, NOT_EQUALS, IN, NOT_IN, GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, BETWEEN, CONTAINS, STARTS_WITH, ENDS_WITH
+  field               String             // Subject or target attribute being evaluated (e.g. "operation", "recipient", "amountYocto", "toolId", "capability")
+  valueJson           String             // JSON-encoded expected value or list of values
+  action              String             @default("DENY") // ALLOW, DENY, REQUIRE_APPROVAL, LIMIT, ESCALATE
+  description         String?
+  isEnforced          Boolean            @default(true)
+  order               Int                @default(0) // Evaluation order within policy
+  
+  violations          PolicyViolation[]
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([policyId, isEnforced])
+  @@index([ruleType])
+}
+
+model PolicyEvaluation {
+  id                  String             @id @default(cuid())
+  evaluationId        String             @unique // Deterministic or generated evaluation correlation ID
+  userId              String
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  agentId             String?
+  objectiveId         String?
+  coordinationRunId   String?
+  mandateId           String?
+  toolId              String?
+  operation           String?
+  resource            String?
+
+  decision            String             // ALLOW, ALLOW_WITH_LIMITS, REQUIRE_APPROVAL, DENY, ESCALATE
+  riskLevel           String             @default("LOW") // LOW, MEDIUM, HIGH, CRITICAL
+  reasonCodesJson     String             @default("[]") // Array of reason strings
+  matchedPolicyIdsJson String            @default("[]") // Matched policy IDs
+  policyVersionsJson  String             @default("{}") // Map of policyId -> version
+  applicableLimitsJson String            @default("{}") // Enforced limits (e.g. maxAmountYocto)
+  approvalRequirementsJson String        @default("{}") // Required approval parameters
+  evidenceJson        String             @default("[]") // Structured checks evidence
+  contextJson         String             @default("{}") // Original evaluation context
+  isSimulated         Boolean            @default(false) // True if invoked via policy simulation
+
+  policyId            String?
+  policy              GovernancePolicy?  @relation(fields: [policyId], references: [id], onDelete: SetNull)
+
+  createdAt           DateTime           @default(now())
+
+  @@index([userId, decision])
+  @@index([evaluationId])
+  @@index([agentId])
+  @@index([objectiveId])
+  @@index([coordinationRunId])
+  @@index([createdAt])
+}
+
+model PolicyViolation {
+  id                  String             @id @default(cuid())
+  userId              String
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  policyId            String
+  policy              GovernancePolicy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  policyRuleId        String?
+  policyRule          PolicyRule?        @relation(fields: [policyRuleId], references: [id], onDelete: SetNull)
+
+  agentId             String?
+  objectiveId         String?
+  coordinationRunId   String?
+  toolId              String?
+  operation           String?
+  
+  severity            String             @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  actionAttempted     String             // Name or description of attempted operation
+  violationReason     String             // Human explanation of the violation
+  contextJson         String             @default("{}")
+  escalated           Boolean            @default(false)
+  
+  createdAt           DateTime           @default(now())
+
+  @@index([userId, severity])
+  @@index([policyId])
+  @@index([agentId])
+  @@index([createdAt])
+}
+
+model PolicyException {
+  id                  String             @id @default(cuid())
+  policyId            String
+  policy              GovernancePolicy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  userId              String
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  grantedByUserId     String
+  agentId             String?
+  resource            String?
+  reason              String
+  validFrom           DateTime           @default(now())
+  expiresAt           DateTime
+  status              String             @default("ACTIVE") // ACTIVE, EXPIRED, REVOKED
+  revokedAt           DateTime?
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([policyId, status])
+  @@index([userId])
+}
+
+model PolicyReview {
+  id                  String             @id @default(cuid())
+  policyId            String
+  policy              GovernancePolicy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  reviewedByUserId    String
+  reviewedByUser      User               @relation(fields: [reviewedByUserId], references: [id], onDelete: Cascade)
+  
+  status              String             @default("APPROVED") // APPROVED, CHANGES_REQUESTED, REJECTED
+  notes               String?
+  
+  createdAt           DateTime           @default(now())
+
+  @@index([policyId])
+}
+
+// Authoritative Execution Pipeline Record for Milestone 8
+model ExecutionRecord {
+  id                  String             @id @default(cuid())
+  idempotencyKey      String             @unique
+  payloadHash         String             // Canonical SHA-256 hash of execution payload
+  status              String             @default("PROPOSED") // PROPOSED, VALIDATED, AUTHORIZED, SIGNED, BROADCAST, CONFIRMING, CONFIRMED, FAILED, REQUIRES_RECOVERY, RECOVERED
+  operation           String             @default("near_transfer") // near_transfer, tool_call, integration_action
+  chain               String             @default("near")
+  recipient           String
+  amountYocto         String             @default("0")
+  token               String             @default("NEAR")
+  
+  // Cryptographic Authorization Envelope fields
+  nonce               String             @unique // Cryptographic single-use nonce
+  authSignature       String             // HMAC-SHA256 signature of envelope
+  isNonceConsumed     Boolean            @default(false)
+  nonceConsumedAt     DateTime?
+  expiresAt           DateTime           // Envelope expiry
+  
+  // Onchain / Provider reference
+  outlayerRequestId   String?
+  txHash              String?            @unique
+  blockHash           String?
+  blockHeight         Int?
+  gasBurnt            String?
+  tokensBurnt         String?
+  errorReason         String?
+  recoveryStatus      String?            // PENDING_RECOVERY, RECOVERING, RECOVERED, MANUAL_INTERVENTION_REQUIRED
+  recoveryAttempts    Int                @default(0)
+  lastPolledAt        DateTime?
+  isSimulated         Boolean            @default(false)
+
+  // Policy & Approval bindings
+  policyId            String?
+  policyVersion       Int?
+  mandateVersion      Int?
+  approvalId          String?
+
+  // Relations
+  userId              String
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mandateId           String
+  mandate             Mandate            @relation(fields: [mandateId], references: [id], onDelete: Cascade)
+  agentId             String?
+  agent               Agent?             @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  taskId              String?
+  task                Task?              @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  confirmedAt         DateTime?
+  reconciledAt        DateTime?
+
+  @@index([userId, status])
+  @@index([mandateId])
+  @@index([txHash])
+  @@index([idempotencyKey])
+}
+
+// =============================================================================
+// MILESTONE 9.1: DURABLE BACKGROUND EXECUTION & WORKER RELIABILITY
+// =============================================================================
+
+// Durable Background Job
+model BackgroundJob {
+  id                String            @id @default(cuid())
+  tenantId          String
+  tenant            User              @relation("UserBackgroundJobs", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  jobType           String            // Registered job type identifier
+  jobCategory       String            @default("GENERAL") // GENERAL, FINANCIAL, INTEGRATION, GOVERNANCE, COORDINATION
+  payload           String            @default("{}") // Validated JSON payload (secrets strictly excluded)
+  payloadHash       String            // Canonical SHA-256 hash of payload
+  
+  status            String            @default("QUEUED") // QUEUED, SCHEDULED, CLAIMED, RUNNING, RETRY_WAIT, COMPLETED, FAILED, DEAD_LETTER, CANCELLED, REQUIRES_RECOVERY
+  priority          Int               @default(0) // Higher value = higher priority
+  attempts          Int               @default(0)
+  maxAttempts       Int               @default(5)
+  
+  scheduledAt       DateTime          @default(now())
+  startedAt         DateTime?
+  completedAt       DateTime?
+  failedAt          DateTime?
+  lastHeartbeatAt   DateTime?
+  
+  workerId          String?
+  worker            BackgroundWorker? @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  leaseToken        String?           // Dynamic token held by active worker
+  leaseGeneration   Int               @default(0) // Strictly monotonic fencing counter
+  leaseExpiresAt    DateTime?         // Heartbeat expiration boundary
+  
+  correlationId     String            @default(cuid())
+  parentJobId       String?
+  parentJob         BackgroundJob?    @relation("JobHierarchy", fields: [parentJobId], references: [id], onDelete: SetNull)
+  childJobs         BackgroundJob[]   @relation("JobHierarchy")
+  
+  idempotencyKey    String?
+  lastErrorCode     String?
+  lastErrorMessage  String?
+  
+  // OpenTelemetry Distributed Tracing Context
+  traceParent       String?           // W3C Trace Context traceparent (00-{traceId}-{spanId}-{flags})
+  traceState        String?           // W3C Trace Context tracestate
+  
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  attemptsList      JobAttempt[]
+  eventsList        JobEvent[]
+  deadLetterRecord  DeadLetterRecord?
+
+  @@index([tenantId, status])
+  @@index([status, scheduledAt, priority])
+  @@index([leaseExpiresAt])
+  @@index([correlationId])
+  @@index([jobType])
+  @@index([tenantId, idempotencyKey])
+}
+
+// Background Worker Instance Registration & Heartbeat
+model BackgroundWorker {
+  id                String            @id @default(cuid())
+  workerName        String
+  workerType        String            @default("STANDARD")
+  instanceId        String            @unique // Hostname + PID + Instance UUID
+  status            String            @default("STARTING") // STARTING, IDLE, BUSY, UNHEALTHY, DRAINING, STOPPED
+  capabilities      String            @default("[\"*\"]") // JSON array of supported job types
+  
+  lastHeartbeatAt   DateTime          @default(now())
+  startedAt         DateTime          @default(now())
+  stoppedAt         DateTime?
+  
+  currentJobId      String?
+  jobsProcessed     Int               @default(0)
+  recentFailures    Int               @default(0)
+  
+  // Worker Capacity & Concurrency Management
+  maxConcurrency    Int               @default(1)
+  activeSlots       Int               @default(0)
+  pollIntervalMs    Int               @default(1000)
+  
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  claimedJobs       BackgroundJob[]
+  attempts          JobAttempt[]
+  events            JobEvent[]
+
+  @@index([status, lastHeartbeatAt])
+  @@index([instanceId])
+}
+
+// Job Processing Attempt History
+model JobAttempt {
+  id                String            @id @default(cuid())
+  jobId             String
+  job               BackgroundJob     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  workerId          String?
+  worker            BackgroundWorker? @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  
+  attemptNumber     Int
+  startedAt         DateTime          @default(now())
+  finishedAt        DateTime?
+  
+  outcome           String            @default("RUNNING") // SUCCESS, FAILED, TIMED_OUT, RETRYABLE_ERROR, NON_RETRYABLE_ERROR
+  errorCode         String?
+  errorMessage      String?
+  durationMs        Int?
+  correlationId     String
+  
+  createdAt         DateTime          @default(now())
+
+  @@index([jobId, attemptNumber])
+  @@index([workerId])
+}
+
+// Append-Only Job Lifecycle Event Stream
+model JobEvent {
+  id                String            @id @default(cuid())
+  jobId             String
+  job               BackgroundJob     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  
+  eventType         String            // SUBMITTED, SCHEDULED, CLAIMED, STARTED, HEARTBEAT, RETRY_WAIT, COMPLETED, FAILED, DEAD_LETTERED, CANCELLED, RECOVERED
+  previousStatus    String?
+  newStatus         String
+  
+  workerId          String?
+  worker            BackgroundWorker? @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  
+  metadata          String            @default("{}") // Structured JSON metadata
+  createdAt         DateTime          @default(now())
+
+  @@index([jobId, createdAt])
+  @@index([eventType])
+}
+
+// Quarantined Dead-Letter Records
+model DeadLetterRecord {
+  id                    String            @id @default(cuid())
+  jobId                 String            @unique
+  job                   BackgroundJob     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  
+  tenantId              String
+  tenant                User              @relation("UserDeadLetters", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  reason                String            // MAX_ATTEMPTS_EXCEEDED, FATAL_NON_RETRYABLE_ERROR, SECURITY_VIOLATION
+  finalError            String
+  attemptCount          Int
+  originalPayloadHash   String
+  
+  quarantinedAt         DateTime          @default(now())
+  reviewedAt            DateTime?
+  reviewedBy            String?
+  resolution            String?           // PENDING_REVIEW, RESOLVED, CANCELLED, REQUEUED
+  resolutionMetadata    String?           @default("{}")
+  
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([tenantId, resolution])
+  @@index([quarantinedAt])
+}
+
+// =============================================================================
+// MILESTONE 9.2: DISTRIBUTED WORKER SCALING, METRICS & OPENTELEMETRY
+// =============================================================================
+
+// Persisted Operational Alerts with Lifecycle & Deduplication
+model OperationalAlert {
+  id                    String            @id @default(cuid())
+  tenantId              String?
+  tenant                User?             @relation("UserOperationalAlerts", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  alertType             String            // QUEUE_BACKLOG, WORKER_STALE, RECOVERY_REQUIRED, FAILURE_SPIKE, DEAD_LETTER_GROWTH
+  severity              String            // INFO, WARNING, ERROR, CRITICAL
+  title                 String
+  description           String
+  
+  observedValue         Float
+  threshold             Float
+  unit                  String            @default("count") // count, ms, percentage, ratio
+  
+  resourceType          String            // QUEUE, WORKER, EXECUTION, DEAD_LETTER
+  resourceId            String?           // Target entity ID if specific
+  status                String            @default("OPEN") // OPEN, ACKNOWLEDGED, RESOLVED, SUPPRESSED
+  
+  deduplicationKey      String            // e.g. "QUEUE_BACKLOG:tenant123"
+  firstDetectedAt       DateTime          @default(now())
+  lastDetectedAt        DateTime          @default(now())
+  
+  acknowledgedAt        DateTime?
+  acknowledgedBy        String?
+  resolvedAt            DateTime?
+  resolvedBy            String?
+  resolutionNotes       String?
+  
+  metadata              String            @default("{}") // Structured context JSON
+  
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([tenantId, status])
+  @@index([deduplicationKey, status])
+  @@index([severity, status])
+  @@index([createdAt])
+}
+
+// Persisted Worker Capacity Analysis & Scaling Recommendations
+model WorkerCapacitySnapshot {
+  id                    String            @id @default(cuid())
+  totalWorkers          Int
+  activeWorkers         Int
+  idleWorkers           Int
+  busyWorkers           Int
+  unhealthyWorkers      Int
+  
+  queuedJobs            Int
+  availableSlots        Int
+  totalSlots            Int               @default(1)
+  queuePressure         Float             // Ratio of eligible queued jobs to available slots
+  
+  recommendation        String            // NO_CHANGE, INCREASE_CAPACITY, REDUCE_CAPACITY, INVESTIGATE_UNHEALTHY_WORKERS
+  reason                String
+  evidence              String            @default("{}") // Validated JSON evidence
+  
+  isAdvisoryOnly        Boolean           @default(true) // Explicit marker: recommendation is not executed infrastructure provisioning
+  
+  recordedAt            DateTime          @default(now())
+
+  @@index([recordedAt])
+  @@index([recommendation])
+}
+
+// Point-in-Time Telemetry Snapshot
+model TelemetrySnapshot {
+  id                    String            @id @default(cuid())
+  metricName            String            // e.g. "mandate.jobs.queue_depth"
+  metricValue           Float
+  metricUnit            String            @default("")
+  dimensions            String            @default("{}") // Bounded JSON dimension tags
+  recordedAt            DateTime          @default(now())
+
+  @@index([metricName, recordedAt])
+}
+
+// =============================================================================
+// MILESTONE 9.3: AUTOMATED RECONCILIATION, INCIDENT MANAGEMENT & RECOVERY
+// =============================================================================
+
+// High-level reconciliation batch run
+model ReconciliationRun {
+  id                    String            @id @default(cuid())
+  tenantId              String?
+  tenant                User?             @relation("UserReconciliationRuns", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  runType               String            @default("FULL") // FULL, TARGETED_EXECUTION, TARGETED_JOB, TARGETED_WORKER, TARGETED_PROVIDER
+  status                String            @default("RUNNING") // RUNNING, COMPLETED, FAILED, PARTIAL
+  targetScope           String?           // Optional targeted filter
+  
+  totalEvaluated        Int               @default(0)
+  matchedCount          Int               @default(0)
+  mismatchCount         Int               @default(0)
+  ambiguousCount        Int               @default(0)
+  findingsCount         Int               @default(0)
+  
+  startedAt             DateTime          @default(now())
+  completedAt           DateTime?
+  errorDetails          String?
+  metadata              String            @default("{}") // Structured JSON
+  
+  findings              ReconciliationFinding[]
+  evidences             ReconciliationEvidence[]
+
+  @@index([tenantId, status])
+  @@index([runType, startedAt])
+  @@index([startedAt])
+}
+
+// Individual finding from a reconciliation run
+model ReconciliationFinding {
+  id                    String            @id @default(cuid())
+  runId                 String
+  run                   ReconciliationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  
+  entityType            String            // EXECUTION, JOB, WORKER, PROVIDER, FINANCIAL_RESERVATION
+  entityId              String
+  internalState         String            // Internal recorded state
+  externalState         String?           // Verified external state (or null if missing)
+  classification        String            // MATCHED, PENDING_CONFIRMATION, INTERNAL_ONLY, EXTERNAL_ONLY, STATE_MISMATCH, AMBIGUOUS, UNAVAILABLE
+  severity              String            // SEV-1, SEV-2, SEV-3, SEV-4, INFO
+  details               String?
+  discrepancyId         String?           // Associated ExecutionDiscrepancy id if created/linked
+  
+  createdAt             DateTime          @default(now())
+  evidences             ReconciliationEvidence[]
+
+  @@index([runId, entityType])
+  @@index([entityId, entityType])
+  @@index([classification])
+}
+
+// Cryptographically hashed evidence observed during reconciliation
+model ReconciliationEvidence {
+  id                    String            @id @default(cuid())
+  runId                 String?
+  run                   ReconciliationRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
+  findingId             String?
+  finding               ReconciliationFinding? @relation(fields: [findingId], references: [id], onDelete: SetNull)
+  
+  entityType            String
+  entityId              String
+  sourceProvider        String            // near_rpc, fastnear, outlayer, local_db, worker_heartbeat
+  observedState         String
+  payloadHash           String            // Canonical SHA-256 of raw data
+  rawEvidenceJson       String            // Clean sanitized evidence payload (NO SECRETS)
+  confidence            Float             @default(1.0) // 0.0 - 1.0 confidence score
+  
+  createdAt             DateTime          @default(now())
+
+  @@index([entityId, entityType])
+  @@index([sourceProvider])
+  @@index([payloadHash])
+}
+
+// Persistent deduplicated discrepancies requiring tracking and action
+model ExecutionDiscrepancy {
+  id                    String            @id @default(cuid())
+  tenantId              String?
+  tenant                User?             @relation("UserDiscrepancies", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  entityType            String            // EXECUTION, JOB, WORKER, PROVIDER, FINANCIAL_RESERVATION
+  entityId              String
+  category              String            // FINANCIAL_AMBIGUITY, STATE_DESYNC, ORPHANED_JOB, STALE_WORKER, RPC_TIMEOUT, LEASE_EXPIRED
+  severity              String            // SEV-1, SEV-2, SEV-3, SEV-4
+  status                String            @default("OPEN") // OPEN, ACKNOWLEDGED, RECOVERY_QUEUED, RESOLVED, IGNORED
+  deduplicationKey      String            @unique
+  
+  internalState         String
+  externalState         String?
+  recommendedResponse   String            // RECONCILE_ONLY, RETRY_NON_FINANCIAL_JOB, MANUAL_FINANCIAL_REVIEW, etc.
+  
+  incidentId            String?
+  incident              Incident?         @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+  
+  firstDetectedAt       DateTime          @default(now())
+  lastObservedAt        DateTime          @default(now())
+  resolvedAt            DateTime?
+  resolutionNotes       String?
+  metadata              String            @default("{}")
+
+  @@index([tenantId, status])
+  @@index([entityType, entityId])
+  @@index([severity, status])
+  @@index([firstDetectedAt])
+}
+
+// Operational Incidents with full lifecycle, severity and escalation
+model Incident {
+  id                    String            @id @default(cuid())
+  tenantId              String?
+  tenant                User?             @relation("UserIncidents", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  incidentNumber        String            @unique // e.g. "INC-2026-0001"
+  title                 String
+  description           String
+  category              String            // FINANCIAL_AMBIGUITY, SYSTEM_DEGRADATION, PROVIDER_OUTAGE, WORKER_STARVATION, RECOVERY_FAILURE
+  severity              String            // SEV-1, SEV-2, SEV-3, SEV-4
+  status                String            @default("DETECTED") // DETECTED, TRIAGED, ACKNOWLEDGED, INVESTIGATING, MITIGATING, RECOVERY_PENDING, VERIFYING, RESOLVED, ESCALATED, MANUAL_INTERVENTION_REQUIRED
+  currentStage          String            @default("DETECTED")
+  source                String            @default("RECONCILIATION") // RECONCILIATION, TELEMETRY_ALERT, DEAD_LETTER, MANUAL
+  
+  targetEntityType      String?           // EXECUTION, JOB, WORKER, PROVIDER
+  targetEntityId        String?
+  deduplicationKey      String?           @unique
+  
+  assignedTeam          String?           // infrastructure, security, finance, core_platform
+  assignedTo            String?           // User id or operator
+  
+  acknowledgedAt        DateTime?
+  acknowledgedBy        String?
+  resolvedAt            DateTime?
+  resolvedBy            String?
+  resolutionSummary     String?
+  
+  metadata              String            @default("{}") // Structured context JSON
+  detectedAt            DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  
+  timelineEvents        IncidentTimelineEvent[]
+  discrepancies         ExecutionDiscrepancy[]
+  recoveryPlans         RecoveryPlan[]
+  assignments           IncidentAssignment[]
+
+  @@index([tenantId, status])
+  @@index([severity, status])
+  @@index([currentStage])
+  @@index([detectedAt])
+}
+
+// Append-only audit timeline for an incident
+model IncidentTimelineEvent {
+  id                    String            @id @default(cuid())
+  incidentId            String
+  incident              Incident          @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  
+  eventType             String            // CREATED, STAGE_CHANGED, STATUS_CHANGED, ASSIGNED, ESCALATED, RECOVERY_PLANNED, RECOVERY_APPROVED, RECOVERY_EXECUTED, RECOVERY_VERIFIED, RESOLVED, COMMENT
+  previousStatus        String?
+  newStatus             String?
+  actorId               String?           // System or userId
+  actorType             String            @default("SYSTEM") // SYSTEM, USER, OPERATOR
+  notes                 String
+  evidenceHash          String?
+  metadata              String            @default("{}")
+  createdAt             DateTime          @default(now())
+
+  @@index([incidentId, createdAt])
+  @@index([eventType])
+}
+
+// Incident assignment history
+model IncidentAssignment {
+  id                    String            @id @default(cuid())
+  incidentId            String
+  incident              Incident          @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  
+  assignedTo            String            // User ID or team identifier
+  assignedBy            String            // User ID or SYSTEM
+  role                  String            @default("RESPONDER") // LEAD_RESPONDER, INVESTIGATOR, APPROVER, OBSERVER
+  assignedAt            DateTime          @default(now())
+
+  @@index([incidentId, assignedAt])
+}
+
+// Safe deterministic recovery plan
+model RecoveryPlan {
+  id                    String            @id @default(cuid())
+  incidentId            String?
+  incident              Incident?         @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+  tenantId              String?
+  tenant                User?             @relation("UserRecoveryPlans", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  targetEntityType      String            // EXECUTION, JOB, WORKER, PROVIDER
+  targetEntityId        String
+  strategy              String            // RECONCILE_ONLY, RETRY_NON_FINANCIAL_JOB, RECLAIM_EXPIRED_WORKER_LEASE, RECONNECT_PROVIDER, RESUME_SAFE_JOB, EXECUTION_STATUS_CHECK, MANUAL_FINANCIAL_REVIEW
+  status                String            @default("DRAFT") // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, EXECUTING, EXECUTED, VERIFIED, FAILED, CANCELLED
+  isFinancial           Boolean           @default(false)
+  
+  actionPayloadJson     String            // Parameterized actions
+  payloadHash           String            // Canonical SHA-256 of actionPayloadJson
+  requiresApproval      Boolean           @default(true) // Financial operations ALWAYS require approval!
+  mandateVersion        Int?              // Bound mandate version for concurrency and safety
+  
+  createdBy             String            @default("SYSTEM")
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  
+  approvals             RecoveryApproval[]
+  attempts              RecoveryAttempt[]
+  verifications         RecoveryVerification[]
+
+  @@index([incidentId])
+  @@index([targetEntityType, targetEntityId])
+  @@index([status])
+}
+
+// Cryptographic and role-bound approval for a recovery plan
+model RecoveryApproval {
+  id                    String            @id @default(cuid())
+  planId                String
+  plan                  RecoveryPlan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  
+  approverId            String
+  approverRole          String            // OWNER, OPERATOR, SECURITY_ADMIN
+  approverType          String            @default("HUMAN") // STRICT: AI agents can NEVER approve financial recovery!
+  status                String            @default("PENDING") // PENDING, APPROVED, REJECTED, EXPIRED
+  
+  payloadHash           String            // Must match plan's payloadHash at moment of approval
+  mandateVersion        Int?              // Bound mandate version to prevent TOCTOU
+  expiresAt             DateTime          // Approval TTL
+  approvedAt            DateTime?
+  rejectedAt            DateTime?
+  rejectionReason       String?
+  notes                 String?
+  signature             String?           // Cryptographic signature of approval
+  createdAt             DateTime          @default(now())
+
+  @@index([planId, status])
+}
+
+// Recorded execution attempt of a recovery plan
+model RecoveryAttempt {
+  id                    String            @id @default(cuid())
+  planId                String
+  plan                  RecoveryPlan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  
+  attemptNumber         Int               @default(1)
+  executedBy            String            // System or userId
+  status                String            @default("RUNNING") // RUNNING, SUCCESS, FAILED, TIMED_OUT, AMBIGUOUS
+  executionResultJson   String            @default("{}")
+  errorDetails          String?
+  startedAt             DateTime          @default(now())
+  finishedAt            DateTime?
+  
+  verifications         RecoveryVerification[]
+
+  @@index([planId, attemptNumber])
+}
+
+// Independent verification of recovery outcome
+model RecoveryVerification {
+  id                    String            @id @default(cuid())
+  planId                String
+  plan                  RecoveryPlan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  attemptId             String?
+  attempt               RecoveryAttempt?  @relation(fields: [attemptId], references: [id], onDelete: SetNull)
+  
+  verificationStrategy  String            // INDEPENDENT_RPC_QUERY, DATABASE_CONSISTENCY_CHECK, WORKER_STATE_CHECK
+  isVerified            Boolean           @default(false)
+  outcomeSummary        String
+  evidenceHash          String
+  rawEvidenceJson       String            @default("{}")
+  verifiedAt            DateTime          @default(now())
+
+  @@index([planId, isVerified])
+}
+
+// =============================================================================
+// MILESTONE 9.4: OPERATIONAL CONTROLS, RESILIENCE & DISASTER RECOVERY
+// =============================================================================
+
+// Persistent Global Operational Control Plane State
+model OperationalControlState {
+  id                    String            @id @default(cuid())
+  mode                  String            @default("NORMAL") // NORMAL, FINANCIAL_EXECUTION_PAUSED, ALL_AGENT_EXECUTION_PAUSED, MAINTENANCE_MODE, SECURITY_LOCKDOWN
+  previousMode          String?
+  reason                String
+  updatedBy             String            // Operator ID
+  updatedByRole         String            // OWNER, SECURITY_ADMIN, OPERATOR
+  incidentId            String?           // Optional linked incident
+  metadata              String            @default("{}") // Structured JSON
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([mode])
+  @@index([updatedAt])
+}
+
+// Persistent Operational Control Audit Trail
+model OperationalAuditRecord {
+  id                    String            @id @default(cuid())
+  actionType            String            // EMERGENCY_PAUSE, RESUME_EXECUTION, MAINTENANCE_START, MAINTENANCE_END, SECURITY_LOCKDOWN, LOCKDOWN_RELEASE, BACKUP_CREATED, RESTORE_EXECUTED, DRILL_RUN
+  mode                  String
+  actorId               String
+  actorRole             String
+  reason                String
+  ipAddress             String?
+  payloadHash           String?
+  details               String            @default("{}")
+  timestamp             DateTime          @default(now())
+
+  @@index([actionType, timestamp])
+  @@index([actorId])
+}
+
+// Immutable Database Backup Manifest
+model DatabaseBackupRecord {
+  id                    String            @id @default(cuid())
+  backupFileName        String
+  backupFilePath        String
+  backupType            String            @default("FULL") // FULL, SNAPSHOT, DRILL
+  status                String            @default("COMPLETED") // RUNNING, COMPLETED, FAILED, RESTORING, CORRUPTED
+  sizeBytes             Int
+  checksumSha256        String
+  schemaVersion         String            @default("1.0")
+  appVersion            String            @default("1.0.0")
+  isEncrypted           Boolean           @default(false)
+  encryptionAlgorithm   String?
+  createdBy             String            // Operator ID or SYSTEM
+  trigger               String            @default("MANUAL") // MANUAL, SCHEDULED, DRILL
+  durationMs            Int               @default(0)
+  metadata              String            @default("{}")
+  createdAt             DateTime          @default(now())
+  expiresAt             DateTime?
+  
+  restores              DatabaseRestoreRecord[]
+
+  @@index([status, createdAt])
+  @@index([checksumSha256])
+}
+
+// Database Restoration Audit & Post-Restore Verification
+model DatabaseRestoreRecord {
+  id                            String                @id @default(cuid())
+  backupId                      String
+  backup                        DatabaseBackupRecord  @relation(fields: [backupId], references: [id], onDelete: Cascade)
+  status                        String                @default("RUNNING") // RUNNING, VERIFYING, RESTORED, RECONCILING, COMPLETED, FAILED
+  restoredBy                    String
+  restoredByRole                String
+  targetPath                    String?
+  isDrill                       Boolean               @default(false)
+  durationMs                    Int                   @default(0)
+  preRestoreReconciliationJson  String                @default("{}")
+  postRestoreReconciliationJson String                @default("{}")
+  financialStateVerified        Boolean               @default(false)
+  errorDetails                  String?
+  startedAt                     DateTime              @default(now())
+  completedAt                   DateTime?
+
+  @@index([backupId, status])
+}
+
+// Persistent Circuit Breakers for External Providers
+model ProviderCircuitBreakerState {
+  id                    String            @id @default(cuid())
+  providerId            String            @unique // e.g. "near_rpc_testnet", "outlayer_primary", "fastnear_rpc"
+  state                 String            @default("CLOSED") // CLOSED, OPEN, HALF_OPEN
+  failureCount          Int               @default(0)
+  successCount          Int               @default(0)
+  lastFailureTime       DateTime?
+  lastSuccessTime       DateTime?
+  nextProbeTime         DateTime?
+  failureThreshold      Int               @default(5)
+  cooldownMs            Int               @default(30000)
+  lastErrorMessage      String?
+  updatedAt             DateTime          @updatedAt
+
+  @@index([state])
+}
+
+// Repeatable Failure Injection & Recovery Drill History
+model ResilienceDrillRun {
+  id                    String            @id @default(cuid())
+  drillType             String            // WORKER_CRASH, RPC_TIMEOUT, BACKPRESSURE_OVERLOAD, BACKUP_RESTORE, RECOVERY_RESTART, LOCKDOWN_ENFORCEMENT
+  status                String            @default("RUNNING") // RUNNING, PASSED, FAILED
+  initiatedBy           String
+  targetScope           String
+  assertionsPassed      Int               @default(0)
+  assertionsFailed      Int               @default(0)
+  durationMs            Int               @default(0)
+  errorDetails          String?
+  reportJson            String            @default("{}")
+  createdAt             DateTime          @default(now())
+  completedAt           DateTime?
+
+  @@index([drillType, status])
+}
+
+// =============================================================================
+// MILESTONE 9.5: STAGE 5 PRODUCTION DURABLE DISPATCH INTENT
+// =============================================================================
+
+// Durable Dispatch Intent Record
+// Guarantees stable idempotency identity and prevents race conditions between lease check and provider dispatch
+model DispatchIntent {
+  id              String        @id @default(cuid())
+  executionId     String        @unique
+  idempotencyKey  String        @unique
+  jobId           String?
+  leaseGeneration Int?
+  status          String        @default("PENDING") // PENDING, DISPATCHED, CONFIRMED, ABORTED
+  targetProvider  String        @default("OUTLAYER")
+  payloadHash     String
+  createdAt       DateTime      @default(now())
+  dispatchedAt    DateTime?
+  completedAt     DateTime?
+
+  @@index([idempotencyKey])
+  @@index([jobId])
+}
+
+
+
+
+
+
+
+
