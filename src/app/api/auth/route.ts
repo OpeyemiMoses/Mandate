@@ -5,7 +5,6 @@ import { yoctoToNear } from "@/lib/yocto";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { SessionService } from "@/lib/auth/sessionService";
 import { WalletAuthService } from "@/lib/auth/walletAuthService";
-import { recordAuditEvent } from "@/lib/auditLedger";
 
 export const dynamic = "force-dynamic";
 
@@ -154,18 +153,6 @@ export async function POST(req: Request) {
 
     // 4. Query live NEAR account state
     const rpcState = await getNearAccountState(cleanAccountId);
-
-    await recordAuditEvent({
-      userId: user.id,
-      eventType: "WALLET_CONNECTED",
-      verdict: "SUCCESS",
-      description: `Authenticated personal NEAR wallet: ${cleanAccountId}`,
-      details: {
-        nearAccountId: cleanAccountId,
-        authMethod: signature ? "CRYPTOGRAPHIC_SIGNATURE" : "DEVELOPMENT_BYPASS",
-        onchainBalanceYocto: rpcState?.amountYocto || "0",
-      },
-    });
 
     const response = NextResponse.json({
       success: true,

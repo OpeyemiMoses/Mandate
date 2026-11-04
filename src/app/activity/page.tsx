@@ -80,6 +80,9 @@ export default function ActivityPage() {
 
   // Filter activities by category and search
   const filtered = activities.filter((a) => {
+    // Exclude personal wallet connection events from ledger display
+    if (a.title === "WALLET CONNECTED" || a.title?.toLowerCase().includes("wallet connect")) return false;
+
     // 1. Category Filter matching prompt specification
     if (categoryFilter === "payments" && a.category !== "payment") return false;
     if (categoryFilter === "approvals" && a.category !== "approval") return false;

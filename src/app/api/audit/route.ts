@@ -23,6 +23,9 @@ export async function GET(req: Request) {
           { mandate: { userId: user.id } },
         ],
       },
+      {
+        eventType: { not: "WALLET_CONNECTED" },
+      },
     ];
 
     if (mandateId) {

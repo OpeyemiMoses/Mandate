@@ -502,7 +502,10 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
       if (auditRes.ok) {
         const data = await auditRes.json();
         if (data.logs) {
-          const mappedLogs: ActivityEvent[] = data.logs.map((l: any) => {
+          const visibleLogs = data.logs.filter(
+            (l: any) => l.eventType !== "WALLET_CONNECTED" && !l.eventType.includes("WALLET_CONNECT")
+          );
+          const mappedLogs: ActivityEvent[] = visibleLogs.map((l: any) => {
             let category: ActivityEvent["category"] = "policy";
             let badgeText: ActivityEvent["badgeText"] = "Info";
             let badgeVariant: ActivityEvent["badgeVariant"] = "info";
