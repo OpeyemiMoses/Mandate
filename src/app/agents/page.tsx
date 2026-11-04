@@ -33,6 +33,7 @@ import { useMandate } from "@/context/MandateContext";
 import { FundAndWithdrawModals } from "@/components/FundAndWithdrawModals";
 import { AgentExecutionModal } from "@/components/AgentExecutionModal";
 import { AgentToolModal } from "@/components/AgentToolModal";
+import { ModalPortal } from "@/components/ModalPortal";
 import { truncateAddress } from "@/lib/formatters";
 
 interface AgentItem {
@@ -578,152 +579,147 @@ export default function AgentsPage() {
         )}
 
         {/* Create Agent Modal with Color Selector */}
-        {showCreateModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-            <div
-              className="relative w-full max-w-lg rounded-2xl bg-[#0F0F12] border border-[#23232A] p-6 shadow-2xl text-[#E5E7EB] space-y-5"
-              style={{
-                boxShadow: "0 20px 60px -15px rgba(255, 59, 48, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05)",
-              }}
-            >
-              <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-xl bg-[#1A1416] border border-[#FF3B30]/30 flex items-center justify-center">
-                      <Bot className="w-4 h-4 text-[#FF3B30]" />
-                    </span>
-                    <h2 className="text-lg font-bold text-white tracking-tight">
-                      Issue Agent Spending Card
-                    </h2>
-                  </div>
-                  <p className="text-xs text-[#A1A1AA]">
-                    Mandate provisions a dedicated OutLayer TEE wallet and custom metallic card.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-white/5 transition-colors"
-                >
-                  ✕
-                </button>
+        <ModalPortal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          maxWidth="max-w-lg"
+        >
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-red-50 dark:bg-[#1A1416] border border-red-200 dark:border-[#FF3B30]/30 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-[#FF3B30]" />
+                </span>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+                  Issue Agent Spending Card
+                </h2>
               </div>
-
-              <form onSubmit={handleCreateAgent} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">
-                    Agent Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    placeholder="e.g. Research & Procurement Agent, Treasury Bot"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#141419] border border-[#2A2A34] focus:border-[#FF3B30] text-sm text-white placeholder-zinc-500 outline-none transition-all"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">
-                    Primary Domain / Purpose
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newPurpose}
-                    onChange={(e) => setNewPurpose(e.target.value)}
-                    placeholder="e.g. Market Intelligence, Dev Infrastructure, Supplier Quotes"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#141419] border border-[#2A2A34] focus:border-[#FF3B30] text-sm text-white placeholder-zinc-500 outline-none transition-all"
-                  />
-                </div>
-
-                {/* Card Color Theme Picker */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-zinc-300 block">
-                    Virtual Card Metallic Theme
-                  </label>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                    {COLOR_OPTIONS.map((col) => {
-                      const isSelected = newColor === col.id;
-                      return (
-                        <button
-                          key={col.id}
-                          type="button"
-                          onClick={() => setNewColor(col.id)}
-                          className={`p-2 rounded-xl border flex flex-col items-center gap-1.5 transition-all ${
-                            isSelected
-                              ? "bg-white/10 border-white text-white"
-                              : "bg-[#141419] border-[#252530] text-zinc-400 hover:text-white"
-                          }`}
-                        >
-                          <span className={`w-4 h-4 rounded-full ${col.dotClass}`} />
-                          <span className="text-[10px] font-mono truncate">{col.label.split(" ")[0]}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">
-                    Description & Assigned Responsibilities
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                    placeholder="Researches verified services, compares quotes, and proposes payments within policy limits."
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#141419] border border-[#2A2A34] focus:border-[#FF3B30] text-sm text-white placeholder-zinc-500 outline-none transition-all resize-none"
-                  />
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-[#14141A] border border-white/5 flex items-start gap-2.5 text-[11px] text-[#A1A1AA]">
-                  <Lock className="w-4 h-4 text-[#FF3B30] shrink-0 mt-0.5" />
-                  <span>
-                    When created, OutLayer TEE enclave derives a dedicated hardware-isolated Ed25519 account for this agent.
-                  </span>
-                </div>
-
-                {createError && (
-                  <div className="p-2.5 rounded-lg bg-[#FF3B30]/10 border border-[#FF3B30]/25 text-xs text-[#FF3B30] flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{createError}</span>
-                  </div>
-                )}
-
-                <div className="pt-2 flex items-center justify-end gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateModal(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={isCreating || !newName.trim()}
-                    className="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] disabled:opacity-50 transition-all shadow-[0_0_20px_rgba(255,59,48,0.35)] flex items-center gap-2"
-                  >
-                    {isCreating ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        Provisioning Card...
-                      </>
-                    ) : (
-                      <>
-                        Issue Agent Card
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
+              <p className="text-xs text-slate-600 dark:text-[#A1A1AA]">
+                Mandate provisions a dedicated OutLayer TEE wallet and custom metallic card.
+              </p>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(false)}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:text-[#A1A1AA] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+            >
+              ✕
+            </button>
           </div>
-        )}
+
+          <form onSubmit={handleCreateAgent} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-700 dark:text-zinc-300">
+                Agent Name
+              </label>
+              <input
+                type="text"
+                required
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="e.g. Research & Procurement Agent, Treasury Bot"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141419] border border-slate-200 dark:border-[#2A2A34] focus:border-[#FF3B30] text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 outline-none transition-all"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-700 dark:text-zinc-300">
+                Primary Domain / Purpose
+              </label>
+              <input
+                type="text"
+                required
+                value={newPurpose}
+                onChange={(e) => setNewPurpose(e.target.value)}
+                placeholder="e.g. Market Intelligence, Dev Infrastructure, Supplier Quotes"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141419] border border-slate-200 dark:border-[#2A2A34] focus:border-[#FF3B30] text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 outline-none transition-all"
+              />
+            </div>
+
+            {/* Card Color Theme Picker */}
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-700 dark:text-zinc-300 block">
+                Virtual Card Metallic Theme
+              </label>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                {COLOR_OPTIONS.map((col) => {
+                  const isSelected = newColor === col.id;
+                  return (
+                    <button
+                      key={col.id}
+                      type="button"
+                      onClick={() => setNewColor(col.id)}
+                      className={`p-2 rounded-xl border flex flex-col items-center gap-1.5 transition-all ${
+                        isSelected
+                          ? "bg-slate-100 dark:bg-white/10 border-slate-900 dark:border-white text-slate-900 dark:text-white"
+                          : "bg-slate-50 dark:bg-[#141419] border-slate-200 dark:border-[#252530] text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                      }`}
+                    >
+                      <span className={`w-4 h-4 rounded-full ${col.dotClass}`} />
+                      <span className="text-[10px] font-mono truncate">{col.label.split(" ")[0]}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-700 dark:text-zinc-300">
+                Description & Assigned Responsibilities
+              </label>
+              <textarea
+                rows={2}
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                placeholder="Researches verified services, compares quotes, and proposes payments within policy limits."
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-[#141419] border border-slate-200 dark:border-[#2A2A34] focus:border-[#FF3B30] text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 outline-none transition-all resize-none"
+              />
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#14141A] border border-slate-200 dark:border-white/5 flex items-start gap-2.5 text-[11px] text-slate-600 dark:text-[#A1A1AA]">
+              <Lock className="w-4 h-4 text-[#FF3B30] shrink-0 mt-0.5" />
+              <span>
+                When created, OutLayer TEE enclave derives a dedicated hardware-isolated Ed25519 account for this agent.
+              </span>
+            </div>
+
+            {createError && (
+              <div className="p-2.5 rounded-lg bg-[#FF3B30]/10 border border-[#FF3B30]/25 text-xs text-[#FF3B30] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{createError}</span>
+              </div>
+            )}
+
+            <div className="pt-2 flex items-center justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={() => setShowCreateModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="submit"
+                disabled={isCreating || !newName.trim()}
+                className="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] disabled:opacity-50 transition-all shadow-[0_0_20px_rgba(255,59,48,0.35)] flex items-center gap-2"
+              >
+                {isCreating ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Provisioning Card...
+                  </>
+                ) : (
+                  <>
+                    Issue Agent Card
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </ModalPortal>
 
         {/* Fund Agent Modal */}
         <FundAndWithdrawModals

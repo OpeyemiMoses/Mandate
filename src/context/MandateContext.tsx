@@ -609,14 +609,32 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
     }
   }, [getHeaders]);
 
-  // Initial load and periodic live balance synchronization
+  // Initial load and periodic live balance synchronization with instant window focus refresh
   useEffect(() => {
     if (accountId || sessionToken) {
       refreshData();
+
+      // Fast polling (3.5s) while tab is visible so incoming onchain transfers reflect immediately
       const interval = setInterval(() => {
-        refreshData();
-      }, 15000);
-      return () => clearInterval(interval);
+        if (typeof document !== "undefined" && document.visibilityState === "visible") {
+          refreshData();
+        }
+      }, 3500);
+
+      const handleFocus = () => {
+        if (typeof document !== "undefined" && document.visibilityState === "visible") {
+          refreshData();
+        }
+      };
+
+      window.addEventListener("focus", handleFocus);
+      document.addEventListener("visibilitychange", handleFocus);
+
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener("focus", handleFocus);
+        document.removeEventListener("visibilitychange", handleFocus);
+      };
     }
   }, [refreshData, accountId, sessionToken]);
 

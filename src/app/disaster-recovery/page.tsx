@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { OperatorGuard } from "@/components/OperatorGuard";
+import { ModalPortal } from "@/components/ModalPortal";
 
 export default function DisasterRecoveryPage() {
   const [manifests, setManifests] = useState<any[]>([]);
@@ -299,52 +300,52 @@ export default function DisasterRecoveryPage() {
         </div>
 
         {/* Restore Confirmation Modal */}
-        {selectedBackup && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="bg-[#121216] border border-[#2B2B36] rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
+        <ModalPortal isOpen={!!selectedBackup} onClose={() => setSelectedBackup(null)}>
+          {selectedBackup && (
+            <div className="bg-white dark:bg-[#121216] border border-slate-200 dark:border-[#2B2B36] rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-white font-bold text-lg">
+                <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-lg">
                   {isDrill ? (
                     <>
-                      <FileCheck2 className="w-5 h-5 text-blue-400" />
+                      <FileCheck2 className="w-5 h-5 text-blue-500 dark:text-blue-400" />
                       <span>Execute Disaster Recovery Drill</span>
                     </>
                   ) : (
                     <>
-                      <AlertTriangle className="w-5 h-5 text-red-400" />
+                      <AlertTriangle className="w-5 h-5 text-red-500 dark:text-red-400" />
                       <span>Live Production Restore Confirmation</span>
                     </>
                   )}
                 </div>
-                <p className="text-xs text-[#A1A1AA]">
+                <p className="text-xs text-slate-500 dark:text-[#A1A1AA]">
                   {isDrill
-                    ? "Drills perform an isolated, non-destructive restoration to test checksum validity and SQLite schema integrity without touching live production tables."
-                    : "Live restoration overwrites the active SQLite database with the selected backup snapshot. System must be in MAINTENANCE_MODE. Post-restore financial reconciliation will run automatically."}
+                    ? "Drills perform an isolated, non-destructive restoration to test checksum validity and schema integrity without touching live production tables."
+                    : "Live restoration overwrites the active database with the selected backup snapshot. System must be in MAINTENANCE_MODE. Post-restore financial reconciliation will run automatically."}
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-[#18181F] border border-[#2B2B36] text-xs space-y-2">
-                <div>Backup: <strong className="text-white">{selectedBackup.fileName}</strong></div>
-                <div>Size: <span className="text-zinc-300">{Math.round(selectedBackup.sizeBytes / 1024 / 1024 * 10) / 10} MB</span></div>
-                <div>Checksum: <span className="font-mono text-zinc-400">{selectedBackup.checksumSha256}</span></div>
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#18181F] border border-slate-200 dark:border-[#2B2B36] text-xs space-y-2 text-slate-800 dark:text-slate-200">
+                <div>Backup: <strong className="text-slate-900 dark:text-white">{selectedBackup.fileName}</strong></div>
+                <div>Size: <span className="text-slate-600 dark:text-zinc-300">{Math.round(selectedBackup.sizeBytes / 1024 / 1024 * 10) / 10} MB</span></div>
+                <div>Checksum: <span className="font-mono text-slate-500 dark:text-zinc-400 break-all">{selectedBackup.checksumSha256}</span></div>
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="text-zinc-400 block mb-1">Restoring Operator</label>
+                  <label className="text-slate-600 dark:text-zinc-400 block mb-1">Restoring Operator</label>
                   <input
                     type="text"
                     value={operatorId}
                     onChange={(e) => setOperatorId(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#1A1A22] border border-[#333342] rounded-lg text-white"
+                    className="w-full px-3 py-2 bg-slate-100 dark:bg-[#1A1A22] border border-slate-300 dark:border-[#333342] rounded-lg text-slate-900 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400 block mb-1">Elevated Role</label>
+                  <label className="text-slate-600 dark:text-zinc-400 block mb-1">Elevated Role</label>
                   <select
                     value={operatorRole}
                     onChange={(e) => setOperatorRole(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#1A1A22] border border-[#333342] rounded-lg text-white"
+                    className="w-full px-3 py-2 bg-slate-100 dark:bg-[#1A1A22] border border-slate-300 dark:border-[#333342] rounded-lg text-slate-900 dark:text-white"
                   >
                     <option value="SECURITY_ADMIN">SECURITY_ADMIN</option>
                     <option value="OWNER">OWNER</option>
@@ -357,7 +358,7 @@ export default function DisasterRecoveryPage() {
                 <button
                   onClick={() => setSelectedBackup(null)}
                   disabled={actionLoading}
-                  className="w-1/2 py-2.5 rounded-xl bg-[#1E1E26] hover:bg-[#282833] text-zinc-300 text-xs font-medium transition-colors"
+                  className="w-1/2 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-[#1E1E26] dark:hover:bg-[#282833] text-slate-700 dark:text-zinc-300 text-xs font-medium transition-colors"
                 >
                   Cancel
                 </button>
@@ -372,8 +373,8 @@ export default function DisasterRecoveryPage() {
                 </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </ModalPortal>
       </div>
       </OperatorGuard>
     </AppShell>

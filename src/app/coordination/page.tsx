@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
+import { ModalPortal } from "@/components/ModalPortal";
 import Link from "next/link";
 import {
   Network,
@@ -384,110 +385,110 @@ export default function CoordinationCenterPage() {
         )}
 
         {/* Modal: Launch New Coordination Run */}
-        {showModal && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#121215] border border-[#1E1E24] rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl">
-              <div className="flex items-center justify-between pb-3 border-b border-[#1E1E24]">
-                <div className="flex items-center gap-2">
-                  <Network className="w-5 h-5 text-[#FF3B30]" />
-                  <h2 className="text-lg font-bold text-white">Launch Coordination Run</h2>
-                </div>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="text-[#71717A] hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {modalError && (
-                <div className="p-3 rounded-lg bg-[#FF3B30]/10 border border-[#FF3B30]/30 text-xs text-[#FF3B30] flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  {modalError}
-                </div>
-              )}
-
-              <form onSubmit={handleLaunchRun} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-medium text-[#A1A1AA] mb-1.5">
-                    Select Approved Objective
-                  </label>
-                  {approvedObjectives.length === 0 ? (
-                    <div className="p-3 rounded-lg bg-[#18181C] border border-[#26262E] text-xs text-[#A1A1AA]">
-                      No approved objectives found. Please create and approve an objective plan first in the Objectives section.
-                    </div>
-                  ) : (
-                    <select
-                      value={selectedObjectiveId}
-                      onChange={(e) => setSelectedObjectiveId(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl bg-[#18181C] border border-[#26262E] text-white text-xs focus:outline-none focus:border-[#FF3B30]"
-                    >
-                      {approvedObjectives.map((obj) => (
-                        <option key={obj.id} value={obj.id}>
-                          {obj.title} (Priority: {obj.priority})
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-[#A1A1AA] mb-1.5">
-                    Max Parallel Concurrency
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={10}
-                    value={concurrency}
-                    onChange={(e) => setConcurrency(parseInt(e.target.value, 10))}
-                    className="w-full px-3 py-2.5 rounded-xl bg-[#18181C] border border-[#26262E] text-white text-xs font-mono focus:outline-none focus:border-[#FF3B30]"
-                  />
-                  <p className="text-[11px] text-[#71717A] mt-1">
-                    Maximum number of independent non-blocked tasks executed concurrently.
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-xl bg-[#16161A] border border-[#222228] space-y-1">
-                  <div className="text-xs font-medium text-[#E5E7EB] flex items-center gap-1.5">
-                    <Shield className="w-3.5 h-3.5 text-emerald-400" />
-                    Central Financial Authority Invariant
-                  </div>
-                  <p className="text-[11px] text-[#A1A1AA] leading-relaxed">
-                    Workflow planner will match tasks to registered agents, validate DAG cycles, and enforce CAS budget reservations.
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#1E1E24]">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                    className="px-4 py-2 rounded-xl bg-[#18181C] hover:bg-[#222228] text-xs text-[#A1A1AA] font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting || approvedObjectives.length === 0}
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#FF3B30] hover:bg-[#FF3B30]/90 text-white text-xs font-medium disabled:opacity-50 shadow-lg shadow-[#FF3B30]/20"
-                  >
-                    {submitting ? (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        Planning DAG...
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-3.5 h-3.5" />
-                        Plan & Launch
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
+        <ModalPortal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          maxWidth="max-w-lg"
+        >
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#1E1E24]">
+            <div className="flex items-center gap-2">
+              <Network className="w-5 h-5 text-[#FF3B30]" />
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Launch Coordination Run</h2>
             </div>
+            <button
+              onClick={() => setShowModal(false)}
+              className="text-slate-400 hover:text-slate-900 dark:text-[#71717A] dark:hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-        )}
+
+          {modalError && (
+            <div className="p-3 rounded-lg bg-[#FF3B30]/10 border border-[#FF3B30]/30 text-xs text-[#FF3B30] flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              {modalError}
+            </div>
+          )}
+
+          <form onSubmit={handleLaunchRun} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-700 dark:text-[#A1A1AA] mb-1.5">
+                Select Approved Objective
+              </label>
+              {approvedObjectives.length === 0 ? (
+                <div className="p-3 rounded-lg bg-slate-50 dark:bg-[#18181C] border border-slate-200 dark:border-[#26262E] text-xs text-slate-600 dark:text-[#A1A1AA]">
+                  No approved objectives found. Please create and approve an objective plan first in the Objectives section.
+                </div>
+              ) : (
+                <select
+                  value={selectedObjectiveId}
+                  onChange={(e) => setSelectedObjectiveId(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-[#18181C] border border-slate-200 dark:border-[#26262E] text-slate-900 dark:text-white text-xs focus:outline-none focus:border-[#FF3B30]"
+                >
+                  {approvedObjectives.map((obj) => (
+                    <option key={obj.id} value={obj.id}>
+                      {obj.title} (Priority: {obj.priority})
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-700 dark:text-[#A1A1AA] mb-1.5">
+                Max Parallel Concurrency
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={10}
+                value={concurrency}
+                onChange={(e) => setConcurrency(parseInt(e.target.value, 10))}
+                className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-[#18181C] border border-slate-200 dark:border-[#26262E] text-slate-900 dark:text-white text-xs font-mono focus:outline-none focus:border-[#FF3B30]"
+              />
+              <p className="text-[11px] text-slate-500 dark:text-[#71717A] mt-1">
+                Maximum number of independent non-blocked tasks executed concurrently.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#16161A] border border-slate-200 dark:border-[#222228] space-y-1">
+              <div className="text-xs font-medium text-slate-900 dark:text-[#E5E7EB] flex items-center gap-1.5">
+                <Shield className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+                Central Financial Authority Invariant
+              </div>
+              <p className="text-[11px] text-slate-600 dark:text-[#A1A1AA] leading-relaxed">
+                Workflow planner will match tasks to registered agents, validate DAG cycles, and enforce CAS budget reservations.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-[#1E1E24]">
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-[#18181C] dark:hover:bg-[#222228] text-xs text-slate-700 dark:text-[#A1A1AA] font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={submitting || approvedObjectives.length === 0}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#FF3B30] hover:bg-[#FF3B30]/90 text-white text-xs font-medium disabled:opacity-50 shadow-lg shadow-[#FF3B30]/20"
+              >
+                {submitting ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    Planning DAG...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-3.5 h-3.5" />
+                    Plan & Launch
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </ModalPortal>
       </div>
     </AppShell>
   );

@@ -39,8 +39,23 @@ export async function GET(req: Request) {
         if (agent.wallet?.nearAccountId) {
           const rpcState = await getNearAccountState(agent.wallet.nearAccountId);
           if (rpcState) {
-            balanceYocto = rpcState.amountYocto;
+            const onchainYocto = BigInt(rpcState.amountYocto || "0");
+            const dbYocto = BigInt(agent.wallet?.balanceYocto || "0");
+            const effectiveYocto = onchainYocto > dbYocto ? onchainYocto.toString() : dbYocto.toString();
+            balanceYocto = effectiveYocto;
             onchainActive = true;
+
+            if (effectiveYocto !== agent.wallet?.balanceYocto) {
+              prisma.wallet.update({
+                where: { id: agent.wallet.id },
+                data: {
+                  balanceYocto: effectiveYocto,
+                  onChainBalanceYocto: rpcState.amountYocto,
+                  isInitialized: true,
+                  initializationStatus: "READY",
+                },
+              }).catch(() => {});
+            }
           }
         }
 

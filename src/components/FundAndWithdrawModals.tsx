@@ -152,6 +152,9 @@ export function FundAndWithdrawModals({
             txHash: result.txHash,
           });
           await refreshData();
+          setTimeout(() => refreshData(), 1000);
+          setTimeout(() => refreshData(), 2500);
+          setTimeout(() => refreshData(), 4500);
         } else {
           setFeedback({
             type: "error",
@@ -206,6 +209,9 @@ export function FundAndWithdrawModals({
             txHash: data.funding?.txHash || effectiveTxHash,
           });
           await refreshData();
+          setTimeout(() => refreshData(), 1000);
+          setTimeout(() => refreshData(), 2500);
+          setTimeout(() => refreshData(), 4500);
         } else {
           setFeedback({
             type: "error",

@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { GlowingCard } from "@/components/GlowingCard";
+import { ModalPortal } from "@/components/ModalPortal";
 import { useMandate } from "@/context/MandateContext";
 
 interface StepItem {
@@ -1973,43 +1974,43 @@ export default function ObjectiveDetailPage() {
         )}
 
         {/* STEP OUTPUT & EVIDENCE INSPECTOR MODAL (MILESTONE 13.5) */}
-        {selectedStep && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="w-full max-w-xl bg-[#141417] border border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#232329]">
+        <ModalPortal isOpen={!!selectedStep} onClose={() => setSelectedStep(null)}>
+          {selectedStep && (
+            <div className="w-full max-w-xl bg-white dark:bg-[#141417] border border-slate-200 dark:border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#232329]">
                 <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-white">{selectedStep.title}</h3>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">{selectedStep.title}</h3>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-400">
                       {selectedStep.taskType}
                     </span>
                     <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
                       selectedStep.status === "COMPLETED"
-                        ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
-                        : "bg-zinc-800 text-zinc-400 border-zinc-700"
+                        ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                        : "bg-slate-100 text-slate-600 border-slate-300 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700"
                     }`}>
                       {selectedStep.status}
                     </span>
                     {selectedStep.verificationStatus && (
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
                         {selectedStep.verificationStatus}
                       </span>
                     )}
                   </div>
                 </div>
-                <button onClick={() => setSelectedStep(null)} className="text-zinc-500 hover:text-white">✕</button>
+                <button onClick={() => setSelectedStep(null)} className="text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white">✕</button>
               </div>
 
               {selectedStep.resultFingerprint && (
-                <div className="p-2.5 rounded-xl bg-[#09090C] border border-[#1A1A22] text-[11px] font-mono space-y-1">
-                  <span className="text-emerald-400 font-bold text-[10px] uppercase tracking-wider">Canonical SHA-256 Fingerprint</span>
-                  <p className="text-zinc-300 break-all">{selectedStep.resultFingerprint}</p>
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#09090C] border border-slate-200 dark:border-[#1A1A22] text-[11px] font-mono space-y-1">
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold text-[10px] uppercase tracking-wider">Canonical SHA-256 Fingerprint</span>
+                  <p className="text-slate-700 dark:text-zinc-300 break-all">{selectedStep.resultFingerprint}</p>
                 </div>
               )}
 
               <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Structured Output Payload</span>
-                <pre className="p-3 rounded-xl bg-[#09090C] border border-[#1A1A22] text-[11px] font-mono text-zinc-300 overflow-x-auto max-h-72">
+                <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-zinc-500 tracking-wider">Structured Output Payload</span>
+                <pre className="p-3 rounded-xl bg-slate-50 dark:bg-[#09090C] border border-slate-200 dark:border-[#1A1A22] text-[11px] font-mono text-slate-800 dark:text-zinc-300 overflow-x-auto max-h-72">
                   {JSON.stringify(selectedStep.output, null, 2)}
                 </pre>
               </div>
@@ -2017,14 +2018,14 @@ export default function ObjectiveDetailPage() {
               <div className="flex justify-end pt-2">
                 <button
                   onClick={() => setSelectedStep(null)}
-                  className="px-4 py-1.5 rounded-lg text-xs font-semibold text-white bg-zinc-800 hover:bg-zinc-700"
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 dark:text-white dark:bg-zinc-800 dark:hover:bg-zinc-700"
                 >
                   Close
                 </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </ModalPortal>
 
         {/* TAB 8: DURABLE OBJECTIVE CHECKPOINTS (MILESTONE 13.6) */}
         {activeTab === "checkpoints" && (
@@ -2123,29 +2124,29 @@ export default function ObjectiveDetailPage() {
           </div>
         )}
         {/* DELEGATION MODAL */}
-        {delegationModalStep && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="w-full max-w-lg bg-[#141417] border border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#232329]">
+        <ModalPortal isOpen={!!delegationModalStep} onClose={() => setDelegationModalStep(null)}>
+          {delegationModalStep && (
+            <div className="w-full max-w-lg bg-white dark:bg-[#141417] border border-slate-200 dark:border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#232329]">
                 <div className="flex items-center gap-2">
-                  <Share2 className="w-4 h-4 text-indigo-400" />
-                  <h3 className="text-sm font-bold text-white">Governed Task Delegation</h3>
+                  <Share2 className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Governed Task Delegation</h3>
                 </div>
-                <button onClick={() => setDelegationModalStep(null)} className="text-zinc-500 hover:text-white">✕</button>
+                <button onClick={() => setDelegationModalStep(null)} className="text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white">✕</button>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#09090C] border border-[#1A1A22] space-y-1 text-xs">
-                <div className="text-zinc-400">
-                  <span className="text-zinc-500">Task: </span>
-                  <span className="text-white font-medium">{delegationModalStep.title}</span>
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#09090C] border border-slate-200 dark:border-[#1A1A22] space-y-1 text-xs">
+                <div className="text-slate-600 dark:text-zinc-400">
+                  <span className="text-slate-500 dark:text-zinc-500">Task: </span>
+                  <span className="text-slate-900 dark:text-white font-medium">{delegationModalStep.title}</span>
                 </div>
-                <div className="text-zinc-400 font-mono text-[11px]">
-                  <span className="text-zinc-500">Task ID: </span>
+                <div className="text-slate-600 dark:text-zinc-400 font-mono text-[11px]">
+                  <span className="text-slate-500 dark:text-zinc-500">Task ID: </span>
                   <span>{delegationModalStep.stepId}</span>
                 </div>
-                <div className="text-zinc-400 font-mono text-[11px]">
-                  <span className="text-zinc-500">Current Agent: </span>
-                  <span className="text-indigo-400">
+                <div className="text-slate-600 dark:text-zinc-400 font-mono text-[11px]">
+                  <span className="text-slate-500 dark:text-zinc-500">Current Agent: </span>
+                  <span className="text-indigo-600 dark:text-indigo-400 font-medium">
                     {assignments.find((a) => a.taskId === delegationModalStep.stepId)?.agent?.name ||
                       assignments.find((a) => a.taskId === delegationModalStep.stepId)?.agentId ||
                       "None"}
@@ -2155,11 +2156,11 @@ export default function ObjectiveDetailPage() {
 
               <div className="space-y-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-zinc-300">Target Agent for Delegation</label>
+                  <label className="text-xs font-medium text-slate-700 dark:text-zinc-300">Target Agent for Delegation</label>
                   <select
                     value={delegationTargetAgentId}
                     onChange={(e) => setDelegationTargetAgentId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-[#0F0F12] border border-[#232329] text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0F0F12] border border-slate-300 dark:border-[#232329] text-xs text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                   >
                     <option value="">Select target agent...</option>
                     {availableAgents
@@ -2173,24 +2174,24 @@ export default function ObjectiveDetailPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-zinc-300">Governed Delegation Reason (Required)</label>
+                  <label className="text-xs font-medium text-slate-700 dark:text-zinc-300">Governed Delegation Reason (Required)</label>
                   <textarea
                     rows={3}
                     value={delegationReason}
                     onChange={(e) => setDelegationReason(e.target.value)}
                     placeholder="Provide explicit operational rationale for task delegation..."
-                    className="w-full px-3 py-2 rounded-xl bg-[#0F0F12] border border-[#232329] text-xs text-white focus:outline-none focus:border-indigo-500 resize-none"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0F0F12] border border-slate-300 dark:border-[#232329] text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 focus:outline-none focus:border-indigo-500 resize-none"
                   />
-                  <span className="text-[10px] text-zinc-500">
+                  <span className="text-[10px] text-slate-500 dark:text-zinc-500">
                     Delegation transfers task execution lease only. Wallet authority and mandate limits are never delegated.
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#232329]">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-[#232329]">
                 <button
                   onClick={() => setDelegationModalStep(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 dark:text-zinc-400 dark:hover:text-white dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors"
                 >
                   Cancel
                 </button>
@@ -2203,8 +2204,8 @@ export default function ObjectiveDetailPage() {
                 </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </ModalPortal>
 
         {/* TAB 8: DURABLE OBJECTIVE CHECKPOINTS (MILESTONE 13.6) */}
         {activeTab === "checkpoints" && (
@@ -2304,25 +2305,25 @@ export default function ObjectiveDetailPage() {
         )}
 
         {/* ELIGIBILITY MODAL */}
-        {eligibilityModalStep && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="w-full max-w-2xl bg-[#141417] border border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-              <div className="flex items-center justify-between pb-3 border-b border-[#232329] shrink-0">
+        <ModalPortal isOpen={!!eligibilityModalStep} onClose={() => setEligibilityModalStep(null)}>
+          {eligibilityModalStep && (
+            <div className="w-full max-w-2xl bg-white dark:bg-[#141417] border border-slate-200 dark:border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#232329] shrink-0">
                 <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  <h3 className="text-sm font-bold text-white">Agent Eligibility Evaluation</h3>
+                  <Shield className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Agent Eligibility Evaluation</h3>
                 </div>
-                <button onClick={() => setEligibilityModalStep(null)} className="text-zinc-500 hover:text-white">✕</button>
+                <button onClick={() => setEligibilityModalStep(null)} className="text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white">✕</button>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#09090C] border border-[#1A1A22] text-xs space-y-1 shrink-0">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#09090C] border border-slate-200 dark:border-[#1A1A22] text-xs space-y-1 shrink-0">
                 <div className="flex items-center justify-between">
-                  <span className="text-white font-medium">{eligibilityModalStep.title}</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                  <span className="text-slate-900 dark:text-white font-medium">{eligibilityModalStep.title}</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-zinc-800 text-slate-800 dark:text-zinc-300">
                     Type: {eligibilityModalStep.taskType || "EXECUTION"}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-zinc-400">
+                <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-500 dark:text-zinc-400">
                   <span>Req Tools: [{eligibilityModalStep.requiredTools.join(", ") || "None"}]</span>
                   <span>Risk: {eligibilityModalStep.riskClassification}</span>
                 </div>
@@ -2330,27 +2331,27 @@ export default function ObjectiveDetailPage() {
 
               <div className="flex-1 overflow-y-auto space-y-3 pr-1">
                 {eligibilityLoading ? (
-                  <div className="p-8 text-center text-xs text-zinc-400 animate-pulse">
+                  <div className="p-8 text-center text-xs text-slate-500 dark:text-zinc-400 animate-pulse">
                     Evaluating deterministic eligibility criteria across registered agents...
                   </div>
                 ) : eligibilityReports && eligibilityReports.length > 0 ? (
                   eligibilityReports.map((report) => (
                     <div
                       key={report.agentId}
-                      className="p-3.5 rounded-xl bg-[#0F0F12] border border-[#1E1E24] space-y-2 text-xs"
+                      className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0F0F12] border border-slate-200 dark:border-[#1E1E24] space-y-2 text-xs"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Bot className="w-4 h-4 text-indigo-400" />
-                          <span className="font-bold text-white">{report.agentName || report.agentId}</span>
+                          <Bot className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                          <span className="font-bold text-slate-900 dark:text-white">{report.agentName || report.agentId}</span>
                         </div>
                         <span
                           className={`px-2 py-0.5 rounded font-mono text-[10px] font-bold ${
                             report.verdict === "ELIGIBLE"
-                              ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
                               : report.verdict === "REQUIRES_APPROVAL"
-                              ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
-                              : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+                              ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                              : "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
                           }`}
                         >
                           {report.verdict}
@@ -2358,9 +2359,9 @@ export default function ObjectiveDetailPage() {
                       </div>
 
                       {report.reasons && report.reasons.length > 0 && (
-                        <ul className="text-[11px] text-zinc-400 list-disc list-inside space-y-0.5">
+                        <ul className="text-[11px] text-slate-500 dark:text-zinc-400 list-disc list-inside space-y-0.5">
                           {report.reasons.map((r: string, idx: number) => (
-                            <li key={idx} className={report.isEligible ? "text-zinc-400" : "text-rose-300"}>
+                            <li key={idx} className={report.isEligible ? "text-slate-600 dark:text-zinc-400" : "text-rose-600 dark:text-rose-300"}>
                               {r}
                             </li>
                           ))}
@@ -2374,7 +2375,7 @@ export default function ObjectiveDetailPage() {
                               handleAssignSingle(eligibilityModalStep.stepId, report.agentId);
                               setEligibilityModalStep(null);
                             }}
-                            className="px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+                            className="px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow"
                           >
                             Assign This Agent
                           </button>
@@ -2383,23 +2384,23 @@ export default function ObjectiveDetailPage() {
                     </div>
                   ))
                 ) : (
-                  <div className="p-8 text-center text-xs text-zinc-500">
+                  <div className="p-8 text-center text-xs text-slate-400 dark:text-zinc-500">
                     No registered agents found for evaluation.
                   </div>
                 )}
               </div>
 
-              <div className="flex justify-end pt-2 border-t border-[#232329] shrink-0">
+              <div className="flex justify-end pt-2 border-t border-slate-200 dark:border-[#232329] shrink-0">
                 <button
                   onClick={() => setEligibilityModalStep(null)}
-                  className="px-4 py-1.5 rounded-lg text-xs font-semibold text-white bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 dark:text-white dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors"
                 >
                   Close
                 </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </ModalPortal>
 
         {/* TAB 8: DURABLE OBJECTIVE CHECKPOINTS (MILESTONE 13.6) */}
         {activeTab === "checkpoints" && (

@@ -24,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { ModalPortal } from "@/components/ModalPortal";
 import { GlowingCard } from "@/components/GlowingCard";
 import { useMandate } from "@/context/MandateContext";
 import { yoctoToNear } from "@/lib/yocto";
@@ -452,111 +453,111 @@ export default function ObjectivesPage() {
         )}
 
         {/* CREATE OBJECTIVE MODAL */}
-        {isCreateOpen && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="w-full max-w-xl bg-[#141417] border border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#232329]">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#FF3B30]" />
-                  <span>Define Desired Outcome</span>
-                </h3>
-                <button
-                  onClick={() => setIsCreateOpen(false)}
-                  className="text-zinc-500 hover:text-white"
+        <ModalPortal
+          isOpen={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+          maxWidth="max-w-xl"
+        >
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#232329]">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#FF3B30]" />
+              <span>Define Desired Outcome</span>
+            </h3>
+            <button
+              onClick={() => setIsCreateOpen(false)}
+              className="text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {createError && (
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 dark:text-rose-400 text-xs">
+              {createError}
+            </div>
+          )}
+
+          <form onSubmit={handleCreateObjective} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-400 mb-1">
+                Describe what you want achieved in natural language
+              </label>
+              <textarea
+                rows={4}
+                placeholder="e.g. Find 3 reliable NEAR blockchain analytics providers, benchmark their features and pricing, and propose procurement for the best option within 2 NEAR budget."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                required
+                className="w-full bg-slate-50 dark:bg-[#1A1A20] border border-slate-200 dark:border-[#2A2A35] rounded-xl p-3 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
+              />
+              <span className="text-[10px] text-slate-500 dark:text-zinc-500 block mt-1">
+                Mandate will interpret scope, capabilities, required tools, and formulate an executable plan.
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-400 mb-1">
+                  Bind Spending Mandate (Optional)
+                </label>
+                <select
+                  value={selectedMandateId}
+                  onChange={(e) => setSelectedMandateId(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-[#1A1A20] border border-slate-200 dark:border-[#2A2A35] rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#FF3B30]"
                 >
-                  <X className="w-4 h-4" />
-                </button>
+                  <option value="">No financial mandate (Read-only)</option>
+                  {mandates
+                    .filter((m) => m.status === "active")
+                    .map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name} ({yoctoToNear(m.budgetAtomic, 2)} NEAR)
+                      </option>
+                    ))}
+                </select>
               </div>
 
-              {createError && (
-                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
-                  {createError}
-                </div>
-              )}
-
-              <form onSubmit={handleCreateObjective} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-400 mb-1">
-                    Describe what you want achieved in natural language
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="e.g. Find 3 reliable NEAR blockchain analytics providers, benchmark their features and pricing, and propose procurement for the best option within 2 NEAR budget."
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    required
-                    className="w-full bg-[#1A1A20] border border-[#2A2A35] rounded-xl p-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
-                  />
-                  <span className="text-[10px] text-zinc-500 block mt-1">
-                    Mandate will interpret scope, capabilities, required tools, and formulate an executable plan.
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-zinc-400 mb-1">
-                      Bind Spending Mandate (Optional)
-                    </label>
-                    <select
-                      value={selectedMandateId}
-                      onChange={(e) => setSelectedMandateId(e.target.value)}
-                      className="w-full bg-[#1A1A20] border border-[#2A2A35] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF3B30]"
-                    >
-                      <option value="">No financial mandate (Read-only)</option>
-                      {mandates
-                        .filter((m) => m.status === "active")
-                        .map((m) => (
-                          <option key={m.id} value={m.id}>
-                            {m.name} ({yoctoToNear(m.budgetAtomic, 2)} NEAR)
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-zinc-400 mb-1">
-                      Max Budget Constraint (NEAR)
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 1.5"
-                      value={maxBudget}
-                      onChange={(e) => setMaxBudget(e.target.value)}
-                      className="w-full bg-[#1A1A20] border border-[#2A2A35] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF3B30]"
-                    />
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-[#232329] flex items-center justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsCreateOpen(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-medium text-zinc-400 hover:text-white"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:opacity-90 disabled:opacity-50 flex items-center gap-1.5"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        <span>Formulating Plan...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-3.5 h-3.5" />
-                        <span>Interpret & Plan</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-400 mb-1">
+                  Max Budget Constraint (NEAR)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 1.5"
+                  value={maxBudget}
+                  onChange={(e) => setMaxBudget(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-[#1A1A20] border border-slate-200 dark:border-[#2A2A35] rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#FF3B30]"
+                />
+              </div>
             </div>
-          </div>
-        )}
+
+            <div className="pt-3 border-t border-slate-200 dark:border-[#232329] flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setIsCreateOpen(false)}
+                className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:opacity-90 disabled:opacity-50 flex items-center gap-1.5"
+              >
+                {isSubmitting ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Formulating Plan...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>Interpret & Plan</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </ModalPortal>
       </div>
     </AppShell>
   );

@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { GlowingCard } from "@/components/GlowingCard";
+import { ModalPortal } from "@/components/ModalPortal";
 import { useMandate } from "@/context/MandateContext";
 
 interface ToolSummary {
@@ -879,22 +880,22 @@ export default function IntegrationsPage() {
         )}
 
         {/* OPERATION PERMISSIONS MODAL */}
-        {permModalConnection && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#121215] border border-[#232329] rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#232329]">
+        <ModalPortal isOpen={!!permModalConnection} onClose={() => setPermModalConnection(null)}>
+          {permModalConnection && (
+            <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#232329] rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col p-6 space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#232329]">
                 <div>
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <SlidersHorizontal className="w-4 h-4 text-[#FF3B30]" />
                     Operation Permissions: {permModalConnection.name}
                   </h3>
-                  <p className="text-xs text-[#71717A]">
+                  <p className="text-xs text-slate-500 dark:text-[#71717A]">
                     Configure fine-grained execution authority, risk gates, and agent restrictions per operation.
                   </p>
                 </div>
                 <button
                   onClick={() => setPermModalConnection(null)}
-                  className="text-zinc-500 hover:text-white"
+                  className="text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white"
                 >
                   ✕
                 </button>
@@ -902,9 +903,9 @@ export default function IntegrationsPage() {
 
               <div className="flex-1 overflow-y-auto space-y-3 pr-1">
                 {loadingOps ? (
-                  <div className="p-8 text-center text-xs text-zinc-500">Loading operations...</div>
+                  <div className="p-8 text-center text-xs text-slate-500 dark:text-zinc-500">Loading operations...</div>
                 ) : connectionOps.length === 0 ? (
-                  <div className="p-8 text-center text-xs text-zinc-500">No operations found for this adapter.</div>
+                  <div className="p-8 text-center text-xs text-slate-500 dark:text-zinc-500">No operations found for this adapter.</div>
                 ) : (
                   connectionOps.map((op) => {
                     const isSaving = savingOpId === op.id;
@@ -913,22 +914,22 @@ export default function IntegrationsPage() {
                         key={op.id}
                         className={`p-3.5 rounded-xl border transition-all ${
                           op.isEnabled
-                            ? "bg-[#0D0D10] border-[#1E1E24]"
-                            : "bg-[#09090C] border-[#16161B] opacity-60"
+                            ? "bg-slate-50 dark:bg-[#0D0D10] border-slate-200 dark:border-[#1E1E24]"
+                            : "bg-slate-100/50 dark:bg-[#09090C] border-slate-200 dark:border-[#16161B] opacity-60"
                         }`}
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
-                              <span className="font-mono text-xs font-bold text-white">{op.id}</span>
-                              <span className="text-xs text-[#A1A1AA]">· {op.name}</span>
+                              <span className="font-mono text-xs font-bold text-slate-900 dark:text-white">{op.id}</span>
+                              <span className="text-xs text-slate-500 dark:text-[#A1A1AA]">· {op.name}</span>
                               {getRiskBadge(op.riskClassification)}
                             </div>
-                            <p className="text-[11px] text-[#71717A]">{op.description}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-[#71717A]">{op.description}</p>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <label className="text-[11px] font-mono text-zinc-400 flex items-center gap-1.5 cursor-pointer">
+                            <label className="text-[11px] font-mono text-slate-600 dark:text-zinc-400 flex items-center gap-1.5 cursor-pointer">
                               <input
                                 type="checkbox"
                                 checked={op.isEnabled}
@@ -936,7 +937,7 @@ export default function IntegrationsPage() {
                                   handleUpdateOpPermission(op.id, { isEnabled: e.target.checked })
                                 }
                                 disabled={isSaving}
-                                className="rounded bg-zinc-800 border-zinc-700 text-[#FF3B30] focus:ring-0"
+                                className="rounded bg-slate-200 dark:bg-zinc-800 border-slate-300 dark:border-zinc-700 text-[#FF3B30] focus:ring-0"
                               />
                               <span>Enabled</span>
                             </label>
@@ -944,8 +945,8 @@ export default function IntegrationsPage() {
                         </div>
 
                         {/* Permission Level Selector */}
-                        <div className="mt-3 pt-2.5 border-t border-[#18181E] flex items-center justify-between">
-                          <span className="text-[10px] font-mono text-[#71717A] uppercase">
+                        <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-[#18181E] flex items-center justify-between">
+                          <span className="text-[10px] font-mono text-slate-500 dark:text-[#71717A] uppercase">
                             Permission Level:
                           </span>
                           <select
@@ -954,7 +955,7 @@ export default function IntegrationsPage() {
                               handleUpdateOpPermission(op.id, { permissionLevel: e.target.value })
                             }
                             disabled={!op.isEnabled || isSaving}
-                            className="bg-[#141417] border border-[#232329] rounded-lg px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#FF3B30]"
+                            className="bg-white dark:bg-[#141417] border border-slate-300 dark:border-[#232329] rounded-lg px-2 py-1 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#FF3B30]"
                           >
                             <option value="READ">READ (Safe read-only)</option>
                             <option value="PROPOSE">PROPOSE (Draft proposal only)</option>
@@ -968,178 +969,176 @@ export default function IntegrationsPage() {
                 )}
               </div>
 
-              <div className="pt-3 border-t border-[#232329] flex justify-end">
+              <div className="pt-3 border-t border-slate-200 dark:border-[#232329] flex justify-end">
                 <button
                   onClick={() => setPermModalConnection(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#1A1A20] hover:bg-[#23232A]"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 dark:text-white dark:bg-[#1A1A20] dark:hover:bg-[#23232A]"
                 >
                   Done
                 </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </ModalPortal>
 
         {/* CONNECTION WIZARD MODAL */}
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#121215] border border-[#232329] rounded-2xl max-w-lg w-full p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#232329]">
-                <div>
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Plus className="w-4 h-4 text-[#FF3B30]" />
-                    Connect External Service
-                  </h3>
-                  <p className="text-xs text-[#71717A]">
-                    Establish a secure, authenticated integration connection.
-                  </p>
+        <ModalPortal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#232329] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#232329]">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-[#FF3B30]" />
+                  Connect External Service
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-[#71717A]">
+                  Establish a secure, authenticated integration connection.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateConnection} className="space-y-4 text-xs">
+              {connError && (
+                <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400">
+                  {connError}
                 </div>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-zinc-500 hover:text-white"
+              )}
+
+              <div>
+                <label className="block text-slate-600 dark:text-zinc-400 mb-1 font-medium">Integration Provider</label>
+                <select
+                  value={newConnProvider}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setNewConnProvider(val);
+                    if (val === "near_rpc") {
+                      setNewConnName("NEAR Public RPC");
+                      setNewConnAuthType("NONE");
+                      setNewConnBaseUrl("https://rpc.testnet.near.org");
+                    } else if (val === "mcp_server") {
+                      setNewConnName("Local MCP Server");
+                      setNewConnAuthType("BEARER_TOKEN");
+                      setNewConnMcpUrl("http://localhost:8000/sse");
+                    } else if (val === "slack") {
+                      setNewConnName("Slack Notifications");
+                      setNewConnAuthType("API_KEY");
+                    } else {
+                      setNewConnName("Custom REST API");
+                      setNewConnAuthType("BEARER_TOKEN");
+                      setNewConnBaseUrl("https://api.example.com");
+                    }
+                  }}
+                  className="w-full bg-slate-50 dark:bg-[#141417] border border-slate-300 dark:border-[#232329] rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-[#FF3B30]"
                 >
-                  ✕
-                </button>
+                  <option value="rest_api">Custom REST API (HTTP Service)</option>
+                  <option value="mcp_server">MCP Server (Model Context Protocol)</option>
+                  <option value="near_rpc">NEAR Protocol RPC Node</option>
+                  <option value="slack">Slack / Webhook Alerts</option>
+                </select>
               </div>
 
-              <form onSubmit={handleCreateConnection} className="space-y-4 text-xs">
-                {connError && (
-                  <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400">
-                    {connError}
-                  </div>
-                )}
+              <div>
+                <label className="block text-slate-600 dark:text-zinc-400 mb-1 font-medium">Connection Name</label>
+                <input
+                  type="text"
+                  value={newConnName}
+                  onChange={(e) => setNewConnName(e.target.value)}
+                  placeholder="e.g. Production Analytics REST"
+                  className="w-full bg-slate-50 dark:bg-[#141417] border border-slate-300 dark:border-[#232329] rounded-xl px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
+                  required
+                />
+              </div>
 
+              {newConnProvider === "mcp_server" ? (
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-medium">Integration Provider</label>
-                  <select
-                    value={newConnProvider}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setNewConnProvider(val);
-                      if (val === "near_rpc") {
-                        setNewConnName("NEAR Public RPC");
-                        setNewConnAuthType("NONE");
-                        setNewConnBaseUrl("https://rpc.testnet.near.org");
-                      } else if (val === "mcp_server") {
-                        setNewConnName("Local MCP Server");
-                        setNewConnAuthType("BEARER_TOKEN");
-                        setNewConnMcpUrl("http://localhost:8000/sse");
-                      } else if (val === "slack") {
-                        setNewConnName("Slack Notifications");
-                        setNewConnAuthType("API_KEY");
-                      } else {
-                        setNewConnName("Custom REST API");
-                        setNewConnAuthType("BEARER_TOKEN");
-                        setNewConnBaseUrl("https://api.example.com");
-                      }
-                    }}
-                    className="w-full bg-[#141417] border border-[#232329] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#FF3B30]"
-                  >
-                    <option value="rest_api">Custom REST API (HTTP Service)</option>
-                    <option value="mcp_server">MCP Server (Model Context Protocol)</option>
-                    <option value="near_rpc">NEAR Protocol RPC Node</option>
-                    <option value="slack">Slack / Webhook Alerts</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-zinc-400 mb-1 font-medium">Connection Name</label>
+                  <label className="block text-slate-600 dark:text-zinc-400 mb-1 font-medium">MCP Server Endpoint URL</label>
                   <input
-                    type="text"
-                    value={newConnName}
-                    onChange={(e) => setNewConnName(e.target.value)}
-                    placeholder="e.g. Production Analytics REST"
-                    className="w-full bg-[#141417] border border-[#232329] rounded-xl px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
+                    type="url"
+                    value={newConnMcpUrl}
+                    onChange={(e) => setNewConnMcpUrl(e.target.value)}
+                    placeholder="https://mcp.internal.domain/sse"
+                    className="w-full bg-slate-50 dark:bg-[#141417] border border-slate-300 dark:border-[#232329] rounded-xl px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
+                    required
+                  />
+                  <p className="text-[10px] text-slate-500 dark:text-zinc-500 mt-1">Tools will be automatically discovered via JSON-RPC protocol.</p>
+                </div>
+              ) : newConnProvider === "slack" ? (
+                <div>
+                  <label className="block text-slate-600 dark:text-zinc-400 mb-1 font-medium">Slack Webhook URL (Optional)</label>
+                  <input
+                    type="url"
+                    value={newConnWebhookUrl}
+                    onChange={(e) => setNewConnWebhookUrl(e.target.value)}
+                    placeholder="https://hooks.slack.com/services/..."
+                    className="w-full bg-slate-50 dark:bg-[#141417] border border-slate-300 dark:border-[#232329] rounded-xl px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-slate-600 dark:text-zinc-400 mb-1 font-medium">Base Endpoint URL</label>
+                  <input
+                    type="url"
+                    value={newConnBaseUrl}
+                    onChange={(e) => setNewConnBaseUrl(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-[#141417] border border-slate-300 dark:border-[#232329] rounded-xl px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
                     required
                   />
                 </div>
+              )}
 
-                {newConnProvider === "mcp_server" ? (
-                  <div>
-                    <label className="block text-zinc-400 mb-1 font-medium">MCP Server Endpoint URL</label>
-                    <input
-                      type="url"
-                      value={newConnMcpUrl}
-                      onChange={(e) => setNewConnMcpUrl(e.target.value)}
-                      placeholder="https://mcp.internal.domain/sse"
-                      className="w-full bg-[#141417] border border-[#232329] rounded-xl px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
-                      required
-                    />
-                    <p className="text-[10px] text-zinc-500 mt-1">Tools will be automatically discovered via JSON-RPC protocol.</p>
-                  </div>
-                ) : newConnProvider === "slack" ? (
-                  <div>
-                    <label className="block text-zinc-400 mb-1 font-medium">Slack Webhook URL (Optional)</label>
-                    <input
-                      type="url"
-                      value={newConnWebhookUrl}
-                      onChange={(e) => setNewConnWebhookUrl(e.target.value)}
-                      placeholder="https://hooks.slack.com/services/..."
-                      className="w-full bg-[#141417] border border-[#232329] rounded-xl px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-zinc-400 mb-1 font-medium">Base Endpoint URL</label>
-                    <input
-                      type="url"
-                      value={newConnBaseUrl}
-                      onChange={(e) => setNewConnBaseUrl(e.target.value)}
-                      className="w-full bg-[#141417] border border-[#232329] rounded-xl px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
-                      required
-                    />
-                  </div>
-                )}
-
-                {newConnProvider !== "near_rpc" && (
-                  <div>
-                    <label className="block text-zinc-400 mb-1 font-medium">Secret Token / API Key</label>
-                    <input
-                      type="password"
-                      value={newConnApiKey}
-                      onChange={(e) => setNewConnApiKey(e.target.value)}
-                      placeholder="Protected in AES-256-GCM Credential Vault"
-                      className="w-full bg-[#141417] border border-[#232329] rounded-xl px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
-                    />
-                  </div>
-                )}
-
-                <div className="pt-3 border-t border-[#232329] flex items-center justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="px-4 py-2 rounded-xl text-zinc-400 hover:text-white"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmittingConn}
-                    className="px-4 py-2 rounded-xl font-semibold text-white bg-[#FF3B30] hover:opacity-90 disabled:opacity-50"
-                  >
-                    {isSubmittingConn ? "Connecting..." : "Save & Verify"}
-                  </button>
+              {newConnProvider !== "near_rpc" && (
+                <div>
+                  <label className="block text-slate-600 dark:text-zinc-400 mb-1 font-medium">Secret Token / API Key</label>
+                  <input
+                    type="password"
+                    value={newConnApiKey}
+                    onChange={(e) => setNewConnApiKey(e.target.value)}
+                    placeholder="Protected in AES-256-GCM Credential Vault"
+                    className="w-full bg-slate-50 dark:bg-[#141417] border border-slate-300 dark:border-[#232329] rounded-xl px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 focus:outline-none focus:border-[#FF3B30]"
+                  />
                 </div>
-              </form>
-            </div>
+              )}
+
+              <div className="pt-3 border-t border-slate-200 dark:border-[#232329] flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingConn}
+                  className="px-4 py-2 rounded-xl font-semibold text-white bg-[#FF3B30] hover:opacity-90 disabled:opacity-50 shadow"
+                >
+                  {isSubmittingConn ? "Connecting..." : "Save & Verify"}
+                </button>
+              </div>
+            </form>
           </div>
-        )}
+        </ModalPortal>
 
         {/* SCHEMA INSPECTOR MODAL */}
-        {selectedTool && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#121215] border border-[#232329] rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#232329]">
+        <ModalPortal isOpen={!!selectedTool} onClose={() => setSelectedTool(null)}>
+          {selectedTool && (
+            <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#232329] rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col p-6 space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#232329]">
                 <div>
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <FileCode className="w-4 h-4 text-[#FF3B30]" />
                     {selectedTool.name}
                   </h3>
-                  <span className="text-xs font-mono text-[#71717A]">{selectedTool.id}</span>
+                  <span className="text-xs font-mono text-slate-500 dark:text-[#71717A]">{selectedTool.id}</span>
                 </div>
                 <button
                   onClick={() => setSelectedTool(null)}
-                  className="text-zinc-500 hover:text-white"
+                  className="text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white"
                 >
                   ✕
                 </button>
@@ -1147,29 +1146,29 @@ export default function IntegrationsPage() {
 
               <div className="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div>
-                  <h4 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+                  <h4 className="text-xs font-semibold text-slate-600 dark:text-zinc-400 uppercase tracking-wider mb-2">
                     Operations Schema
                   </h4>
                   <div className="space-y-3">
                     {Object.values(selectedTool.operations || {}).map((op) => (
                       <div
                         key={op.id}
-                        className="p-3.5 rounded-xl bg-[#0B0B0E] border border-[#1E1E24] space-y-2"
+                        className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0B0B0E] border border-slate-200 dark:border-[#1E1E24] space-y-2"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-sm font-bold text-white">{op.id}</span>
+                          <span className="font-mono text-sm font-bold text-slate-900 dark:text-white">{op.id}</span>
                           <div className="flex items-center gap-2">
                             {getPermissionBadge(op.requiredPermission)}
                             {getRiskBadge(op.riskClassification)}
                           </div>
                         </div>
-                        <p className="text-xs text-[#A1A1AA]">{op.description}</p>
+                        <p className="text-xs text-slate-600 dark:text-[#A1A1AA]">{op.description}</p>
                         {op.inputSchema && (
                           <div className="mt-2">
-                            <span className="text-[10px] font-semibold text-[#71717A] uppercase block mb-1">
+                            <span className="text-[10px] font-semibold text-slate-500 dark:text-[#71717A] uppercase block mb-1">
                               Input JSON Schema:
                             </span>
-                            <pre className="p-2.5 rounded-lg bg-[#050507] border border-[#1A1A22] text-[11px] font-mono text-zinc-300 overflow-x-auto">
+                            <pre className="p-2.5 rounded-lg bg-slate-100 dark:bg-[#050507] border border-slate-200 dark:border-[#1A1A22] text-[11px] font-mono text-slate-800 dark:text-zinc-300 overflow-x-auto">
                               {JSON.stringify(op.inputSchema, null, 2)}
                             </pre>
                           </div>
@@ -1180,17 +1179,17 @@ export default function IntegrationsPage() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#232329] flex justify-end shrink-0">
+              <div className="pt-3 border-t border-slate-200 dark:border-[#232329] flex justify-end shrink-0">
                 <button
                   onClick={() => setSelectedTool(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#1A1A20] hover:bg-[#23232A]"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 dark:text-white dark:bg-[#1A1A20] dark:hover:bg-[#23232A]"
                 >
                   Close
                 </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </ModalPortal>
       </div>
     </AppShell>
   );

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { OperatorGuard } from "@/components/OperatorGuard";
+import { ModalPortal } from "@/components/ModalPortal";
 import { yoctoToNear } from "@/lib/yocto";
 
 interface ExecutionItem {
@@ -288,85 +289,85 @@ export default function ExecutionSecurityPage() {
       </div>
 
       {/* Selected Execution Detail Modal */}
-      {selectedExecution && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#121215] border border-[#27272A] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6">
-            <div className="flex items-center justify-between border-b border-[#27272A] pb-4">
+      <ModalPortal isOpen={!!selectedExecution} onClose={() => setSelectedExecution(null)}>
+        {selectedExecution && (
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#27272A] pb-4">
               <div className="flex items-center gap-2">
-                <FileCheck2 className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-lg font-bold text-white">Cryptographic Authorization Envelope</h3>
+                <FileCheck2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Cryptographic Authorization Envelope</h3>
               </div>
               <button
                 onClick={() => setSelectedExecution(null)}
-                className="text-[#A1A1AA] hover:text-white text-sm"
+                className="text-slate-400 hover:text-slate-900 dark:text-[#A1A1AA] dark:hover:text-white text-sm"
               >
                 ✕
               </button>
             </div>
 
             <div className="space-y-4 text-xs font-mono">
-              <div className="p-3 bg-[#18181D] rounded-lg border border-[#27272A] space-y-1">
-                <div className="text-[#A1A1AA]">Execution ID:</div>
-                <div className="text-white break-all">{selectedExecution.id}</div>
+              <div className="p-3 bg-slate-50 dark:bg-[#18181D] rounded-lg border border-slate-200 dark:border-[#27272A] space-y-1">
+                <div className="text-slate-500 dark:text-[#A1A1AA]">Execution ID:</div>
+                <div className="text-slate-900 dark:text-white break-all">{selectedExecution.id}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 bg-[#18181D] rounded-lg border border-[#27272A] space-y-1">
-                  <div className="text-[#A1A1AA]">Nonce:</div>
-                  <div className="text-white break-all">{selectedExecution.nonce}</div>
+                <div className="p-3 bg-slate-50 dark:bg-[#18181D] rounded-lg border border-slate-200 dark:border-[#27272A] space-y-1">
+                  <div className="text-slate-500 dark:text-[#A1A1AA]">Nonce:</div>
+                  <div className="text-slate-900 dark:text-white break-all">{selectedExecution.nonce}</div>
                 </div>
 
-                <div className="p-3 bg-[#18181D] rounded-lg border border-[#27272A] space-y-1">
-                  <div className="text-[#A1A1AA]">Nonce Consumed:</div>
-                  <div className={selectedExecution.isNonceConsumed ? "text-emerald-400 font-bold" : "text-amber-400 font-bold"}>
+                <div className="p-3 bg-slate-50 dark:bg-[#18181D] rounded-lg border border-slate-200 dark:border-[#27272A] space-y-1">
+                  <div className="text-slate-500 dark:text-[#A1A1AA]">Nonce Consumed:</div>
+                  <div className={selectedExecution.isNonceConsumed ? "text-emerald-500 dark:text-emerald-400 font-bold" : "text-amber-500 dark:text-amber-400 font-bold"}>
                     {selectedExecution.isNonceConsumed ? "YES (Single-Use Locked)" : "NO (Pending)"}
                   </div>
                 </div>
               </div>
 
-              <div className="p-3 bg-[#18181D] rounded-lg border border-[#27272A] space-y-1">
-                <div className="text-[#A1A1AA]">HMAC-SHA256 Authorization Signature:</div>
-                <div className="text-emerald-400 break-all">{selectedExecution.authSignature}</div>
+              <div className="p-3 bg-slate-50 dark:bg-[#18181D] rounded-lg border border-slate-200 dark:border-[#27272A] space-y-1">
+                <div className="text-slate-500 dark:text-[#A1A1AA]">HMAC-SHA256 Authorization Signature:</div>
+                <div className="text-emerald-600 dark:text-emerald-400 break-all">{selectedExecution.authSignature}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 bg-[#18181D] rounded-lg border border-[#27272A] space-y-1">
-                  <div className="text-[#A1A1AA]">Recipient Account:</div>
-                  <div className="text-white break-all">{selectedExecution.recipient}</div>
+                <div className="p-3 bg-slate-50 dark:bg-[#18181D] rounded-lg border border-slate-200 dark:border-[#27272A] space-y-1">
+                  <div className="text-slate-500 dark:text-[#A1A1AA]">Recipient Account:</div>
+                  <div className="text-slate-900 dark:text-white break-all">{selectedExecution.recipient}</div>
                 </div>
 
-                <div className="p-3 bg-[#18181D] rounded-lg border border-[#27272A] space-y-1">
-                  <div className="text-[#A1A1AA]">Amount:</div>
-                  <div className="text-white font-bold">{yoctoToNear(selectedExecution.amountYocto)} NEAR</div>
+                <div className="p-3 bg-slate-50 dark:bg-[#18181D] rounded-lg border border-slate-200 dark:border-[#27272A] space-y-1">
+                  <div className="text-slate-500 dark:text-[#A1A1AA]">Amount:</div>
+                  <div className="text-slate-900 dark:text-white font-bold">{yoctoToNear(selectedExecution.amountYocto)} NEAR</div>
                 </div>
               </div>
 
               {selectedExecution.txHash && (
-                <div className="p-3 bg-[#18181D] rounded-lg border border-[#27272A] space-y-1">
-                  <div className="text-[#A1A1AA]">NEAR Testnet Transaction Hash:</div>
-                  <div className="text-cyan-400 break-all">{selectedExecution.txHash}</div>
+                <div className="p-3 bg-slate-50 dark:bg-[#18181D] rounded-lg border border-slate-200 dark:border-[#27272A] space-y-1">
+                  <div className="text-slate-500 dark:text-[#A1A1AA]">NEAR Testnet Transaction Hash:</div>
+                  <div className="text-cyan-600 dark:text-cyan-400 break-all">{selectedExecution.txHash}</div>
                 </div>
               )}
 
               {selectedExecution.errorReason && (
-                <div className="p-3 bg-rose-500/10 rounded-lg border border-rose-500/20 text-rose-300">
+                <div className="p-3 bg-rose-500/10 rounded-lg border border-rose-500/20 text-rose-600 dark:text-rose-300">
                   <div className="font-bold mb-1">Execution Failure / Refusal:</div>
                   <div>{selectedExecution.errorReason}</div>
                 </div>
               )}
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-[#27272A]">
+            <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-[#27272A]">
               <button
                 onClick={() => setSelectedExecution(null)}
-                className="px-4 py-2 rounded-lg bg-[#27272A] hover:bg-[#3F3F46] text-xs text-white"
+                className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-[#27272A] dark:hover:bg-[#3F3F46] text-xs text-slate-800 dark:text-white font-medium"
               >
                 Close
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalPortal>
         </div>
       </OperatorGuard>
     </AppShell>

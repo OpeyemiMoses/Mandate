@@ -19,6 +19,8 @@ import {
   Filter,
 } from "lucide-react";
 
+import { ModalPortal } from "@/components/ModalPortal";
+
 export default function GovernanceCenterPage() {
   const [policies, setPolicies] = useState<any[]>([]);
   const [templates, setTemplates] = useState<any[]>([]);
@@ -380,94 +382,92 @@ export default function GovernanceCenterPage() {
       </div>
 
       {/* Create Policy Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141417] border border-[#2B2B32] rounded-2xl p-6 w-full max-w-md space-y-5">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Plus className="w-5 h-5 text-red-500" />
-              Create Governance Policy
-            </h3>
+      <ModalPortal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)}>
+        <div className="bg-white dark:bg-[#141417] border border-slate-200 dark:border-[#2B2B32] rounded-2xl p-6 w-full max-w-md space-y-5 shadow-2xl">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Plus className="w-5 h-5 text-red-500" />
+            Create Governance Policy
+          </h3>
 
-            <form onSubmit={handleCreatePolicy} className="space-y-4">
+          <form onSubmit={handleCreatePolicy} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-[#A1A1AA] mb-1">
+                Policy Name
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Treasury Spending Guardrail"
+                value={newPolicyName}
+                onChange={(e) => setNewPolicyName(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#0B0B0B] border border-slate-300 dark:border-[#232329] rounded-lg text-sm text-slate-900 dark:text-white focus:outline-none focus:border-red-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-[#A1A1AA] mb-1">
+                Description
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Describe the operational boundaries and authority intent..."
+                value={newPolicyDesc}
+                onChange={(e) => setNewPolicyDesc(e.target.value)}
+                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-[#0B0B0B] border border-slate-300 dark:border-[#232329] rounded-lg text-sm text-slate-900 dark:text-white focus:outline-none focus:border-red-500"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[#A1A1AA] mb-1">
-                  Policy Name
+                <label className="block text-xs font-medium text-slate-600 dark:text-[#A1A1AA] mb-1">
+                  Scope
+                </label>
+                <select
+                  value={newPolicyScope}
+                  onChange={(e) => setNewPolicyScope(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0B0B0B] border border-slate-300 dark:border-[#232329] rounded-lg text-xs text-slate-900 dark:text-white focus:outline-none focus:border-red-500"
+                >
+                  <option value="USER">USER (Universal)</option>
+                  <option value="AGENT">AGENT</option>
+                  <option value="MANDATE">MANDATE</option>
+                  <option value="INTEGRATION">INTEGRATION</option>
+                  <option value="COORDINATION_RUN">COORDINATION</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-600 dark:text-[#A1A1AA] mb-1">
+                  Priority (Lower = Higher)
                 </label>
                 <input
-                  type="text"
-                  required
-                  placeholder="e.g. Treasury Spending Guardrail"
-                  value={newPolicyName}
-                  onChange={(e) => setNewPolicyName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#232329] rounded-lg text-sm text-white focus:outline-none focus:border-red-500"
+                  type="number"
+                  min={1}
+                  max={1000}
+                  value={newPolicyPriority}
+                  onChange={(e) => setNewPolicyPriority(Number(e.target.value))}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0B0B0B] border border-slate-300 dark:border-[#232329] rounded-lg text-xs text-slate-900 dark:text-white focus:outline-none focus:border-red-500"
                 />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-xs font-medium text-[#A1A1AA] mb-1">
-                  Description
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Describe the operational boundaries and authority intent..."
-                  value={newPolicyDesc}
-                  onChange={(e) => setNewPolicyDesc(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-[#0B0B0B] border border-[#232329] rounded-lg text-sm text-white focus:outline-none focus:border-red-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-[#A1A1AA] mb-1">
-                    Scope
-                  </label>
-                  <select
-                    value={newPolicyScope}
-                    onChange={(e) => setNewPolicyScope(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#0B0B0B] border border-[#232329] rounded-lg text-xs text-white focus:outline-none focus:border-red-500"
-                  >
-                    <option value="USER">USER (Universal)</option>
-                    <option value="AGENT">AGENT</option>
-                    <option value="MANDATE">MANDATE</option>
-                    <option value="INTEGRATION">INTEGRATION</option>
-                    <option value="COORDINATION_RUN">COORDINATION</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-[#A1A1AA] mb-1">
-                    Priority (Lower = Higher)
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={1000}
-                    value={newPolicyPriority}
-                    onChange={(e) => setNewPolicyPriority(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-[#0B0B0B] border border-[#232329] rounded-lg text-xs text-white focus:outline-none focus:border-red-500"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#232329]">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 rounded-lg bg-[#1B1B1F] text-xs font-medium text-[#A1A1AA] hover:text-white"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-xs font-medium text-white"
-                >
-                  Create Policy
-                </button>
-              </div>
-            </form>
-          </div>
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-[#232329]">
+              <button
+                type="button"
+                onClick={() => setShowCreateModal(false)}
+                className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-[#1B1B1F] text-xs font-medium text-slate-600 dark:text-[#A1A1AA] dark:hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-xs font-medium text-white shadow"
+              >
+                Create Policy
+              </button>
+            </div>
+          </form>
         </div>
-      )}
+      </ModalPortal>
     </div>
   );
 }

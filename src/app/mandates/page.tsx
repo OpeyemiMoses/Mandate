@@ -21,6 +21,7 @@ import {
   History,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { ModalPortal } from "@/components/ModalPortal";
 import { GlowingCard } from "@/components/GlowingCard";
 import { MandateMark } from "@/components/MandateLogo";
 import { useMandate } from "@/context/MandateContext";
@@ -465,91 +466,91 @@ export default function MandatesPage() {
       </div>
 
       {/* Edit Mandate Parameters Modal */}
-      {editingMandate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-md rounded-2xl bg-[#141417] border border-[#232329] p-6 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-semibold text-white">Edit Mandate Configuration</h3>
-                <p className="text-xs text-zinc-400 mt-0.5">{editingMandate.name}</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingMandate(null)}
-                className="text-zinc-400 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+      <ModalPortal
+        isOpen={Boolean(editingMandate)}
+        onClose={() => setEditingMandate(null)}
+        maxWidth="max-w-md"
+      >
+        <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-[#232329]">
+          <div>
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">Edit Mandate Configuration</h3>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">{editingMandate?.name}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setEditingMandate(null)}
+            className="text-slate-400 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-            {editError && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-400">
-                {editError}
-              </div>
-            )}
+        {editError && (
+          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-500 dark:text-red-400">
+            {editError}
+          </div>
+        )}
 
-            <div className="space-y-4 text-xs">
-              <div>
-                <label className="block text-zinc-400 mb-1">Total Authorized Budget (NEAR)</label>
-                <input
-                  type="text"
-                  value={editBudgetNear}
-                  onChange={(e) => setEditBudgetNear(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white font-mono focus:outline-none focus:border-[#FF3B30]"
-                />
-              </div>
+        <div className="space-y-4 text-xs">
+          <div>
+            <label className="block text-slate-700 dark:text-zinc-400 mb-1">Total Authorized Budget (NEAR)</label>
+            <input
+              type="text"
+              value={editBudgetNear}
+              onChange={(e) => setEditBudgetNear(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#FF3B30]"
+            />
+          </div>
 
-              <div>
-                <label className="block text-zinc-400 mb-1">Per-Transaction Limit (NEAR)</label>
-                <input
-                  type="text"
-                  value={editPerTxLimitNear}
-                  onChange={(e) => setEditPerTxLimitNear(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white font-mono focus:outline-none focus:border-[#FF3B30]"
-                />
-              </div>
+          <div>
+            <label className="block text-slate-700 dark:text-zinc-400 mb-1">Per-Transaction Limit (NEAR)</label>
+            <input
+              type="text"
+              value={editPerTxLimitNear}
+              onChange={(e) => setEditPerTxLimitNear(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#FF3B30]"
+            />
+          </div>
 
-              <div>
-                <label className="block text-zinc-400 mb-1">Approval Threshold (NEAR)</label>
-                <input
-                  type="text"
-                  value={editApprovalThresholdNear}
-                  onChange={(e) => setEditApprovalThresholdNear(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white font-mono focus:outline-none focus:border-[#FF3B30]"
-                />
-              </div>
+          <div>
+            <label className="block text-slate-700 dark:text-zinc-400 mb-1">Approval Threshold (NEAR)</label>
+            <input
+              type="text"
+              value={editApprovalThresholdNear}
+              onChange={(e) => setEditApprovalThresholdNear(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#FF3B30]"
+            />
+          </div>
 
-              <div>
-                <label className="block text-zinc-400 mb-1">Expiration Date</label>
-                <input
-                  type="date"
-                  value={editExpiresAt}
-                  onChange={(e) => setEditExpiresAt(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white font-mono focus:outline-none focus:border-[#FF3B30]"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setEditingMandate(null)}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-zinc-400 hover:text-white"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveEdit}
-                disabled={isSubmittingEdit}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] transition-all disabled:opacity-50"
-              >
-                {isSubmittingEdit ? "Saving Changes..." : "Save Parameters"}
-              </button>
-            </div>
+          <div>
+            <label className="block text-slate-700 dark:text-zinc-400 mb-1">Expiration Date</label>
+            <input
+              type="date"
+              value={editExpiresAt}
+              onChange={(e) => setEditExpiresAt(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#FF3B30]"
+            />
           </div>
         </div>
-      )}
+
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            onClick={() => setEditingMandate(null)}
+            className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleSaveEdit}
+            disabled={isSubmittingEdit}
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] transition-all disabled:opacity-50"
+          >
+            {isSubmittingEdit ? "Saving Changes..." : "Save Parameters"}
+          </button>
+        </div>
+      </ModalPortal>
     </AppShell>
   );
 }

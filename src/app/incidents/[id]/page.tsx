@@ -19,6 +19,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { ModalPortal } from "@/components/ModalPortal";
 
 export default function IncidentDetailPage({
   params,
@@ -395,38 +396,36 @@ export default function IncidentDetailPage({
         </div>
 
         {/* Resolve Modal */}
-        {resolveModalOpen && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-            <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-              <h3 className="text-lg font-bold text-zinc-100">Resolve Incident</h3>
-              <p className="text-xs text-zinc-400">
-                Provide a definitive resolution summary. All linked discrepancies will also be closed.
-              </p>
-              <textarea
-                rows={3}
-                placeholder="Resolution summary..."
-                value={resolutionSummary}
-                onChange={(e) => setResolutionSummary(e.target.value)}
-                className="w-full p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50"
-              />
-              <div className="flex justify-end gap-2">
-                <button
-                  onClick={() => setResolveModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleResolveIncident}
-                  disabled={actionLoading === "resolve" || !resolutionSummary.trim()}
-                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white"
-                >
-                  Confirm Resolution
-                </button>
-              </div>
+        <ModalPortal isOpen={resolveModalOpen} onClose={() => setResolveModalOpen(false)}>
+          <div className="max-w-md w-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 space-y-4 shadow-2xl">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">Resolve Incident</h3>
+            <p className="text-xs text-slate-500 dark:text-zinc-400">
+              Provide a definitive resolution summary. All linked discrepancies will also be closed.
+            </p>
+            <textarea
+              rows={3}
+              placeholder="Resolution summary..."
+              value={resolutionSummary}
+              onChange={(e) => setResolutionSummary(e.target.value)}
+              className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 rounded-lg text-sm text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50"
+            />
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => setResolveModalOpen(false)}
+                className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleResolveIncident}
+                disabled={actionLoading === "resolve" || !resolutionSummary.trim()}
+                className="px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow"
+              >
+                Confirm Resolution
+              </button>
             </div>
           </div>
-        )}
+        </ModalPortal>
       </div>
     </AppShell>
   );

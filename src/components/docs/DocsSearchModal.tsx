@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Search, X, ArrowRight, FileText, CornerDownLeft } from "lucide-react";
 import { ALL_DOC_PAGES, DOC_SECTIONS, type DocPageMeta } from "@/lib/docs/docsNavigation";
@@ -58,10 +59,18 @@ export function DocsSearchModal({ isOpen, onClose }: DocsSearchModalProps) {
     }).slice(0, 10);
   }, [query]);
 
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/60 dark:bg-black/75 backdrop-blur-sm animate-fade-in">
+  if (!isOpen || !mounted) return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[9999] flex items-start justify-center pt-20 px-4 bg-black/80 dark:bg-black/85 backdrop-blur-md animate-fade-in"
+      onClick={onClose}
+    >
       <div
         className="relative w-full max-w-2xl rounded-2xl bg-white dark:bg-[#111114] border border-slate-200 dark:border-[#232329] shadow-2xl overflow-hidden animate-pop"
         onClick={(e) => e.stopPropagation()}
@@ -160,7 +169,8 @@ export function DocsSearchModal({ isOpen, onClose }: DocsSearchModalProps) {
           <span>36 comprehensive pages indexed</span>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

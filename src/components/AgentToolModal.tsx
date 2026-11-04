@@ -178,8 +178,14 @@ export function AgentToolModal({
   const unassignedTools = availableTools.filter((t) => !t.isAssigned);
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="w-full max-w-2xl my-auto bg-white dark:bg-[#141417] border border-slate-200 dark:border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col text-slate-900 dark:text-white">
+    <div
+      className="fixed inset-0 z-[9999] bg-black/80 dark:bg-black/85 backdrop-blur-md animate-in fade-in duration-200 flex items-center justify-center p-4 overflow-y-auto"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-2xl my-auto bg-white dark:bg-[#141417] border border-slate-200 dark:border-[#232329] rounded-2xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col text-slate-900 dark:text-white"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-[#232329] shrink-0">
           <div className="flex items-center gap-2.5">

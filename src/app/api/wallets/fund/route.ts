@@ -149,14 +149,18 @@ export async function POST(req: Request) {
 
     // Fetch verified live on-chain balance if available
     const liveState = await getNearAccountState(wallet.nearAccountId);
-    const confirmedBalYocto = liveState?.amountYocto || (BigInt(wallet.balanceYocto) + BigInt(amountYocto)).toString();
+    const currentDbBalYocto = BigInt(wallet.balanceYocto || "0");
+    const fundedYocto = BigInt(amountYocto);
+    const minExpectedYocto = currentDbBalYocto + fundedYocto;
+    const onchainLiveYocto = liveState?.amountYocto ? BigInt(liveState.amountYocto) : BigInt(0);
+    const confirmedBalYocto = (onchainLiveYocto > minExpectedYocto ? onchainLiveYocto : minExpectedYocto).toString();
 
     // Update agent wallet balance in database & reconcile with onchain RPC
     await prisma.wallet.update({
       where: { id: wallet.id },
       data: {
         balanceYocto: confirmedBalYocto,
-        onChainBalanceYocto: liveState?.amountYocto || null,
+        onChainBalanceYocto: liveState?.amountYocto || confirmedBalYocto,
         isInitialized: true,
         initializationStatus: "READY",
       },
