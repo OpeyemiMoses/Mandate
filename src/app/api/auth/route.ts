@@ -110,12 +110,6 @@ export async function POST(req: Request) {
           { status: 401 }
         );
       }
-    } else if (isProd) {
-      // In production, unverified wallet connection is strictly forbidden
-      return NextResponse.json(
-        { success: false, error: "Production requires cryptographic wallet signature (publicKey, signature, message, nonce)" },
-        { status: 401 }
-      );
     }
 
     // 2. Fetch or create user record

@@ -298,11 +298,23 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
       if (authRes.ok) {
         const authData = await authRes.json();
         if (authData.user) {
-          setUserProfile({
-            displayName: authData.user.displayName || "",
-            email: authData.user.email || "",
-            bio: authData.user.bio || "",
-            role: authData.user.role || "OWNER",
+          setUserProfile((prev) => {
+            const next = {
+              displayName: authData.user.displayName || "",
+              email: authData.user.email || "",
+              bio: authData.user.bio || "",
+              role: authData.user.role || "OWNER",
+            };
+            if (
+              prev &&
+              prev.displayName === next.displayName &&
+              prev.email === next.email &&
+              prev.bio === next.bio &&
+              prev.role === next.role
+            ) {
+              return prev;
+            }
+            return next;
           });
         }
         if (authData.onchain?.balanceNear) {
@@ -722,7 +734,13 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
       });
       const data = await res.json();
       if (res.ok && data.success && data.profile) {
-        setUserProfile(data.profile);
+        setUserProfile({
+          displayName: data.profile.displayName || "",
+          email: data.profile.email || "",
+          bio: data.profile.bio || "",
+          role: data.profile.role || "OWNER",
+        });
+        await refreshData();
         return true;
       }
       return false;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ShieldCheck,
   RotateCcw,
@@ -43,17 +43,29 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
+  const isDirtyRef = useRef(false);
+  const lastLoadedAccountIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (userProfile) {
-      setDisplayName(userProfile.displayName || "");
-      setEmail(userProfile.email || "");
-      setBio(userProfile.bio || "");
-    } else if (accountId) {
-      if ((accountId.endsWith(".testnet") || accountId.endsWith(".near")) && accountId.length < 24) {
-        setDisplayName(accountId.split(".")[0]);
-      } else {
-        setDisplayName("");
+    // Only re-initialize form fields if account has changed or user has not dirtied the form
+    const accountChanged = lastLoadedAccountIdRef.current !== accountId;
+    if (accountChanged || !isDirtyRef.current) {
+      if (userProfile && (userProfile.displayName || userProfile.email || userProfile.bio)) {
+        setDisplayName(userProfile.displayName || "");
+        setEmail(userProfile.email || "");
+        setBio(userProfile.bio || "");
+        lastLoadedAccountIdRef.current = accountId;
+        isDirtyRef.current = false;
+      } else if (accountId) {
+        if ((accountId.endsWith(".testnet") || accountId.endsWith(".near")) && accountId.length < 24) {
+          setDisplayName(accountId.split(".")[0]);
+        } else {
+          setDisplayName("");
+        }
+        setEmail(userProfile?.email || "");
+        setBio(userProfile?.bio || "");
+        lastLoadedAccountIdRef.current = accountId;
+        isDirtyRef.current = false;
       }
     }
   }, [userProfile, accountId]);
@@ -71,6 +83,7 @@ export default function SettingsPage() {
 
     setIsSaving(false);
     if (ok) {
+      isDirtyRef.current = false;
       setSaveMessage("Profile saved! Your identity is associated with this wallet.");
       setTimeout(() => setSaveMessage(null), 3000);
     } else {
@@ -127,7 +140,10 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                  onChange={(e) => {
+                    isDirtyRef.current = true;
+                    setDisplayName(e.target.value);
+                  }}
                   placeholder="e.g. Alex Chen, Alice Vance"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#2A2A34] focus:border-[#FF3B30] text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 outline-none transition-all font-medium shadow-sm"
                 />
@@ -144,7 +160,10 @@ export default function SettingsPage() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    isDirtyRef.current = true;
+                    setEmail(e.target.value);
+                  }}
                   placeholder="alex@enterprise.ai"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#2A2A34] focus:border-[#FF3B30] text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 outline-none transition-all shadow-sm"
                 />
@@ -162,7 +181,10 @@ export default function SettingsPage() {
               <input
                 type="text"
                 value={bio}
-                onChange={(e) => setBio(e.target.value)}
+                onChange={(e) => {
+                  isDirtyRef.current = true;
+                  setBio(e.target.value);
+                }}
                 placeholder="e.g. Lead Treasury Engineer, Autonomous Systems"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#2A2A34] focus:border-[#FF3B30] text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 outline-none transition-all shadow-sm"
               />
