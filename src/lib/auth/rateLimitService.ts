@@ -33,6 +33,14 @@ export const RATE_LIMIT_CONFIG = {
   GLOBAL_WINDOW_SECONDS: 60,
 };
 
+export interface CleanupResult {
+  success: boolean;
+  deleted: number;
+  durationMs: number;
+  batchSize: number;
+  error?: string;
+}
+
 export class RateLimitService {
   /**
    * Atomically checks and increments a rate-limit counter in the shared database store.
@@ -188,39 +196,128 @@ export class RateLimitService {
   }
 
   /**
-   * Clean expired rate limit buckets using bounded batch deletion (Workstream C).
-   * Prevents unbounded full-table locks and query timeouts on large datasets.
-   * Defaults to deleting up to batchSize (default 500) rows per execution.
+   * Clean expired rate limit buckets using bounded batch deletion with structured observability.
+   * Returns deleted row count on success; throws on failure so errors are never masked as 0-row cleanups.
    */
   public static async cleanExpiredBuckets(batchSize = 500): Promise<number> {
+    const result = await this.cleanExpiredBucketsDetailed(batchSize);
+    if (!result.success) {
+      throw new Error(`RATE_LIMIT_CLEANUP_FAILED: ${result.error}`);
+    }
+    return result.deleted;
+  }
+
+  /**
+   * Detailed cleanup with explicit structured status and observability metrics.
+   * Distinguishes "0 deleted (healthy empty)" from "cleanup failed (database error)".
+   */
+  public static async cleanExpiredBucketsDetailed(batchSize = 500): Promise<CleanupResult> {
+    const startTime = Date.now();
+    const safeBatchSize = Math.max(1, Math.min(batchSize, 500)); // Bounded strictly to <= 500
+
     try {
-      const safeBatchSize = Math.max(1, Math.min(batchSize, 5000));
-      const res: any = await prisma.$executeRaw`
-        DELETE FROM "RateLimitBucket"
-        WHERE "key" IN (
-          SELECT "key"
-          FROM "RateLimitBucket"
-          WHERE "resetAt" < NOW() - INTERVAL '1 hour'
-          LIMIT ${safeBatchSize}
-        );
-      `;
-      return Number(res) || 0;
-    } catch {
-      return 0;
+      const isPostgres =
+        process.env.DATABASE_URL?.startsWith("postgres") ||
+        process.env.DATABASE_URL?.startsWith("postgresql") ||
+        process.env.MANDATE_DATABASE_TYPE === "postgres";
+
+      let deleted = 0;
+      if (isPostgres) {
+        const res: any = await prisma.$executeRaw`
+          DELETE FROM "RateLimitBucket"
+          WHERE "key" IN (
+            SELECT "key"
+            FROM "RateLimitBucket"
+            WHERE "resetAt" < NOW() - INTERVAL '1 hour'
+            LIMIT ${safeBatchSize}
+          );
+        `;
+        deleted = Number(res) || 0;
+      } else {
+        const oneHourAgo = new Date(Date.now() - 3600000);
+        if ((prisma as any).rateLimitBucket?.findMany) {
+          const expiredKeys = await (prisma as any).rateLimitBucket.findMany({
+            where: { resetAt: { lt: oneHourAgo } },
+            select: { key: true },
+            take: safeBatchSize,
+          });
+          if (expiredKeys.length > 0) {
+            const deleteRes = await (prisma as any).rateLimitBucket.deleteMany({
+              where: { key: { in: expiredKeys.map((k: any) => k.key) } },
+            });
+            deleted = deleteRes.count;
+          }
+        }
+      }
+
+      const durationMs = Date.now() - startTime;
+      console.log(
+        JSON.stringify({
+          event: "RATE_LIMIT_CLEANUP",
+          status: "SUCCESS",
+          deleted_rows: deleted,
+          cleanup_failed: false,
+          duration_ms: durationMs,
+          batch_size: safeBatchSize,
+        })
+      );
+
+      return {
+        success: true,
+        deleted,
+        durationMs,
+        batchSize: safeBatchSize,
+      };
+    } catch (err: any) {
+      const durationMs = Date.now() - startTime;
+      const errorMsg = err?.message || "Unknown database cleanup error";
+
+      console.error(
+        JSON.stringify({
+          event: "RATE_LIMIT_CLEANUP",
+          status: "FAILED",
+          deleted_rows: 0,
+          cleanup_failed: true,
+          error: errorMsg,
+          duration_ms: durationMs,
+          batch_size: safeBatchSize,
+        })
+      );
+
+      return {
+        success: false,
+        deleted: 0,
+        durationMs,
+        batchSize: safeBatchSize,
+        error: errorMsg,
+      };
     }
   }
 
   /**
    * Sweeps all expired buckets in bounded batches up to a maximum number of iterations.
    */
-  public static async cleanAllExpiredBuckets(batchSize = 500, maxBatches = 20): Promise<number> {
+  public static async cleanAllExpiredBuckets(
+    batchSize = 500,
+    maxBatches = 20
+  ): Promise<{ success: boolean; totalDeleted: number; batchesRun: number; error?: string }> {
     let totalDeleted = 0;
+    let batchesRun = 0;
     for (let batch = 0; batch < maxBatches; batch++) {
-      const deleted = await this.cleanExpiredBuckets(batchSize);
-      totalDeleted += deleted;
-      if (deleted < batchSize) break;
+      batchesRun++;
+      const res = await this.cleanExpiredBucketsDetailed(batchSize);
+      if (!res.success) {
+        return {
+          success: false,
+          totalDeleted,
+          batchesRun,
+          error: res.error,
+        };
+      }
+      totalDeleted += res.deleted;
+      if (res.deleted < batchSize) break;
     }
-    return totalDeleted;
+    return { success: true, totalDeleted, batchesRun };
   }
 }
 

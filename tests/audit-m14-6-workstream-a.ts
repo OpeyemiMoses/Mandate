@@ -1,13 +1,12 @@
 /**
- * MANDATE M14.6-ECA: Workstream A Adversarial Audit Probe
- * In-memory test verifying:
- * 1. Ciphertext transposition vulnerability between Wallet A and Wallet B.
- * 2. Absence of Additional Authenticated Data (AAD) in CredentialVault.
- * 3. Exact ciphertext format and version identifier.
- * 4. Behavior under modified IV, tag, ciphertext, and context.
+ * MANDATE M14.6-R1: Workstream A Adversarial Verification Probe
+ * Verifies:
+ * 1. Introduction of version 2 (`v2:iv:tag:ciphertext`) encryption format.
+ * 2. Mandatory Authenticated Additional Data (AAD) binding to walletId + nearAccountId.
+ * 3. Strict rejection of cross-wallet ciphertext transposition attacks.
+ * 4. Elimination of ordinary production plaintext fallbacks.
  */
 
-import crypto from "crypto";
 import { CredentialVault, CURRENT_VAULT_VERSION } from "../src/lib/integrations/credentialVault";
 import {
   WalletCredentialService,
@@ -40,9 +39,12 @@ async function runWorkstreamAProbe() {
   console.log("🔬 AUDIT PROBE: WORKSTREAM A — CREDENTIAL VAULT AAD CONTEXT BINDING");
   console.log("================================================================================\n");
 
+  const walletAContext = { walletId: "wallet_alpha_001", nearAccountId: "alpha.testnet" };
+  const walletBContext = { walletId: "wallet_beta_002", nearAccountId: "beta.testnet" };
+
   // 1. Inspect format and version
   const rawKeyA = "wk_testnet_wallet_alpha_secret_key_1234567890";
-  const encryptedA = encryptWalletApiKey(rawKeyA);
+  const encryptedA = encryptWalletApiKey(rawKeyA, walletAContext);
   const parts = encryptedA.split(":");
 
   const isV2 = parts[0] === "v2";
@@ -52,59 +54,89 @@ async function runWorkstreamAProbe() {
     expected: "v2 (with AAD context binding)",
     actual: `${parts[0]} (parts count: ${parts.length})`,
     vulnerabilityConfirmed: !isV2,
-    details: `CURRENT_VAULT_VERSION is ${CURRENT_VAULT_VERSION}. Stored payload format is ${parts[0]} with 4 segments (${parts[0]}:iv:tag:ciphertext). No version 2 exists.`,
+    details: `CURRENT_VAULT_VERSION is ${CURRENT_VAULT_VERSION}. Stored payload format is ${parts[0]} with 4 segments (${parts[0]}:iv:tag:ciphertext).`,
   });
 
-  // 2. Transposition Attack between Wallet A and Wallet B
-  const walletAContext = { walletId: "wallet_alpha_001", nearAccountId: "alpha.testnet" };
-  const walletBContext = { walletId: "wallet_beta_002", nearAccountId: "beta.testnet" };
+  // 2. Legitimate Decryption under Correct Context
+  const decryptedUnderA = decryptWalletApiKey(encryptedA, walletAContext);
+  const legitimateSuccess = decryptedUnderA === rawKeyA;
+  recordProbe({
+    testId: "A2-LEGITIMATE-DECRYPT",
+    name: "Legitimate Decryption Under Correct Wallet Context",
+    expected: "Decryption succeeds and yields original raw API key",
+    actual: legitimateSuccess ? "Decryption SUCCEEDED" : "Decryption FAILED",
+    vulnerabilityConfirmed: !legitimateSuccess,
+    details: `Original key was retrieved cleanly under authorized context (${walletAContext.walletId}, ${walletAContext.nearAccountId}).`,
+  });
 
-  // In a secure v2 implementation, decryption must require the target wallet context (walletId + nearAccountId)
-  // and fail if decrypted under wallet B's context.
-  // In the current implementation, decryptApiKey takes NO context parameters at all!
-  const decryptedUnderB = decryptWalletApiKey(encryptedA);
+  // 3. Transposition Attack: Attempt to decrypt Wallet A's ciphertext under Wallet B's context
+  const decryptedUnderB = decryptWalletApiKey(encryptedA, walletBContext);
   const transpositionSuccess = decryptedUnderB === rawKeyA;
 
   recordProbe({
-    testId: "A2-TRANSPOSITION",
+    testId: "A3-TRANSPOSITION",
     name: "Cross-Wallet Ciphertext Transposition Attack",
     expected: "Decryption must fail authentication when transposed to Wallet B",
-    actual: transpositionSuccess ? "Decryption SUCCEEDED without authentication failure" : "Decryption failed",
+    actual: transpositionSuccess ? "Decryption SUCCEEDED (VULNERABLE)" : "Decryption FAILED (SECURE - Empty String)",
     vulnerabilityConfirmed: transpositionSuccess,
-    details: `Transplanted ciphertext from Wallet A into Wallet B decrypted successfully into the plaintext key "${decryptedUnderB.slice(0, 15)}...". Decrypt function has no AAD context parameters.`,
+    details: `Ciphertext from Wallet A copied to Wallet B was rejected by GCM AAD verification: returned "${decryptedUnderB}". Transposition defeated.`,
   });
 
-  // 3. Altered Ciphertext and Tag Failure Checks (GCM Integrity)
-  // 3.1 Corrupted Tag
+  // 4. Altered NEAR Account ID Context Attack
+  const alteredAccountContext = { walletId: walletAContext.walletId, nearAccountId: "hacker.testnet" };
+  const decryptedAlteredAccount = decryptWalletApiKey(encryptedA, alteredAccountContext);
+  recordProbe({
+    testId: "A4-ALTERED-ACCOUNT",
+    name: "Altered NEAR Account Context Rejection",
+    expected: "Decryption fails if account ID differs",
+    actual: decryptedAlteredAccount === "" ? "Decryption FAILED safely" : "Decrypted unexpectedly",
+    vulnerabilityConfirmed: decryptedAlteredAccount !== "",
+    details: "AAD verification binds the canonical NEAR account ID; altered account ID fails tag authentication.",
+  });
+
+  // 5. Altered Wallet ID Context Attack
+  const alteredWalletContext = { walletId: "wallet_attacker_999", nearAccountId: walletAContext.nearAccountId };
+  const decryptedAlteredWallet = decryptWalletApiKey(encryptedA, alteredWalletContext);
+  recordProbe({
+    testId: "A5-ALTERED-WALLET-ID",
+    name: "Altered Wallet ID Context Rejection",
+    expected: "Decryption fails if wallet ID differs",
+    actual: decryptedAlteredWallet === "" ? "Decryption FAILED safely" : "Decrypted unexpectedly",
+    vulnerabilityConfirmed: decryptedAlteredWallet !== "",
+    details: "AAD verification binds the canonical wallet ID; altered wallet ID fails tag authentication.",
+  });
+
+  // 6. GCM Tag Tampering Check
   const partsA = encryptedA.split(":");
   const corruptedTag = partsA[0] + ":" + partsA[1] + ":" + (partsA[2].slice(0, -2) + "ff") + ":" + partsA[3];
-  const decryptCorruptedTag = decryptWalletApiKey(corruptedTag);
+  const decryptCorruptedTag = decryptWalletApiKey(corruptedTag, walletAContext);
 
   recordProbe({
-    testId: "A3-GCM-TAG-CORRUPTION",
+    testId: "A6-GCM-TAG-CORRUPTION",
     name: "AES-GCM Authentication Tag Tamper Rejection",
     expected: "Tampered auth tag must fail decryption and return empty string",
     actual: decryptCorruptedTag === "" ? "Returned empty string (decryption failed safely)" : `Returned "${decryptCorruptedTag}"`,
     vulnerabilityConfirmed: decryptCorruptedTag !== "",
-    details: "Standard AES-GCM tag verification catches payload bit flips, but does NOT catch cross-row database transposition.",
+    details: "AES-GCM tag verification catches bit flips in ciphertext or auth tag.",
   });
 
-  // 3.2 Legacy Plaintext Fallback Acceptance
-  const legacyKey = "wk_legacy_plaintext_key_without_encryption";
-  const decryptedLegacy = decryptWalletApiKey(legacyKey);
-  const legacyAccepted = decryptedLegacy === legacyKey;
+  // 7. Plaintext Fallback Elimination Check
+  const legacyPlaintextKey = "wk_legacy_plaintext_key_without_encryption";
+  const decryptedLegacy = decryptWalletApiKey(legacyPlaintextKey, walletAContext);
+  const plaintextFallbackAccepted = decryptedLegacy === legacyPlaintextKey;
 
   recordProbe({
-    testId: "A4-PLAINTEXT-FALLBACK",
-    name: "Legacy Plaintext Fallback Acceptance",
-    expected: "Production reads reject plaintext credentials (or restrict strictly to one-time migration)",
-    actual: legacyAccepted ? "Plaintext accepted transparently on ordinary read" : "Rejected plaintext",
-    vulnerabilityConfirmed: legacyAccepted,
-    details: "WalletCredentialService.decryptApiKey returns plaintext directly if !isEncrypted(key), maintaining indefinite fallback.",
+    testId: "A7-PLAINTEXT-FALLBACK",
+    name: "Plaintext Fallback Elimination on Production Read",
+    expected: "Production read rejects plaintext credential and returns empty string",
+    actual: plaintextFallbackAccepted ? "Plaintext accepted (VULNERABLE)" : "Plaintext rejected (SECURE - Empty String)",
+    vulnerabilityConfirmed: plaintextFallbackAccepted,
+    details: "WalletCredentialService.decryptApiKey strictly enforces encrypted payload format and rejects unencrypted raw keys.",
   });
 
   console.log("================================================================================");
-  console.log(`WORKSTREAM A PROBE COMPLETED: ${probeResults.filter(p => p.vulnerabilityConfirmed).length} VULNERABILITIES CONFIRMED`);
+  const vulnCount = probeResults.filter((p) => p.vulnerabilityConfirmed).length;
+  console.log(`WORKSTREAM A PROBE COMPLETED: ${vulnCount} VULNERABILITIES CONFIRMED`);
   console.log("================================================================================\n");
 
   return probeResults;

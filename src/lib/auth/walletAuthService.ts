@@ -317,19 +317,41 @@ export class WalletAuthService {
       };
     }
 
-    // 5. Atomic CAS Single-Use Consumption with Expiry Enforcement in PostgreSQL (Workstream F)
-    const casResult = await prisma.authChallenge.updateMany({
-      where: {
-        id: challenge.id,
-        consumedAt: null,
-        expiresAt: { gt: new Date() },
-      },
-      data: {
-        consumedAt: new Date(),
-      },
-    });
+    // 5. Atomic CAS Single-Use Consumption with Authoritative PostgreSQL Clock (NOW())
+    const isPostgres =
+      process.env.DATABASE_URL?.startsWith("postgres") ||
+      process.env.DATABASE_URL?.startsWith("postgresql") ||
+      process.env.MANDATE_DATABASE_TYPE === "postgres";
 
-    if (casResult.count !== 1) {
+    let casSuccess = false;
+
+    if (isPostgres) {
+      // Authoritative PostgreSQL clock evaluation: NOW() for both expiresAt check and consumedAt
+      const rowsUpdated: number = await prisma.$executeRaw`
+        UPDATE "AuthChallenge"
+        SET "consumedAt" = NOW()
+        WHERE "id" = ${challenge.id}
+          AND "consumedAt" IS NULL
+          AND "expiresAt" > NOW();
+      `;
+      casSuccess = rowsUpdated === 1;
+    } else {
+      // Safe fallback for local SQLite development
+      const now = new Date();
+      const casResult = await prisma.authChallenge.updateMany({
+        where: {
+          id: challenge.id,
+          consumedAt: null,
+          expiresAt: { gt: now },
+        },
+        data: {
+          consumedAt: now,
+        },
+      });
+      casSuccess = casResult.count === 1;
+    }
+
+    if (!casSuccess) {
       // Differentiate replay race vs expiry boundary
       const freshChallenge = await prisma.authChallenge.findUnique({
         where: { id: challenge.id },
@@ -372,7 +394,9 @@ export function startChallengeCleanupWorker(intervalMs = 60000): void {
     try {
       await WalletAuthService.cleanExpiredChallenges(500);
       await RateLimitService.cleanExpiredBuckets();
-    } catch {}
+    } catch (err: any) {
+      console.error("[ChallengeCleanupWorker] Background sweep encountered error:", err?.message);
+    }
   }, intervalMs);
   if (cleanupTimer.unref) {
     cleanupTimer.unref();

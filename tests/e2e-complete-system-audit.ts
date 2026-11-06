@@ -167,11 +167,13 @@ async function runE2ECompleteAudit() {
       data: { name: "Agent Alpha", status: "ACTIVE", userId: userA.id },
     });
 
+    const walletAId = `w-a-${runId}`;
+    const nearAccountA = `vault-a-${runId}.testnet`;
     const walletA = await prisma.wallet.create({
       data: {
-        walletId: `w-a-${runId}`,
-        apiKey: `wk_a_${runId}`,
-        nearAccountId: `vault-a-${runId}.testnet`,
+        walletId: walletAId,
+        apiKey: encryptWalletApiKey(`wk_a_${runId}`, { walletId: walletAId, nearAccountId: nearAccountA }),
+        nearAccountId: nearAccountA,
         initializationStatus: "ACTIVE",
         balanceYocto: nearToYocto("5.0"),
         agent: { connect: { id: agentA.id } },
@@ -377,32 +379,51 @@ async function runE2ECompleteAudit() {
   }
 
   // ---------------------------------------------------------------------------
-  // LAYER 6: HARDWARE TEE & CREDENTIAL VAULT ENCRYPTION
+  // LAYER 6: HARDWARE TEE & CREDENTIAL VAULT ENCRYPTION (v2 WITH AAD)
   // ---------------------------------------------------------------------------
-  console.log("\n--- [LAYER 6: Hardware TEE & AES-256-GCM Credential Vault] ---");
+  console.log("\n--- [LAYER 6: Hardware TEE & AES-256-GCM Credential Vault (v2 AAD)] ---");
   try {
     const rawApiKey = "wk_testnet_worker_secret_9876543210abcdef";
-    const encrypted = encryptWalletApiKey(rawApiKey);
-    const decrypted = decryptWalletApiKey(encrypted);
+    const vaultWalletId = `w_vault_${runId}`;
+    const vaultNearAccount = `vault_${runId}.testnet`;
+
+    const encrypted = encryptWalletApiKey(rawApiKey, {
+      walletId: vaultWalletId,
+      nearAccountId: vaultNearAccount,
+    });
+    const decrypted = decryptWalletApiKey(encrypted, {
+      walletId: vaultWalletId,
+      nearAccountId: vaultNearAccount,
+    });
+
+    // Transposition test: Decrypting under a different wallet context fails closed
+    const transposedDecrypted = decryptWalletApiKey(encrypted, {
+      walletId: `other_wallet_${runId}`,
+      nearAccountId: `other_${runId}.testnet`,
+    });
 
     // Tampered payload
     const tamperedPayload = encrypted.slice(0, -4) + "9999";
-    const tamperedDecrypted = decryptWalletApiKey(tamperedPayload);
+    const tamperedDecrypted = decryptWalletApiKey(tamperedPayload, {
+      walletId: vaultWalletId,
+      nearAccountId: vaultNearAccount,
+    });
 
     if (
-      encrypted.startsWith("v1:") &&
+      encrypted.startsWith("v2:") &&
       encrypted.split(":").length === 4 &&
       decrypted === rawApiKey &&
+      transposedDecrypted === "" &&
       tamperedDecrypted === ""
     ) {
       record(
         "Layer 6: Vault",
-        "AES-256-GCM Authenticated Credential Vault Encryption",
+        "AES-256-GCM Authenticated Credential Vault v2 with AAD",
         "PASS",
-        `Key encrypted to authenticated ciphertext (${encrypted.substring(0, 24)}...); Decryption matches plaintext; Corrupted ciphertext yields empty string (Fail-Closed)`
+        `Key encrypted with v2 AAD context (${encrypted.substring(0, 24)}...); Decryption matches plaintext; Transposed context strictly rejected; Corrupted ciphertext yields empty string (Fail-Closed)`
       );
     } else {
-      record("Layer 6: Vault", "Credential Vault Encryption", "FAIL", `Encryption validation failed`);
+      record("Layer 6: Vault", "Credential Vault Encryption", "FAIL", `Encryption validation failed: v2=${encrypted.startsWith("v2:")}, match=${decrypted === rawApiKey}, transposedBlocked=${transposedDecrypted === ""}`);
     }
   } catch (err: any) {
     record("Layer 6: Vault", "Credential Vault", "FAIL", `Error: ${err.message}`);

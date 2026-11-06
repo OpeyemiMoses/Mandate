@@ -23,7 +23,7 @@ const SENSITIVE_KEY_PATTERNS = [
   /wk_[a-zA-Z0-9]+/i,
 ];
 
-export const CURRENT_VAULT_VERSION = 1;
+export const CURRENT_VAULT_VERSION = 2;
 
 // In-memory cache for decrypted credentials with bounded TTL
 const credentialMemoryCache = new Map<string, { credentials: Record<string, any>; version: number; expiresAt: number }>();
@@ -42,13 +42,26 @@ export interface EncryptedPayload {
 export class CredentialVault {
   /**
    * Encrypts a credentials dictionary using AES-256-GCM.
+   * Version 2 binds authenticated additional data (AAD) to prevent cross-record transposition.
    * Stored format: v{version}:{ivHex}:{authTagHex}:{ciphertextHex}
    */
-  public static encrypt(credentials: Record<string, any>, keyVersion: number = CURRENT_VAULT_VERSION): string {
+  public static encrypt(
+    credentials: Record<string, any>,
+    keyVersion: number = CURRENT_VAULT_VERSION,
+    aad?: Buffer | string
+  ): string {
     const secret = getCredentialVaultMasterKey(keyVersion);
     const key = deriveKey(secret);
     const iv = crypto.randomBytes(12);
     const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+
+    if (keyVersion >= 2) {
+      if (!aad) {
+        throw new Error("AUTHENTICATED_DATA_REQUIRED: Version 2 vault encryption requires authenticated additional data (AAD).");
+      }
+      const aadBuffer = Buffer.isBuffer(aad) ? aad : Buffer.from(aad, "utf8");
+      cipher.setAAD(aadBuffer);
+    }
 
     const plaintext = JSON.stringify(credentials);
     let ciphertext = cipher.update(plaintext, "utf8", "hex");
@@ -60,9 +73,14 @@ export class CredentialVault {
 
   /**
    * Decrypts an encrypted credential payload.
-   * Supports backwards-compatible format (iv:authTag:ciphertext) and versioned format (v1:iv:authTag:ciphertext).
+   * When payload is v2, verifies authentication tag against the provided AAD.
+   * If AAD does not match, GCM authentication fails and throws an error.
    */
-  public static decrypt(encryptedString: string): { credentials: Record<string, any>; version: number } {
+  public static decrypt(
+    encryptedString: string,
+    aad?: Buffer | string,
+    options?: { allowLegacyV1?: boolean }
+  ): { credentials: Record<string, any>; version: number } {
     if (!encryptedString) {
       throw new Error("Cannot decrypt empty credentials string");
     }
@@ -79,13 +97,19 @@ export class CredentialVault {
       authTagHex = parts[2];
       ciphertextHex = parts[3];
     } else if (parts.length === 3) {
-      // Legacy format from earlier milestone
+      // Legacy unversioned format from earlier milestone
       version = 1;
       ivHex = parts[0];
       authTagHex = parts[1];
       ciphertextHex = parts[2];
     } else {
-      throw new Error("Invalid encrypted credentials format");
+      throw new Error("Invalid encrypted credentials format: expected v{version}:{iv}:{tag}:{cipher}");
+    }
+
+    if (version < 2 && !options?.allowLegacyV1) {
+      throw new Error(
+        `LEGACY_CREDENTIAL_DEPRECATED: Version ${version} credentials lack AAD context binding. Must be migrated to version 2.`
+      );
     }
 
     const secret = getCredentialVaultMasterKey(version);
@@ -94,6 +118,15 @@ export class CredentialVault {
     const authTag = Buffer.from(authTagHex, "hex");
 
     const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
+
+    if (version >= 2) {
+      if (!aad) {
+        throw new Error("AUTHENTICATED_DATA_REQUIRED: Decrypting version 2 credentials requires matching AAD context.");
+      }
+      const aadBuffer = Buffer.isBuffer(aad) ? aad : Buffer.from(aad, "utf8");
+      decipher.setAAD(aadBuffer);
+    }
+
     decipher.setAuthTag(authTag);
 
     let decrypted = decipher.update(ciphertextHex, "hex", "utf8");
