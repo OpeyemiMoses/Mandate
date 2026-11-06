@@ -317,7 +317,7 @@ export class WalletAuthService {
       };
     }
 
-    // 5. Atomic CAS Single-Use Consumption with Authoritative PostgreSQL Clock (NOW())
+    // 5. Transactionally Safe Challenge Consumption Under Row-Lock (Workstream A Hardening)
     const isPostgres =
       process.env.DATABASE_URL?.startsWith("postgres") ||
       process.env.DATABASE_URL?.startsWith("postgresql") ||
@@ -326,15 +326,31 @@ export class WalletAuthService {
     let casSuccess = false;
 
     if (isPostgres) {
-      // Authoritative PostgreSQL clock evaluation: NOW() for both expiresAt check and consumedAt
-      const rowsUpdated: number = await prisma.$executeRaw`
-        UPDATE "AuthChallenge"
-        SET "consumedAt" = NOW()
-        WHERE "id" = ${challenge.id}
-          AND "consumedAt" IS NULL
-          AND "expiresAt" > NOW();
-      `;
-      casSuccess = rowsUpdated === 1;
+      try {
+        const consumptionOutcome = await WalletAuthService.consumeChallengeAtomic(challenge.id);
+
+        if (!consumptionOutcome.success) {
+          if (consumptionOutcome.code === "CHALLENGE_ALREADY_USED") {
+            return {
+              valid: false,
+              error: "Challenge already consumed. Replay strictly prevented.",
+              code: "CHALLENGE_ALREADY_USED",
+            };
+          }
+          return {
+            valid: false,
+            error: "Authentication challenge expired before consumption could complete. Request a new challenge.",
+            code: "CHALLENGE_EXPIRED",
+          };
+        }
+        casSuccess = true;
+      } catch (txErr: any) {
+        return {
+          valid: false,
+          error: "Database transaction failure during challenge consumption. Authentication aborted.",
+          code: "INVALID_WALLET_PROOF",
+        };
+      }
     } else {
       // Safe fallback for local SQLite development
       const now = new Date();
@@ -379,6 +395,69 @@ export class WalletAuthService {
       publicKey: cleanPublicKey,
       permission: "FullAccess",
     };
+  }
+
+  /**
+   * Workstream A Hardening:
+   * Explicit, transactionally safe challenge consumption sequence under PostgreSQL row-lock:
+   * 1. Start a short interactive database transaction.
+   * 2. Acquire exclusive row lock on challenge: SELECT ... FOR UPDATE.
+   * 3. Evaluate PostgreSQL database wall clock (clock_timestamp()) strictly AFTER acquiring row lock:
+   *    - If row not found: reject with CHALLENGE_NOT_FOUND.
+   *    - If consumedAt is not null: reject with CHALLENGE_ALREADY_USED (replay prevention).
+   *    - If expiresAt <= db_now: reject with CHALLENGE_EXPIRED.
+   * 4. Atomically update consumedAt = clock_timestamp() with defense-in-depth condition.
+   * 5. Verify UPDATE affected exactly 1 row. If 0 rows affected, reject with CHALLENGE_EXPIRED.
+   * 6. Commit transaction.
+   */
+  public static async consumeChallengeAtomic(challengeId: string): Promise<{
+    success: boolean;
+    code: "SUCCESS" | "CHALLENGE_NOT_FOUND" | "CHALLENGE_ALREADY_USED" | "CHALLENGE_EXPIRED" | "TRANSACTION_FAILED";
+  }> {
+    try {
+      return await prisma.$transaction(async (tx) => {
+        const lockedRows: any[] = await tx.$queryRaw`
+          SELECT "id", "expiresAt", "consumedAt", clock_timestamp() AS "db_now"
+          FROM "AuthChallenge"
+          WHERE "id" = ${challengeId}
+          FOR UPDATE;
+        `;
+
+        if (!lockedRows || lockedRows.length === 0) {
+          return { success: false, code: "CHALLENGE_NOT_FOUND" as const };
+        }
+
+        const locked = lockedRows[0];
+        if (locked.consumedAt !== null) {
+          return { success: false, code: "CHALLENGE_ALREADY_USED" as const };
+        }
+
+        // Evaluate database wall clock strictly AFTER acquiring row lock
+        const dbNow = new Date(locked.db_now);
+        const expiresAt = new Date(locked.expiresAt);
+        if (expiresAt.getTime() <= dbNow.getTime()) {
+          return { success: false, code: "CHALLENGE_EXPIRED" as const };
+        }
+
+        // Atomically consume with defensive conditional check
+        const updatedCount = await tx.$executeRaw`
+          UPDATE "AuthChallenge"
+          SET "consumedAt" = clock_timestamp()
+          WHERE "id" = ${challengeId}
+            AND "consumedAt" IS NULL
+            AND "expiresAt" > clock_timestamp();
+        `;
+
+        if (Number(updatedCount) !== 1) {
+          return { success: false, code: "CHALLENGE_EXPIRED" as const };
+        }
+
+        return { success: true, code: "SUCCESS" as const };
+      });
+    } catch (txErr: any) {
+      console.error("[WalletAuthService] Interactive transaction error during challenge consumption:", txErr?.message);
+      return { success: false, code: "TRANSACTION_FAILED" as const };
+    }
   }
 }
 

@@ -129,14 +129,17 @@ export class PostgresBackupService {
     const createdBy = options.createdBy || "SYSTEM";
     const trigger = options.trigger || "MANUAL";
 
-    const defaultUrl =
-      "postgresql://postgres:postgrespassword@localhost:5432/mandate_prod?schema=public";
     let connectionString = options.databaseUrl;
     if (!connectionString && process.env.DATABASE_URL?.startsWith("postgres")) {
       connectionString = process.env.DATABASE_URL;
     }
+    if (!connectionString && process.env.POSTGRES_URL) {
+      connectionString = process.env.POSTGRES_URL;
+    }
     if (!connectionString) {
-      connectionString = defaultUrl;
+      throw new Error(
+        "[PostgresBackupService] No database URL provided in options or configured in DATABASE_URL/POSTGRES_URL environment variables."
+      );
     }
 
     const client = new Client({ connectionString });

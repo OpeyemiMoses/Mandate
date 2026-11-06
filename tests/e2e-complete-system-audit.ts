@@ -11,6 +11,10 @@
  */
 
 import crypto from "crypto";
+import { assertNotProductionDatabase } from "./helpers/assertNotProductionDatabase";
+
+assertNotProductionDatabase(process.env.DATABASE_URL);
+
 import { prismaPg as prisma } from "../src/lib/postgresDb";
 import { WalletAuthService, AUTH_AUDIENCE, AUTH_NETWORK } from "../src/lib/auth/walletAuthService";
 import { validateRequestOrigin } from "../src/lib/security/originValidation";

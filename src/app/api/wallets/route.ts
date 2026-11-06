@@ -163,7 +163,10 @@ export async function POST(req: Request) {
         wallet: {
           create: {
             walletId: outlayerRes.wallet_id,
-            apiKey: encryptWalletApiKey(outlayerRes.api_key),
+            apiKey: encryptWalletApiKey(outlayerRes.api_key, {
+              walletId: outlayerRes.wallet_id,
+              nearAccountId: outlayerRes.near_account_id,
+            }),
             nearAccountId: outlayerRes.near_account_id,
             handoffUrl: outlayerRes.handoff_url,
             network: "testnet",
