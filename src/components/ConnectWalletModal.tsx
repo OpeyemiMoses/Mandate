@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { ModalPortal } from "./ModalPortal";
 import {
   X,
   Wallet,
@@ -303,17 +303,10 @@ export function ConnectWalletModal({ isOpen, onClose }: ConnectWalletModalProps)
     },
   ];
 
-  return createPortal(
-    <div className="fixed inset-0 z-[9999] overflow-y-auto bg-black/80 dark:bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="flex min-h-full items-center justify-center p-4 sm:p-6 text-center">
-        <div
-          className="relative w-full max-w-lg text-left rounded-2xl bg-white dark:bg-[#0F0F12] border border-slate-200 dark:border-[#23232A] p-6 shadow-2xl text-slate-900 dark:text-[#E5E7EB] space-y-5 animate-pop"
-          style={{
-            boxShadow:
-              "0 20px 60px -15px rgba(255, 59, 48, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.05)",
-          }}
-        >
-          {/* Header */}
+  return (
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg">
+      <div className="space-y-5">
+        {/* Header */}
           <div className="flex items-start justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -565,8 +558,6 @@ export function ConnectWalletModal({ isOpen, onClose }: ConnectWalletModalProps)
           <span className="font-mono text-slate-400 dark:text-zinc-500">rpc.testnet.near.org</span>
         </div>
       </div>
-      </div>
-    </div>,
-    document.body
+    </ModalPortal>
   );
 }

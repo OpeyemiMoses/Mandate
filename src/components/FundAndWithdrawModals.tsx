@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { ModalPortal } from "./ModalPortal";
 import {
   Wallet,
   ArrowDownLeft,
@@ -256,11 +256,10 @@ export function FundAndWithdrawModals({
     }
   };
 
-  return createPortal(
-    <div className="fixed inset-0 z-[9999] overflow-y-auto bg-black/80 dark:bg-black/85 backdrop-blur-md animate-fade-in">
-      <div className="flex min-h-full items-center justify-center p-4 sm:p-6 text-center">
-        <div className="relative w-full max-w-md transform text-left rounded-3xl p-[1px] bg-gradient-to-br from-[#FF3B30]/60 via-[#FF3B30]/20 to-slate-200 dark:to-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.35)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.9)] animate-pop transition-all">
-          <div className="relative rounded-[23px] bg-white dark:bg-[#101014] p-6 space-y-5 text-slate-900 dark:text-white border border-slate-200/80 dark:border-transparent">
+  return (
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md" customCard={true}>
+      <div className="relative w-full max-w-md transform text-left rounded-3xl p-[1px] bg-gradient-to-br from-[#FF3B30]/60 via-[#FF3B30]/20 to-slate-200 dark:to-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.35)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.9)] animate-pop transition-all">
+        <div className="relative rounded-[23px] bg-white dark:bg-[#101014] p-6 space-y-5 text-slate-900 dark:text-white border border-slate-200/80 dark:border-transparent">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div
@@ -489,8 +488,6 @@ export function FundAndWithdrawModals({
           </form>
         </div>
       </div>
-      </div>
-    </div>,
-    document.body
+    </ModalPortal>
   );
 }

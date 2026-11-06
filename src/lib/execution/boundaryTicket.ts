@@ -10,10 +10,13 @@
 
 import crypto from "crypto";
 import { canonicalize } from "@/lib/auditLedger";
+import { getExecutionSigningSecret } from "@/lib/production/environmentValidation";
 
-// Module-private cryptographic key generated per process lifecycle.
-// Never exported, never accessible to arbitrary application callers or API handlers.
-const BOUNDARY_INTERNAL_SECRET = crypto.randomBytes(32).toString("hex");
+// Cryptographic key strictly resolved from EXECUTION_SIGNING_SECRET.
+// Milestone 14.5: Bound strictly to dedicated EXECUTION_SIGNING_SECRET.
+function getBoundarySigningSecret(): string {
+  return getExecutionSigningSecret();
+}
 
 // Module-private brand symbol
 const TICKET_SEAL = Symbol("BoundaryExecutionTicket.seal");
@@ -127,7 +130,13 @@ export function mintBoundaryExecutionTicket(params: MintTicketParams): BoundaryE
     throw new Error("UNAUTHORIZED_EXECUTION_BOUNDARY_BYPASS: Cannot mint ticket with missing required parameters.");
   }
 
-  return new BoundaryExecutionTicket(params, BOUNDARY_INTERNAL_SECRET, TICKET_SEAL);
+  // Testnet-Only Enactment: Block mainnet ticket minting at the factory source
+  const network = (params.network || "testnet").toLowerCase();
+  if (network !== "testnet") {
+    throw new Error(`MAINNET_EXECUTION_PROHIBITED: Cannot mint ticket for network "${network}". Only NEAR Testnet is authorized in Testnet Beta.`);
+  }
+
+  return new BoundaryExecutionTicket(params, getBoundarySigningSecret(), TICKET_SEAL);
 }
 
 /**
@@ -182,7 +191,7 @@ export function validateBoundaryExecutionTicket(
   });
 
   const expectedHmac = crypto
-    .createHmac("sha256", BOUNDARY_INTERNAL_SECRET)
+    .createHmac("sha256", getBoundarySigningSecret())
     .update(JSON.stringify(canonicalPayload), "utf8")
     .digest("hex");
 

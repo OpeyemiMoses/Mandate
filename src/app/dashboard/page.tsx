@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -34,7 +34,7 @@ export default function DashboardPage() {
     mode: "fund" | "withdraw";
   }>({ isOpen: false, mode: "fund" });
 
-  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
+  const [onboardingDismissed, setOnboardingDismissed] = useState<boolean>(true);
 
   const {
     accountId,
@@ -54,6 +54,35 @@ export default function DashboardPage() {
     setIsWalletModalOpen,
     toggleAgentFreeze,
   } = useMandate();
+
+  // Load onboarding dismissal state from localStorage on mount or account change
+  useEffect(() => {
+    try {
+      const globalDismissed = localStorage.getItem("mandate_onboarding_dismissed") === "true";
+      const accountDismissed = accountId
+        ? localStorage.getItem(`mandate_onboarding_dismissed_${accountId}`) === "true"
+        : false;
+      if (!globalDismissed && !accountDismissed) {
+        setOnboardingDismissed(false);
+      } else {
+        setOnboardingDismissed(true);
+      }
+    } catch {
+      setOnboardingDismissed(false);
+    }
+  }, [accountId]);
+
+  const handleDismissOnboarding = () => {
+    setOnboardingDismissed(true);
+    try {
+      localStorage.setItem("mandate_onboarding_dismissed", "true");
+      if (accountId) {
+        localStorage.setItem(`mandate_onboarding_dismissed_${accountId}`, "true");
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -174,10 +203,10 @@ export default function DashboardPage() {
               </div>
               <button
                 type="button"
-                onClick={() => setOnboardingDismissed(true)}
-                className="text-xs text-slate-500 hover:text-slate-900 dark:text-[#A1A1AA] dark:hover:text-white transition-colors self-start sm:self-auto"
+                onClick={handleDismissOnboarding}
+                className="text-xs text-slate-500 hover:text-slate-900 dark:text-[#A1A1AA] dark:hover:text-white transition-colors self-start sm:self-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5"
               >
-                Dismiss Checklist
+                <span>✕</span> Dismiss Checklist
               </button>
             </div>
 

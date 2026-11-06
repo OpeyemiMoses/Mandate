@@ -17,6 +17,7 @@ export function NearWalletSelectorSync() {
     walletName,
     openWalletModal,
     isInitialized,
+    signAuthChallenge,
   } = useNearWalletSelector();
 
   const {
@@ -28,8 +29,29 @@ export function NearWalletSelectorSync() {
   } = useMandate();
 
   const handledTxRef = useRef<string | null>(null);
+  const isSigningRef = useRef(false);
+  const attemptedAccountRef = useRef<string | null>(null);
 
-  // Sync account from NEAR Connector into MandateContext
+  // Reset attempted account if user disconnected or switched account
+  useEffect(() => {
+    if (!nearAccountId) {
+      attemptedAccountRef.current = null;
+    } else if (
+      attemptedAccountRef.current &&
+      attemptedAccountRef.current.toLowerCase() !== nearAccountId.toLowerCase()
+    ) {
+      attemptedAccountRef.current = null;
+    }
+  }, [nearAccountId]);
+
+  // Register global signer for MandateContext fallback
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as any).signNearAuthChallenge = signAuthChallenge;
+    }
+  }, [signAuthChallenge]);
+
+  // Sync account from NEAR Connector into MandateContext via mandatory cryptographic proof
   useEffect(() => {
     if (!isInitialized) return;
 
@@ -41,14 +63,56 @@ export function NearWalletSelectorSync() {
       return;
     }
 
-    if (nearAccountId && nearAccountId.toLowerCase() !== mandateAccountId?.toLowerCase()) {
-      connectWallet(nearAccountId, walletName || "Intear / NEAR Wallet");
+    if (
+      nearAccountId &&
+      nearAccountId.toLowerCase() !== mandateAccountId?.toLowerCase() &&
+      attemptedAccountRef.current?.toLowerCase() !== nearAccountId.toLowerCase() &&
+      !isSigningRef.current
+    ) {
+      isSigningRef.current = true;
+      (async () => {
+        try {
+          const chRes = await fetch(`/api/auth?action=challenge&accountId=${encodeURIComponent(nearAccountId)}`);
+          const chData = await chRes.json();
+          if (!chRes.ok || !chData.success || !chData.challenge) {
+            console.warn("Authentication challenge request unsuccessful:", chData?.error || chRes.statusText);
+            attemptedAccountRef.current = nearAccountId;
+            return;
+          }
+
+          const signed = await signAuthChallenge({
+            message: chData.challenge.message,
+            recipient: "mandate.app",
+            nonce: chData.challenge.nonce,
+          });
+
+          const connRes = await connectWallet(nearAccountId, walletName || "NEAR Wallet", {
+            publicKey: signed.publicKey,
+            signature: signed.signature,
+            message: chData.challenge.message,
+            nonce: chData.challenge.nonce,
+          });
+
+          if (!connRes.ok) {
+            console.warn("Wallet authentication session issuance failed:", connRes.error);
+            attemptedAccountRef.current = nearAccountId;
+          } else {
+            attemptedAccountRef.current = null;
+          }
+        } catch (err: any) {
+          console.warn("Wallet authentication signing rejected or cancelled:", err?.message || err);
+          attemptedAccountRef.current = nearAccountId;
+        } finally {
+          isSigningRef.current = false;
+        }
+      })();
     }
-  }, [nearAccountId, walletName, mandateAccountId, connectWallet, isInitialized]);
+  }, [nearAccountId, walletName, mandateAccountId, connectWallet, isInitialized, signAuthChallenge]);
 
   // Open NEAR Connector modal when requested via context
   useEffect(() => {
     if (isWalletModalOpen && isInitialized) {
+      attemptedAccountRef.current = null;
       openWalletModal();
       setIsWalletModalOpen(false);
     }

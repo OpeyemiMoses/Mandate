@@ -5,6 +5,7 @@ import { ExecutionBoundaryService } from "@/lib/execution/boundaryService";
 import { nearToYocto, yoctoToNear, isPositiveYoctoString } from "@/lib/yocto";
 import { recordAuditEvent } from "@/lib/auditLedger";
 import { ExecutionGateService } from "@/lib/operations/executionGateService";
+import { getDecryptedWalletApiKey } from "@/lib/security/walletCredentialService";
 
 /**
  * POST /api/wallets/withdraw - Withdraw unused funds back to authenticated user's NEAR account
@@ -115,7 +116,7 @@ export async function POST(req: Request) {
     // 2. Submit transfer via OutLayer TEE back to the user's account using the sealed boundary service
     const outlayerRes = await ExecutionBoundaryService.executeWithdrawal({
       userId: user.id,
-      walletApiKey: wallet.apiKey,
+      walletApiKey: getDecryptedWalletApiKey(wallet),
       fromAccountId: wallet.nearAccountId,
       toAccountId: user.nearAccountId,
       amountYocto,

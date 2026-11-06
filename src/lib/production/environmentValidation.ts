@@ -14,6 +14,8 @@ export const KNOWN_INSECURE_SECRETS = new Set([
   "mandate-credential-vault-master-key-v2-secret-32bytes",
   "mandate-credential-vault-master-key-v3-secret-32bytes",
   "mandate-universal-tools-master-encryption-key-v1",
+  "mandate-internal-service-secret-v1-dev-only-32b",
+  "mandate-session-secret-v1-dev-only-32bytes",
   "mandate-client-id",
   "mock-client-id",
   "21fef48091f12692cad574a6f7753643",
@@ -249,6 +251,8 @@ export function validateEnvironment(
 
   // 1. Mandatory Secrets
   validateSecretVar("EXECUTION_SIGNING_SECRET", "REQUIRED_PRODUCTION", isProd);
+  validateSecretVar("SESSION_SECRET", "REQUIRED_PRODUCTION", isProd);
+  validateSecretVar("INTERNAL_SERVICE_SECRET", "REQUIRED_PRODUCTION", isProd);
   validateSecretVar("CREDENTIAL_VAULT_KEY_V1", "REQUIRED_PRODUCTION", isProd);
   validateSecretVar("TOOL_ENCRYPTION_KEY", "REQUIRED_PRODUCTION", isProd);
 
@@ -256,7 +260,8 @@ export function validateEnvironment(
   validateSecretVar("CREDENTIAL_VAULT_KEY_V2", "OPTIONAL_PRODUCTION", false);
   validateSecretVar("CREDENTIAL_VAULT_KEY_V3", "OPTIONAL_PRODUCTION", false);
   validateSecretVar("OUTLAYER_SIGNING_SECRET", "OPTIONAL_PRODUCTION", false);
-  validateSecretVar("SESSION_SECRET", "OPTIONAL_PRODUCTION", false);
+  validateSecretVar("MANDATE_API_KEY", "OPTIONAL_PRODUCTION", false);
+  validateSecretVar("ADMIN_API_KEY", "OPTIONAL_PRODUCTION", false);
 
   // 3. Database URL
   const dbUrl = env.DATABASE_URL;
@@ -373,10 +378,11 @@ export function assertProductionEnvironmentValid(customEnv?: Record<string, stri
 /**
  * Safely resolves the Execution Signing Secret.
  * Enforces production validation and fail-closed security.
+ * Strictly dedicated to signing and verifying BoundaryExecutionTicket.
  */
 export function getExecutionSigningSecret(): string {
   const isProd = process.env.NODE_ENV === "production";
-  const secret = process.env.EXECUTION_SIGNING_SECRET || process.env.OUTLAYER_SIGNING_SECRET;
+  const secret = process.env.EXECUTION_SIGNING_SECRET;
 
   if (isProd) {
     if (!secret) {
@@ -392,7 +398,32 @@ export function getExecutionSigningSecret(): string {
   }
 
   // Development / test fallback with explicit isolation
-  return secret || "mandate-execution-signing-secret-v1-production-boundary";
+  return secret || process.env.OUTLAYER_SIGNING_SECRET || "mandate-execution-signing-secret-v1-production-boundary";
+}
+
+/**
+ * Safely resolves the Internal Service Secret.
+ * Enforces production validation and fail-closed security.
+ * Strictly dedicated to x-mandate-internal-key service-to-service calls and Origin firewall exemptions.
+ */
+export function getInternalServiceSecret(): string {
+  const isProd = process.env.NODE_ENV === "production";
+  const secret = process.env.INTERNAL_SERVICE_SECRET;
+
+  if (isProd) {
+    if (!secret) {
+      throw new ConfigurationError("Production internal service secret (INTERNAL_SERVICE_SECRET) is missing");
+    }
+    if (isKnownInsecureSecret(secret)) {
+      throw new ConfigurationError("Production internal service secret cannot use known development default");
+    }
+    if (secret.length < MINIMUM_SECRET_LENGTH || !hasSufficientEntropy(secret)) {
+      throw new ConfigurationError(`Production internal service secret must have at least ${MINIMUM_SECRET_LENGTH} characters`);
+    }
+    return secret;
+  }
+
+  return secret || "mandate-internal-service-secret-v1-dev-only-32b";
 }
 
 /**
@@ -458,11 +489,16 @@ export function getToolEncryptionKey(): string {
 
 /**
  * Safely resolves the Session Secret for signing authentication tokens.
- * Supports explicit SESSION_SECRET or cryptographically derives one from EXECUTION_SIGNING_SECRET.
+ * Enforces production validation: SESSION_SECRET is strictly required and never falls back to other secrets.
  */
 export function getSessionSecret(): string {
+  const isProd = process.env.NODE_ENV === "production";
   const explicit = process.env.SESSION_SECRET;
-  if (explicit) {
+
+  if (isProd) {
+    if (!explicit) {
+      throw new ConfigurationError("Production session secret (SESSION_SECRET) is missing");
+    }
     if (isKnownInsecureSecret(explicit)) {
       throw new ConfigurationError("Production session secret cannot use known development default");
     }
@@ -472,7 +508,5 @@ export function getSessionSecret(): string {
     return explicit;
   }
 
-  // Derive domain-separated session key from verified execution signing secret
-  const baseKey = getExecutionSigningSecret();
-  return crypto.createHmac("sha256", baseKey).update("mandate-auth-session-domain-separation-v1").digest("hex");
+  return explicit || "mandate-session-secret-v1-dev-only-32bytes";
 }

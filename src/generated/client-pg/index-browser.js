@@ -1429,6 +1429,29 @@ exports.Prisma.DispatchIntentScalarFieldEnum = {
   completedAt: 'completedAt'
 };
 
+exports.Prisma.AuthChallengeScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  nonce: 'nonce',
+  nonceHash: 'nonceHash',
+  challengeMessage: 'challengeMessage',
+  audience: 'audience',
+  network: 'network',
+  issuedAt: 'issuedAt',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  attemptCount: 'attemptCount',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RateLimitBucketScalarFieldEnum = {
+  key: 'key',
+  tokens: 'tokens',
+  resetAt: 'resetAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1517,7 +1540,9 @@ exports.Prisma.ModelName = {
   DatabaseRestoreRecord: 'DatabaseRestoreRecord',
   ProviderCircuitBreakerState: 'ProviderCircuitBreakerState',
   ResilienceDrillRun: 'ResilienceDrillRun',
-  DispatchIntent: 'DispatchIntent'
+  DispatchIntent: 'DispatchIntent',
+  AuthChallenge: 'AuthChallenge',
+  RateLimitBucket: 'RateLimitBucket'
 };
 
 /**

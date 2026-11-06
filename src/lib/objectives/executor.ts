@@ -123,8 +123,8 @@ export async function executeObjectivePlan(params: {
     }
   }
 
-  // 2. Transition Objective status to ACTIVE
-  if (objective.status !== "ACTIVE") {
+  // 2. Transition Objective status to ACTIVE (if not already ACTIVE or RUNNING)
+  if (objective.status !== "ACTIVE" && objective.status !== "RUNNING") {
     if (!isValidObjectiveStatusTransition(objective.status as ObjectiveStatus, "ACTIVE")) {
       throw new Error(`Cannot transition objective from "${objective.status}" to "ACTIVE"`);
     }

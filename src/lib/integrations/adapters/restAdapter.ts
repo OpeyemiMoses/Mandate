@@ -221,7 +221,7 @@ export class UniversalRestAdapter implements UniversalIntegrationAdapter {
       const res = await safeFetch(testUrl, {
         method: "GET",
         headers,
-        timeoutMs: 8000,
+        timeoutMs: 12000,
       });
 
       const latencyMs = Date.now() - startTime;

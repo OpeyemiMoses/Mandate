@@ -34,7 +34,7 @@ export const SECTION_H_PAGES: Record<string, DocPageContent> = {
             <div className="p-4 rounded-xl bg-[#141418] border border-white/5 space-y-1.5">
               <div className="font-semibold text-white text-sm">Can agents spend money independently?</div>
               <p className="text-[#A1A1AA] leading-relaxed">
-                Yes, but <strong>only</strong> within the strict limits pre-authorized by the user in an active mandate (e.g. up to 0.1 NEAR per tx to whitelisted recipients). Any transaction exceeding limits is blocked or held for human review.
+                Yes, but <strong>only</strong> within the strict limits pre-authorized by the user in an active mandate (e.g. user-defined per-tx budget limits to allowlisted recipients). Any transaction exceeding limits is blocked or held for human review.
               </p>
             </div>
 

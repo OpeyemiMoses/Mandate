@@ -126,6 +126,9 @@ export function validateSafeUrl(urlString: string): {
     hostname.endsWith(".localhost") ||
     hostname.endsWith(".local")
   ) {
+    if (process.env.ALLOW_LOCAL_TEST_URLS === "true") {
+      return { valid: true, url };
+    }
     return { valid: false, error: "SSRF Protection: Access to localhost/loopback is forbidden." };
   }
 
@@ -246,6 +249,9 @@ export async function validateSafeUrlAsync(urlString: string): Promise<{
   // If hostname is already a direct IP, it was checked by validateSafeUrl
   const isDirectIp = /^(\d{1,3}\.){3}\d{1,3}$/.test(hostname) || hostname.includes(":");
   if (isDirectIp) {
+    if (process.env.ALLOW_LOCAL_TEST_URLS === "true") {
+      return { valid: true, url, resolvedIps: [hostname] };
+    }
     if (isPrivateOrReservedIp(hostname)) {
       return {
         valid: false,

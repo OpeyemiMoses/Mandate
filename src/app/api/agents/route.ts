@@ -5,6 +5,7 @@ import { getNearAccountState } from "@/lib/nearRpc";
 import { getAuthenticatedUser, toAuthErrorResponse } from "@/lib/auth";
 import { yoctoToNear } from "@/lib/yocto";
 import { recordAuditEvent } from "@/lib/auditLedger";
+import { encryptWalletApiKey } from "@/lib/security/walletCredentialService";
 import { agentRegistry, registerDefaultAgents } from "@/lib/runtime/registry";
 import { grantAgentToolAccess } from "@/lib/tools/access";
 
@@ -186,7 +187,7 @@ export async function POST(req: Request) {
         wallet: {
           create: {
             walletId: outlayerRes.wallet_id,
-            apiKey: outlayerRes.api_key,
+            apiKey: encryptWalletApiKey(outlayerRes.api_key),
             nearAccountId: outlayerRes.near_account_id,
             handoffUrl: outlayerRes.handoff_url,
             network: "testnet",

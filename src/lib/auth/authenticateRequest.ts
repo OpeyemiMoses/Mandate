@@ -6,9 +6,12 @@
  * or signed headers. Strictly forbids client-supplied userId spoofing.
  */
 
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { SessionService, SessionPayload } from "./sessionService";
+import { validateRequestOrigin } from "@/lib/security/originValidation";
+import { getInternalServiceSecret } from "@/lib/production/environmentValidation";
 
 export class AuthenticationError extends Error {
   public readonly statusCode = 401;
@@ -58,20 +61,29 @@ export async function authenticateRequest(
 ): Promise<AuthContext> {
   const isProd = process.env.NODE_ENV === "production";
 
-  // 1. Check for system internal header if permitted
+  // 1. Check for system internal header if permitted (Milestone 14.5: bound to INTERNAL_SERVICE_SECRET)
   if (options?.allowSystemInternal) {
     const internalSecret = req.headers.get("x-mandate-internal-key");
-    const executionSecret = process.env.EXECUTION_SIGNING_SECRET || "mandate-execution-signing-secret-v1-production-boundary";
-    if (internalSecret && internalSecret === executionSecret) {
-      return {
-        userId: "SYSTEM",
-        nearAccountId: "system.mandate",
-        role: "OWNER",
-        isAdmin: true,
-        isOperator: true,
-        sessionExpiresAt: new Date(Date.now() + 3600000),
-        authMethod: "SYSTEM",
-      };
+    if (internalSecret && typeof internalSecret === "string") {
+      let expectedSecret: string;
+      try {
+        expectedSecret = getInternalServiceSecret();
+      } catch {
+        expectedSecret = "";
+      }
+      const provBuf = Buffer.from(internalSecret.trim());
+      const expBuf = Buffer.from(expectedSecret);
+      if (expectedSecret.length > 0 && provBuf.length === expBuf.length && crypto.timingSafeEqual(provBuf, expBuf)) {
+        return {
+          userId: "SYSTEM",
+          nearAccountId: "system.mandate",
+          role: "OWNER",
+          isAdmin: true,
+          isOperator: true,
+          sessionExpiresAt: new Date(Date.now() + 3600000),
+          authMethod: "SYSTEM",
+        };
+      }
     }
   }
 
@@ -90,6 +102,14 @@ export async function authenticateRequest(
 
       const authMethod = req.headers.get("cookie")?.includes(token) ? "COOKIE" : "BEARER";
 
+      // Defense-in-depth: Validate Origin / Referer for cookie-authenticated mutating requests
+      if (authMethod === "COOKIE" && ["POST", "PUT", "PATCH", "DELETE"].includes(req.method.toUpperCase())) {
+        const originCheck = await validateRequestOrigin(req, { requireOriginForCookie: true });
+        if (!originCheck.valid) {
+          throw new ForbiddenError(`Forbidden: ${originCheck.reason}`);
+        }
+      }
+
       return {
         userId: payload.userId,
         nearAccountId: payload.nearAccountId,
@@ -101,53 +121,64 @@ export async function authenticateRequest(
       };
     }
 
-    // Explicit session token was invalid or expired; fall through to account header check
+    // Explicit session token was invalid or expired; fall through to test harness check
   }
 
-  // 3. Fallback for authenticated web clients, test suites, and testnet public beta
-  const nearAccountHeader = req.headers.get("x-near-account") || req.headers.get("x-user-id");
-  if (nearAccountHeader && nearAccountHeader.trim().length > 0) {
-    const cleanAccount = nearAccountHeader.trim().toLowerCase();
+  // 3. Fallback strictly restricted to offline automated test suites
+  const isOfflineTestHarness =
+    process.env.MANDATE_ALLOW_OFFLINE_TEST_AUTH === "true" &&
+    process.env.NODE_ENV !== "production";
 
-    let user = await prisma.user.findUnique({
-      where: { nearAccountId: cleanAccount },
-    });
+  if (isOfflineTestHarness) {
+    const nearAccountHeader =
+      req.headers.get("x-near-account") || req.headers.get("x-user-id");
+    if (nearAccountHeader && nearAccountHeader.trim().length > 0) {
+      const cleanAccount = nearAccountHeader.trim().toLowerCase();
 
-    if (!user) {
-      // Connecting a wallet never grants administrative privileges automatically
-      const configuredAdmins = (process.env.ADMIN_NEAR_ACCOUNT_IDS || "")
-        .split(",")
-        .map((s) => s.trim().toLowerCase())
-        .filter(Boolean);
-      const isConfiguredAdmin = configuredAdmins.includes(cleanAccount);
-      user = await prisma.user.create({
-        data: {
-          nearAccountId: cleanAccount,
-          role: isConfiguredAdmin ? "ADMIN" : "MEMBER",
-        },
+      let user = await prisma.user.findUnique({
+        where: { nearAccountId: cleanAccount },
       });
+
+      if (!user) {
+        const configuredAdmins = (process.env.ADMIN_NEAR_ACCOUNT_IDS || "")
+          .split(",")
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean);
+        const isConfiguredAdmin = configuredAdmins.includes(cleanAccount);
+        user = await prisma.user.create({
+          data: {
+            nearAccountId: cleanAccount,
+            role: isConfiguredAdmin ? "ADMIN" : "MEMBER",
+          },
+        });
+      }
+
+      const isAdmin =
+        user.role === "OWNER" ||
+        user.role === "SECURITY_ADMIN" ||
+        user.role === "ADMIN";
+      const isOperator = isAdmin || user.role === "OPERATOR";
+
+      if (options?.requireAdmin && !isAdmin) {
+        throw new ForbiddenError("Forbidden: Administrative role required");
+      }
+
+      return {
+        userId: user.id,
+        nearAccountId: user.nearAccountId,
+        role: user.role,
+        isAdmin,
+        isOperator,
+        sessionExpiresAt: new Date(Date.now() + 86400000),
+        authMethod: "HEADER",
+      };
     }
-
-    const isAdmin = user.role === "OWNER" || user.role === "SECURITY_ADMIN" || user.role === "ADMIN";
-    const isOperator = isAdmin || user.role === "OPERATOR";
-
-    if (options?.requireAdmin && !isAdmin) {
-      throw new ForbiddenError("Forbidden: Administrative role required");
-    }
-
-    return {
-      userId: user.id,
-      nearAccountId: user.nearAccountId,
-      role: user.role,
-      isAdmin,
-      isOperator,
-      sessionExpiresAt: new Date(Date.now() + 86400000),
-      authMethod: "HEADER",
-    };
   }
 
-  // Fails closed on missing or invalid session
-  throw new AuthenticationError("Unauthorized: Missing or invalid authentication credentials");
+  // Fails closed on missing or invalid session credentials
+  throw new AuthenticationError(
+    "Unauthorized: Missing or invalid authentication credentials"
+  );
 }
 
 /**

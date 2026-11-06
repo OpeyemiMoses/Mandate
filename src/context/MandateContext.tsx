@@ -162,7 +162,16 @@ interface MandateContextValue {
   updateUserProfile: (profile: Partial<UserProfile>) => Promise<boolean>;
   toggleAgentFreeze: (agentId: string) => Promise<boolean>;
   changeAgentCardColor: (agentId: string, colorVariant: string) => Promise<boolean>;
-  connectWallet: (accountId: string, providerName?: string) => Promise<{ ok: boolean; error?: string; onchain?: any }>;
+  connectWallet: (
+    accountId: string,
+    providerName?: string,
+    authProof?: {
+      publicKey: string;
+      signature: string;
+      message: string;
+      nonce: string;
+    }
+  ) => Promise<{ ok: boolean; error?: string; onchain?: any }>;
   disconnectWallet: () => void;
   createAgentWallet: () => Promise<{ ok: boolean; error?: string; wallet?: AgentWalletState }>;
   fundAgentWallet: (amountNear: string, agentId?: string) => Promise<{ ok: boolean; error?: string; txHash?: string }>;
@@ -217,20 +226,20 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
   const [activities, setActivities] = useState<ActivityEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Restore active user from localStorage on mount
+  // Restore active user from localStorage on mount (preferring HTTP-only cookie)
   useEffect(() => {
     try {
+      // Remove any legacy bearer token from localStorage to eliminate XSS exposure
+      localStorage.removeItem("mandate_session_token");
+
       if (localStorage.getItem("mandate_explicitly_disconnected") === "true") {
         return;
       }
       const saved = localStorage.getItem(LOCAL_STORAGE_ACCOUNT_KEY);
-      const savedToken = localStorage.getItem("mandate_session_token");
       const savedProvider = localStorage.getItem("mandate_wallet_provider");
       if (saved) {
         setAccountId(saved);
-      }
-      if (savedToken) {
-        setSessionToken(savedToken);
+        setSessionToken("cookie-session");
       }
       if (savedProvider) {
         setWalletProvider(savedProvider);
@@ -245,15 +254,12 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
     if (accountId) {
       h["x-near-account"] = accountId;
     }
-    if (sessionToken) {
-      h["x-session-token"] = sessionToken;
-    }
     return h;
-  }, [accountId, sessionToken]);
+  }, [accountId]);
 
   // Synchronize data from backend REST APIs
   const refreshData = useCallback(async () => {
-    if (!accountId && !sessionToken) {
+    if (!accountId) {
       setIsLoading(false);
       setPersonalWallet(null);
       setAgentWallet(null);
@@ -269,41 +275,28 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       const headers = getHeaders();
 
-      // 1. Fetch Auth & Connected User details
-      let authRes = await fetch("/api/auth", { headers });
-      if (authRes.status === 401 && accountId) {
-        // Session expired or invalidated by server restart; automatically re-authenticate
-        try {
-          const reAuthRes = await fetch("/api/auth", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ accountId }),
-          });
-          if (reAuthRes.ok) {
-            const reAuthData = await reAuthRes.json();
-            if (reAuthData.user?.sessionToken) {
-              setSessionToken(reAuthData.user.sessionToken);
-              try {
-                localStorage.setItem("mandate_session_token", reAuthData.user.sessionToken);
-              } catch {}
-              headers["x-session-token"] = reAuthData.user.sessionToken;
-              authRes = await fetch("/api/auth", { headers });
-            }
-          }
-        } catch (reAuthErr) {
-          console.warn("Auto-reauthentication failed:", reAuthErr);
-        }
+      // 1. Fetch Auth & Connected User details via secure HTTP-only cookie
+      const authRes = await fetch("/api/auth", { headers, credentials: "include" });
+      if (authRes.status === 401) {
+        // Session expired or unauthenticated; strictly clear unauthenticated state without auto-reauth
+        setAccountId("");
+        setSessionToken(null);
+        setUserProfile(null);
+        setIsLoading(false);
+        return;
       }
 
       if (authRes.ok) {
         const authData = await authRes.json();
         if (authData.user) {
+          setAccountId(authData.user.nearAccountId);
+          setSessionToken("cookie-session");
           setUserProfile((prev) => {
             const next = {
               displayName: authData.user.displayName || "",
               email: authData.user.email || "",
               bio: authData.user.bio || "",
-              role: authData.user.role || "OWNER",
+              role: authData.user.role || "MEMBER",
             };
             if (
               prev &&
@@ -320,6 +313,13 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
         if (authData.onchain?.balanceNear) {
           setUserNearBalance(authData.onchain.balanceNear);
         }
+      } else if (authRes.status === 401) {
+        // Explicitly unauthorized; clear local user state
+        setAccountId("");
+        setSessionToken(null);
+        setUserProfile(null);
+        setIsLoading(false);
+        return;
       }
 
       // Query live NEAR testnet RPC directly to ensure real balance reading
@@ -650,8 +650,17 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
     }
   }, [refreshData, accountId, sessionToken]);
 
-  // Connect Wallet
-  const connectWallet = async (newAccountId: string, providerName: string = "MyNearWallet") => {
+  // Connect Wallet with Mandatory Cryptographic Wallet Proof
+  const connectWallet = useCallback(async (
+    newAccountId: string,
+    providerName: string = "MyNearWallet",
+    authProof?: {
+      publicKey: string;
+      signature: string;
+      message: string;
+      nonce: string;
+    }
+  ) => {
     try {
       setIsLoading(true);
       try {
@@ -662,24 +671,77 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("mandate_wallet_provider", providerName);
       } catch {}
 
+      let proof = authProof;
+
+      // If proof was not passed directly, check for stored local key or active challenge signer
+      if (!proof) {
+        // 1. Fetch challenge from server
+        const chRes = await fetch(`/api/auth?action=challenge&accountId=${encodeURIComponent(newAccountId)}`);
+        const chData = await chRes.json();
+        if (!chRes.ok || !chData.success || !chData.challenge) {
+          return { ok: false, error: chData.error || "Failed to generate authentication challenge" };
+        }
+        const { message, nonce, recipient } = chData.challenge;
+
+        // 2. Check if this account has a locally stored keypair (e.g. from Instant Faucet)
+        const storedKeyStr = typeof window !== "undefined" ? localStorage.getItem(`near_key_${newAccountId}`) : null;
+        if (storedKeyStr) {
+          const { KeyPair } = await import("near-api-js");
+          const keyPair = KeyPair.fromString(storedKeyStr as any);
+          const sigObj = keyPair.sign(Buffer.from(message, "utf8"));
+          proof = {
+            publicKey: keyPair.getPublicKey().toString(),
+            signature: Buffer.from(sigObj.signature).toString("hex"),
+            message,
+            nonce,
+          };
+        } else if (typeof window !== "undefined" && typeof (window as any).signNearAuthChallenge === "function") {
+          try {
+            const signed = await (window as any).signNearAuthChallenge({ message, recipient: "mandate.app", nonce });
+            proof = {
+              publicKey: signed.publicKey,
+              signature: signed.signature,
+              message,
+              nonce,
+            };
+          } catch (signErr: any) {
+            return { ok: false, error: `Wallet signature rejected or cancelled: ${signErr.message}` };
+          }
+        }
+      }
+
+      if (!proof) {
+        return {
+          ok: false,
+          error: "Mandatory cryptographic wallet proof required. An account ID alone cannot authenticate. Please sign the authentication challenge in your wallet.",
+        };
+      }
+
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accountId: newAccountId }),
+        credentials: "include",
+        body: JSON.stringify({
+          accountId: newAccountId,
+          publicKey: proof.publicKey,
+          signature: proof.signature,
+          message: proof.message,
+          nonce: proof.nonce,
+        }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        return { ok: false, error: data.error || "Failed to connect wallet" };
+        return { ok: false, error: data.error || "Cryptographic wallet authentication failed" };
       }
 
       setAccountId(data.user.nearAccountId);
-      setSessionToken(data.user.sessionToken);
+      setSessionToken("cookie-session");
       if (data.user) {
         setUserProfile({
           displayName: data.user.displayName || "",
           email: data.user.email || "",
           bio: data.user.bio || "",
-          role: data.user.role || "OWNER",
+          role: data.user.role || "MEMBER",
         });
       }
       if (data.onchain?.balanceNear) {
@@ -687,9 +749,8 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
       }
       try {
         localStorage.setItem(LOCAL_STORAGE_ACCOUNT_KEY, data.user.nearAccountId);
-        if (data.user.sessionToken) {
-          localStorage.setItem("mandate_session_token", data.user.sessionToken);
-        }
+        // Sensitive bearer tokens are strictly omitted from client localStorage
+        localStorage.removeItem("mandate_session_token");
       } catch {}
 
       await refreshData();
@@ -699,10 +760,19 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [refreshData]);
 
-  // Disconnect Wallet
-  const disconnectWallet = () => {
+  // Disconnect Wallet (Invalidates Server Session & Clears Cookies)
+  const disconnectWallet = async () => {
+    try {
+      await fetch("/api/auth", {
+        method: "DELETE",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.warn("Failed to invalidate session on server:", err);
+    }
+
     try {
       localStorage.setItem("mandate_explicitly_disconnected", "true");
       localStorage.removeItem(LOCAL_STORAGE_ACCOUNT_KEY);
@@ -724,22 +794,24 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
     setActivities([]);
   };
 
-  // Update Profile
+  // Update Profile (Real-time synchronization without full page reload)
   const updateUserProfile = async (profile: Partial<UserProfile>) => {
     try {
       const res = await fetch("/api/user/profile", {
         method: "PATCH",
         headers: getHeaders(),
+        credentials: "include",
         body: JSON.stringify(profile),
       });
       const data = await res.json();
       if (res.ok && data.success && data.profile) {
-        setUserProfile({
-          displayName: data.profile.displayName || "",
-          email: data.profile.email || "",
-          bio: data.profile.bio || "",
-          role: data.profile.role || "OWNER",
-        });
+        // Immediate local state synchronization for header/sidebar reactivity
+        setUserProfile((prev) => ({
+          displayName: data.profile.displayName ?? prev?.displayName ?? "",
+          email: data.profile.email ?? prev?.email ?? "",
+          bio: data.profile.bio ?? prev?.bio ?? "",
+          role: data.profile.role ?? prev?.role ?? "MEMBER",
+        }));
         await refreshData();
         return true;
       }
@@ -807,13 +879,20 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Fund Agent Wallet
-  const fundAgentWallet = async (amountNear: string, agentId?: string) => {
+  // Fund Agent Wallet (Requires authentic on-chain transaction hash)
+  const fundAgentWallet = async (amountNear: string, agentId?: string, txHash?: string) => {
     try {
-      const txHash = `tx-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      if (!txHash) {
+        return {
+          ok: false,
+          error: "Valid on-chain NEAR Testnet transaction hash required. Synthetic hashes are strictly prohibited.",
+        };
+      }
       const res = await fetch("/api/wallets/fund", {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify({ txHash, amountNear, agentId }),
+        credentials: "include",
+        body: JSON.stringify({ txHash: txHash.trim(), amountNear, agentId }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -821,7 +900,7 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
       }
 
       await refreshData();
-      return { ok: true, txHash };
+      return { ok: true, txHash: data.funding?.txHash || txHash };
     } catch (err: any) {
       return { ok: false, error: err.message };
     }

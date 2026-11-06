@@ -4,7 +4,10 @@ import { getNearAccountState } from "@/lib/nearRpc";
 import { yoctoToNear } from "@/lib/yocto";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { SessionService } from "@/lib/auth/sessionService";
-import { WalletAuthService } from "@/lib/auth/walletAuthService";
+import { WalletAuthService, RateLimitError, InvalidAccountIdError } from "@/lib/auth/walletAuthService";
+import { extractClientIp } from "@/lib/auth/rateLimitService";
+import { isValidNearAccountId } from "@/lib/auth/nearAccountKeyVerification";
+import { validateRequestOrigin } from "@/lib/security/originValidation";
 
 export const dynamic = "force-dynamic";
 
@@ -20,12 +23,54 @@ export async function GET(req: Request) {
     const accountId = url.searchParams.get("accountId");
 
     // 1. Challenge generation endpoint
-    if (action === "challenge" && accountId) {
-      const challenge = await WalletAuthService.createChallenge(accountId);
-      return NextResponse.json({
-        success: true,
-        challenge,
-      });
+    if (action === "challenge") {
+      if (!accountId || typeof accountId !== "string" || !accountId.trim()) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Missing required accountId parameter for authentication challenge.",
+            code: "INVALID_ACCOUNT_ID",
+          },
+          { status: 400 }
+        );
+      }
+
+      const clientIp = extractClientIp(req);
+      try {
+        const challenge = await WalletAuthService.createChallenge(accountId, { clientIp });
+        return NextResponse.json({
+          success: true,
+          challenge,
+        });
+      } catch (challengeError: any) {
+        if (challengeError instanceof InvalidAccountIdError || challengeError.code === "INVALID_ACCOUNT_ID") {
+          return NextResponse.json(
+            { success: false, error: challengeError.message, code: "INVALID_ACCOUNT_ID" },
+            { status: 400 }
+          );
+        }
+        if (challengeError instanceof RateLimitError || challengeError.code === "RATE_LIMIT_EXCEEDED") {
+          return NextResponse.json(
+            { success: false, error: challengeError.message, code: challengeError.code },
+            {
+              status: 429,
+              headers: {
+                "Retry-After": String(challengeError.retryAfterSec || 60),
+              },
+            }
+          );
+        }
+        if (challengeError.code === "RATE_LIMIT_SERVICE_UNAVAILABLE") {
+          return NextResponse.json(
+            { success: false, error: challengeError.message, code: challengeError.code },
+            { status: 503 }
+          );
+        }
+        return NextResponse.json(
+          { success: false, error: challengeError.message || "Failed to generate authentication challenge" },
+          { status: 500 }
+        );
+      }
     }
 
     // 2. Profile query endpoint
@@ -41,7 +86,9 @@ export async function GET(req: Request) {
         email: user.email || "",
         bio: user.bio || "",
         role: user.role,
-        sessionToken: user.sessionToken,
+        sessionExpiresAt: user.updatedAt
+          ? new Date(user.updatedAt.getTime() + 86400000).toISOString()
+          : new Date().toISOString(),
       },
       onchain: {
         exists: Boolean(rpcState),
@@ -74,45 +121,83 @@ export async function GET(req: Request) {
 
 /**
  * POST /api/auth
- * Connects/authenticates wallet.
- * Supports:
- * A) Cryptographic signature verification (NEP-413 / Ed25519)
- * B) Development direct connection with signed session generation
+ * Connects/authenticates wallet via mandatory NEP-413 cryptographic proof.
+ * An account ID alone CANNOT obtain an authenticated session.
  */
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    // 1. Defense-in-depth Origin / Referer firewall check
+    const originCheck = await validateRequestOrigin(req, { requireOriginForCookie: true });
+    if (!originCheck.valid) {
+      return NextResponse.json(
+        { success: false, error: originCheck.reason, code: "UNTRUSTED_ORIGIN" },
+        { status: 403 }
+      );
+    }
+
+    const body = await req.json().catch(() => ({}));
     const { accountId, publicKey, signature, message, nonce } = body;
 
-    if (!accountId || typeof accountId !== "string") {
+    // 2. Strict mandatory presence of accountId
+    if (!accountId || typeof accountId !== "string" || !accountId.trim()) {
       return NextResponse.json(
-        { success: false, error: "Missing or invalid accountId" },
-        { status: 400 }
+        { success: false, error: "Missing or invalid accountId", code: "AUTHENTICATION_PROOF_REQUIRED" },
+        { status: 401 }
+      );
+    }
+
+    // 3. Strict mandatory cryptographic proof parameters
+    if (
+      !publicKey || typeof publicKey !== "string" || !publicKey.trim() ||
+      !signature || typeof signature !== "string" || !signature.trim() ||
+      !message || typeof message !== "string" || !message.trim() ||
+      !nonce || typeof nonce !== "string" || !nonce.trim()
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Mandatory cryptographic wallet proof required. An account ID alone cannot authenticate. Missing publicKey, signature, message, or nonce.",
+          code: "AUTHENTICATION_PROOF_REQUIRED",
+        },
+        { status: 401 }
       );
     }
 
     const cleanAccountId = accountId.trim().toLowerCase();
-    const isProd = process.env.NODE_ENV === "production";
 
-    // 1. If signature parameters are provided, perform cryptographic verification
-    if (signature && publicKey && message && nonce) {
-      const outcome = await WalletAuthService.verifySignature({
-        accountId: cleanAccountId,
-        publicKey,
-        signature,
-        message,
-        nonce,
-      });
-
-      if (!outcome.valid) {
-        return NextResponse.json(
-          { success: false, error: outcome.error || "Invalid cryptographic wallet signature" },
-          { status: 401 }
-        );
-      }
+    // 4. Strict format validation on account ID
+    if (!isValidNearAccountId(cleanAccountId)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Invalid NEAR account ID format: "${accountId}"`,
+          code: "INVALID_ACCOUNT_ID",
+        },
+        { status: 400 }
+      );
     }
 
-    // 2. Fetch or create user record
+    // 5. Mandatory cryptographic verification against active server challenge
+    const outcome = await WalletAuthService.verifySignature({
+      accountId: cleanAccountId,
+      publicKey: publicKey.trim(),
+      signature: signature.trim(),
+      message,
+      nonce: nonce.trim(),
+    });
+
+    if (!outcome.valid) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: outcome.error || "Invalid cryptographic wallet signature",
+          code: outcome.code || "INVALID_WALLET_PROOF",
+        },
+        { status: 401 }
+      );
+    }
+
+    // 5. User resolution ONLY AFTER verified cryptographic ownership
     let user = await prisma.user.findUnique({
       where: { nearAccountId: cleanAccountId },
       include: {
@@ -142,10 +227,10 @@ export async function POST(req: Request) {
       });
     }
 
-    // 3. Issue cryptographically signed session token & HTTP-only cookie
+    // 6. Issue cryptographically signed session token & HTTP-only cookie
     const session = await SessionService.createSession(user.id, user.nearAccountId, user.role);
 
-    // 4. Query live NEAR account state
+    // 7. Query live NEAR account state
     const rpcState = await getNearAccountState(cleanAccountId);
 
     const response = NextResponse.json({
@@ -157,7 +242,6 @@ export async function POST(req: Request) {
         email: user.email || "",
         bio: user.bio || "",
         role: user.role,
-        sessionToken: session.token,
         sessionExpiresAt: session.expiresAt.toISOString(),
       },
       onchain: {
@@ -198,6 +282,14 @@ export async function POST(req: Request) {
  */
 export async function DELETE(req: Request) {
   try {
+    const originCheck = await validateRequestOrigin(req, { requireOriginForCookie: true });
+    if (!originCheck.valid) {
+      return NextResponse.json(
+        { success: false, error: originCheck.reason, code: "UNTRUSTED_ORIGIN" },
+        { status: 403 }
+      );
+    }
+
     const user = await getAuthenticatedUser(req);
     await SessionService.invalidateSession(user.id);
 
@@ -209,9 +301,11 @@ export async function DELETE(req: Request) {
     response.headers.set("Set-Cookie", SessionService.serializeClearCookie());
     return response;
   } catch (error: any) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       { success: false, error: error.message },
       { status: 401 }
     );
+    response.headers.set("Set-Cookie", SessionService.serializeClearCookie());
+    return response;
   }
 }

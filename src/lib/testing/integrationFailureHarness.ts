@@ -731,10 +731,14 @@ export class IntegrationFailureHarness {
     // -------------------------------------------------------------
     try {
       // Verify that after simulation, live FastNEAR Testnet RPC and OutLayer health checks pass
-      const [nearRpcCheck, outlayerCheck] = await Promise.all([
-        IndependentEvidenceService.verifyNearBlockchainRpc({ accountId: "testnet" }),
-        OutLayerTeeVerificationService.verifyEndpointReachability(),
-      ]);
+      const nearRpcCheck = await IndependentEvidenceService.verifyNearBlockchainRpc({ accountId: "testnet" });
+      let outlayerCheck = await OutLayerTeeVerificationService.verifyEndpointReachability();
+
+      if (!outlayerCheck.reachable) {
+        // Retry once after brief pause if transient network glitch occurred after intensive failure drill
+        await new Promise((r) => setTimeout(r, 1000));
+        outlayerCheck = await OutLayerTeeVerificationService.verifyEndpointReachability();
+      }
 
       const recovered = nearRpcCheck.verified && outlayerCheck.reachable;
 

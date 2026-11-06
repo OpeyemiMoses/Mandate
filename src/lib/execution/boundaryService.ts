@@ -17,6 +17,7 @@ import {
 } from "@/lib/objectives/authority";
 import { executeOutlayerTransfer } from "@/lib/outlayer";
 import { verifyNearTransaction } from "@/lib/nearRpc";
+import { getDecryptedWalletApiKey } from "@/lib/security/walletCredentialService";
 import {
   ExecutionRequest,
   ExecutionResult,
@@ -519,7 +520,7 @@ export class ExecutionBoundaryService {
       });
 
       outlayerResult = await executeOutlayerTransfer({
-        apiKey: mandate.wallet.apiKey,
+        apiKey: getDecryptedWalletApiKey(mandate.wallet),
         to: preflight.recipient,
         amountYocto,
         idempotencyKey,

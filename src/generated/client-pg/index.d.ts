@@ -373,6 +373,16 @@ export type ResilienceDrillRun = $Result.DefaultSelection<Prisma.$ResilienceDril
  * 
  */
 export type DispatchIntent = $Result.DefaultSelection<Prisma.$DispatchIntentPayload>
+/**
+ * Model AuthChallenge
+ * 
+ */
+export type AuthChallenge = $Result.DefaultSelection<Prisma.$AuthChallengePayload>
+/**
+ * Model RateLimitBucket
+ * 
+ */
+export type RateLimitBucket = $Result.DefaultSelection<Prisma.$RateLimitBucketPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1211,6 +1221,26 @@ export class PrismaClient<
     * ```
     */
   get dispatchIntent(): Prisma.DispatchIntentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.authChallenge`: Exposes CRUD operations for the **AuthChallenge** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AuthChallenges
+    * const authChallenges = await prisma.authChallenge.findMany()
+    * ```
+    */
+  get authChallenge(): Prisma.AuthChallengeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.rateLimitBucket`: Exposes CRUD operations for the **RateLimitBucket** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RateLimitBuckets
+    * const rateLimitBuckets = await prisma.rateLimitBucket.findMany()
+    * ```
+    */
+  get rateLimitBucket(): Prisma.RateLimitBucketDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1723,7 +1753,9 @@ export namespace Prisma {
     DatabaseRestoreRecord: 'DatabaseRestoreRecord',
     ProviderCircuitBreakerState: 'ProviderCircuitBreakerState',
     ResilienceDrillRun: 'ResilienceDrillRun',
-    DispatchIntent: 'DispatchIntent'
+    DispatchIntent: 'DispatchIntent',
+    AuthChallenge: 'AuthChallenge',
+    RateLimitBucket: 'RateLimitBucket'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1742,7 +1774,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "agent" | "wallet" | "fundingRecord" | "withdrawalRecord" | "mandate" | "task" | "researchSession" | "approvalRequest" | "transactionRecord" | "auditLog" | "agentExecution" | "executionEvent" | "integrationConnection" | "integrationOperationPermission" | "integrationOperationExecution" | "oAuthSession" | "agentToolAccess" | "toolInvocation" | "objective" | "objectivePlan" | "objectivePlanStep" | "objectiveTaskEvent" | "objectiveTaskResult" | "objectiveSuccessCriteria" | "objectiveEvent" | "objectivePlanApproval" | "objectiveCheckpoint" | "capabilityDiscovery" | "capabilityMatch" | "coordinationRun" | "coordinationTask" | "agentCapabilityProfile" | "agentAssignment" | "agentHandoff" | "sharedObjectiveArtifact" | "taskLease" | "coordinationEvent" | "governancePolicy" | "policyVersion" | "policyRule" | "policyEvaluation" | "policyViolation" | "policyException" | "policyReview" | "executionRecord" | "backgroundJob" | "backgroundWorker" | "jobAttempt" | "jobEvent" | "deadLetterRecord" | "operationalAlert" | "workerCapacitySnapshot" | "telemetrySnapshot" | "reconciliationRun" | "reconciliationFinding" | "reconciliationEvidence" | "executionDiscrepancy" | "incident" | "incidentTimelineEvent" | "incidentAssignment" | "recoveryPlan" | "recoveryApproval" | "recoveryAttempt" | "recoveryVerification" | "operationalControlState" | "operationalAuditRecord" | "databaseBackupRecord" | "databaseRestoreRecord" | "providerCircuitBreakerState" | "resilienceDrillRun" | "dispatchIntent"
+      modelProps: "user" | "agent" | "wallet" | "fundingRecord" | "withdrawalRecord" | "mandate" | "task" | "researchSession" | "approvalRequest" | "transactionRecord" | "auditLog" | "agentExecution" | "executionEvent" | "integrationConnection" | "integrationOperationPermission" | "integrationOperationExecution" | "oAuthSession" | "agentToolAccess" | "toolInvocation" | "objective" | "objectivePlan" | "objectivePlanStep" | "objectiveTaskEvent" | "objectiveTaskResult" | "objectiveSuccessCriteria" | "objectiveEvent" | "objectivePlanApproval" | "objectiveCheckpoint" | "capabilityDiscovery" | "capabilityMatch" | "coordinationRun" | "coordinationTask" | "agentCapabilityProfile" | "agentAssignment" | "agentHandoff" | "sharedObjectiveArtifact" | "taskLease" | "coordinationEvent" | "governancePolicy" | "policyVersion" | "policyRule" | "policyEvaluation" | "policyViolation" | "policyException" | "policyReview" | "executionRecord" | "backgroundJob" | "backgroundWorker" | "jobAttempt" | "jobEvent" | "deadLetterRecord" | "operationalAlert" | "workerCapacitySnapshot" | "telemetrySnapshot" | "reconciliationRun" | "reconciliationFinding" | "reconciliationEvidence" | "executionDiscrepancy" | "incident" | "incidentTimelineEvent" | "incidentAssignment" | "recoveryPlan" | "recoveryApproval" | "recoveryAttempt" | "recoveryVerification" | "operationalControlState" | "operationalAuditRecord" | "databaseBackupRecord" | "databaseRestoreRecord" | "providerCircuitBreakerState" | "resilienceDrillRun" | "dispatchIntent" | "authChallenge" | "rateLimitBucket"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -7074,6 +7106,154 @@ export namespace Prisma {
           }
         }
       }
+      AuthChallenge: {
+        payload: Prisma.$AuthChallengePayload<ExtArgs>
+        fields: Prisma.AuthChallengeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AuthChallengeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AuthChallengeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>
+          }
+          findFirst: {
+            args: Prisma.AuthChallengeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AuthChallengeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>
+          }
+          findMany: {
+            args: Prisma.AuthChallengeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>[]
+          }
+          create: {
+            args: Prisma.AuthChallengeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>
+          }
+          createMany: {
+            args: Prisma.AuthChallengeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AuthChallengeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>[]
+          }
+          delete: {
+            args: Prisma.AuthChallengeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>
+          }
+          update: {
+            args: Prisma.AuthChallengeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>
+          }
+          deleteMany: {
+            args: Prisma.AuthChallengeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AuthChallengeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AuthChallengeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>[]
+          }
+          upsert: {
+            args: Prisma.AuthChallengeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthChallengePayload>
+          }
+          aggregate: {
+            args: Prisma.AuthChallengeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAuthChallenge>
+          }
+          groupBy: {
+            args: Prisma.AuthChallengeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AuthChallengeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AuthChallengeCountArgs<ExtArgs>
+            result: $Utils.Optional<AuthChallengeCountAggregateOutputType> | number
+          }
+        }
+      }
+      RateLimitBucket: {
+        payload: Prisma.$RateLimitBucketPayload<ExtArgs>
+        fields: Prisma.RateLimitBucketFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RateLimitBucketFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RateLimitBucketFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>
+          }
+          findFirst: {
+            args: Prisma.RateLimitBucketFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RateLimitBucketFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>
+          }
+          findMany: {
+            args: Prisma.RateLimitBucketFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>[]
+          }
+          create: {
+            args: Prisma.RateLimitBucketCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>
+          }
+          createMany: {
+            args: Prisma.RateLimitBucketCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RateLimitBucketCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>[]
+          }
+          delete: {
+            args: Prisma.RateLimitBucketDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>
+          }
+          update: {
+            args: Prisma.RateLimitBucketUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>
+          }
+          deleteMany: {
+            args: Prisma.RateLimitBucketDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RateLimitBucketUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RateLimitBucketUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>[]
+          }
+          upsert: {
+            args: Prisma.RateLimitBucketUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitBucketPayload>
+          }
+          aggregate: {
+            args: Prisma.RateLimitBucketAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRateLimitBucket>
+          }
+          groupBy: {
+            args: Prisma.RateLimitBucketGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RateLimitBucketGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RateLimitBucketCountArgs<ExtArgs>
+            result: $Utils.Optional<RateLimitBucketCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -7242,6 +7422,8 @@ export namespace Prisma {
     providerCircuitBreakerState?: ProviderCircuitBreakerStateOmit
     resilienceDrillRun?: ResilienceDrillRunOmit
     dispatchIntent?: DispatchIntentOmit
+    authChallenge?: AuthChallengeOmit
+    rateLimitBucket?: RateLimitBucketOmit
   }
 
   /* Types for Logging */
@@ -100353,6 +100535,2155 @@ export namespace Prisma {
 
 
   /**
+   * Model AuthChallenge
+   */
+
+  export type AggregateAuthChallenge = {
+    _count: AuthChallengeCountAggregateOutputType | null
+    _avg: AuthChallengeAvgAggregateOutputType | null
+    _sum: AuthChallengeSumAggregateOutputType | null
+    _min: AuthChallengeMinAggregateOutputType | null
+    _max: AuthChallengeMaxAggregateOutputType | null
+  }
+
+  export type AuthChallengeAvgAggregateOutputType = {
+    attemptCount: number | null
+  }
+
+  export type AuthChallengeSumAggregateOutputType = {
+    attemptCount: number | null
+  }
+
+  export type AuthChallengeMinAggregateOutputType = {
+    id: string | null
+    accountId: string | null
+    nonce: string | null
+    nonceHash: string | null
+    challengeMessage: string | null
+    audience: string | null
+    network: string | null
+    issuedAt: Date | null
+    expiresAt: Date | null
+    consumedAt: Date | null
+    attemptCount: number | null
+    createdAt: Date | null
+  }
+
+  export type AuthChallengeMaxAggregateOutputType = {
+    id: string | null
+    accountId: string | null
+    nonce: string | null
+    nonceHash: string | null
+    challengeMessage: string | null
+    audience: string | null
+    network: string | null
+    issuedAt: Date | null
+    expiresAt: Date | null
+    consumedAt: Date | null
+    attemptCount: number | null
+    createdAt: Date | null
+  }
+
+  export type AuthChallengeCountAggregateOutputType = {
+    id: number
+    accountId: number
+    nonce: number
+    nonceHash: number
+    challengeMessage: number
+    audience: number
+    network: number
+    issuedAt: number
+    expiresAt: number
+    consumedAt: number
+    attemptCount: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AuthChallengeAvgAggregateInputType = {
+    attemptCount?: true
+  }
+
+  export type AuthChallengeSumAggregateInputType = {
+    attemptCount?: true
+  }
+
+  export type AuthChallengeMinAggregateInputType = {
+    id?: true
+    accountId?: true
+    nonce?: true
+    nonceHash?: true
+    challengeMessage?: true
+    audience?: true
+    network?: true
+    issuedAt?: true
+    expiresAt?: true
+    consumedAt?: true
+    attemptCount?: true
+    createdAt?: true
+  }
+
+  export type AuthChallengeMaxAggregateInputType = {
+    id?: true
+    accountId?: true
+    nonce?: true
+    nonceHash?: true
+    challengeMessage?: true
+    audience?: true
+    network?: true
+    issuedAt?: true
+    expiresAt?: true
+    consumedAt?: true
+    attemptCount?: true
+    createdAt?: true
+  }
+
+  export type AuthChallengeCountAggregateInputType = {
+    id?: true
+    accountId?: true
+    nonce?: true
+    nonceHash?: true
+    challengeMessage?: true
+    audience?: true
+    network?: true
+    issuedAt?: true
+    expiresAt?: true
+    consumedAt?: true
+    attemptCount?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AuthChallengeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthChallenge to aggregate.
+     */
+    where?: AuthChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthChallenges to fetch.
+     */
+    orderBy?: AuthChallengeOrderByWithRelationInput | AuthChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AuthChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthChallenges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AuthChallenges
+    **/
+    _count?: true | AuthChallengeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AuthChallengeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AuthChallengeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AuthChallengeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AuthChallengeMaxAggregateInputType
+  }
+
+  export type GetAuthChallengeAggregateType<T extends AuthChallengeAggregateArgs> = {
+        [P in keyof T & keyof AggregateAuthChallenge]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAuthChallenge[P]>
+      : GetScalarType<T[P], AggregateAuthChallenge[P]>
+  }
+
+
+
+
+  export type AuthChallengeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuthChallengeWhereInput
+    orderBy?: AuthChallengeOrderByWithAggregationInput | AuthChallengeOrderByWithAggregationInput[]
+    by: AuthChallengeScalarFieldEnum[] | AuthChallengeScalarFieldEnum
+    having?: AuthChallengeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AuthChallengeCountAggregateInputType | true
+    _avg?: AuthChallengeAvgAggregateInputType
+    _sum?: AuthChallengeSumAggregateInputType
+    _min?: AuthChallengeMinAggregateInputType
+    _max?: AuthChallengeMaxAggregateInputType
+  }
+
+  export type AuthChallengeGroupByOutputType = {
+    id: string
+    accountId: string
+    nonce: string
+    nonceHash: string
+    challengeMessage: string
+    audience: string
+    network: string
+    issuedAt: Date
+    expiresAt: Date
+    consumedAt: Date | null
+    attemptCount: number
+    createdAt: Date
+    _count: AuthChallengeCountAggregateOutputType | null
+    _avg: AuthChallengeAvgAggregateOutputType | null
+    _sum: AuthChallengeSumAggregateOutputType | null
+    _min: AuthChallengeMinAggregateOutputType | null
+    _max: AuthChallengeMaxAggregateOutputType | null
+  }
+
+  type GetAuthChallengeGroupByPayload<T extends AuthChallengeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AuthChallengeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AuthChallengeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AuthChallengeGroupByOutputType[P]>
+            : GetScalarType<T[P], AuthChallengeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AuthChallengeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    nonce?: boolean
+    nonceHash?: boolean
+    challengeMessage?: boolean
+    audience?: boolean
+    network?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    consumedAt?: boolean
+    attemptCount?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["authChallenge"]>
+
+  export type AuthChallengeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    nonce?: boolean
+    nonceHash?: boolean
+    challengeMessage?: boolean
+    audience?: boolean
+    network?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    consumedAt?: boolean
+    attemptCount?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["authChallenge"]>
+
+  export type AuthChallengeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    nonce?: boolean
+    nonceHash?: boolean
+    challengeMessage?: boolean
+    audience?: boolean
+    network?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    consumedAt?: boolean
+    attemptCount?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["authChallenge"]>
+
+  export type AuthChallengeSelectScalar = {
+    id?: boolean
+    accountId?: boolean
+    nonce?: boolean
+    nonceHash?: boolean
+    challengeMessage?: boolean
+    audience?: boolean
+    network?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    consumedAt?: boolean
+    attemptCount?: boolean
+    createdAt?: boolean
+  }
+
+  export type AuthChallengeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "accountId" | "nonce" | "nonceHash" | "challengeMessage" | "audience" | "network" | "issuedAt" | "expiresAt" | "consumedAt" | "attemptCount" | "createdAt", ExtArgs["result"]["authChallenge"]>
+
+  export type $AuthChallengePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AuthChallenge"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      accountId: string
+      nonce: string
+      nonceHash: string
+      challengeMessage: string
+      audience: string
+      network: string
+      issuedAt: Date
+      expiresAt: Date
+      consumedAt: Date | null
+      attemptCount: number
+      createdAt: Date
+    }, ExtArgs["result"]["authChallenge"]>
+    composites: {}
+  }
+
+  type AuthChallengeGetPayload<S extends boolean | null | undefined | AuthChallengeDefaultArgs> = $Result.GetResult<Prisma.$AuthChallengePayload, S>
+
+  type AuthChallengeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AuthChallengeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AuthChallengeCountAggregateInputType | true
+    }
+
+  export interface AuthChallengeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AuthChallenge'], meta: { name: 'AuthChallenge' } }
+    /**
+     * Find zero or one AuthChallenge that matches the filter.
+     * @param {AuthChallengeFindUniqueArgs} args - Arguments to find a AuthChallenge
+     * @example
+     * // Get one AuthChallenge
+     * const authChallenge = await prisma.authChallenge.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AuthChallengeFindUniqueArgs>(args: SelectSubset<T, AuthChallengeFindUniqueArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AuthChallenge that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AuthChallengeFindUniqueOrThrowArgs} args - Arguments to find a AuthChallenge
+     * @example
+     * // Get one AuthChallenge
+     * const authChallenge = await prisma.authChallenge.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AuthChallengeFindUniqueOrThrowArgs>(args: SelectSubset<T, AuthChallengeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuthChallenge that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthChallengeFindFirstArgs} args - Arguments to find a AuthChallenge
+     * @example
+     * // Get one AuthChallenge
+     * const authChallenge = await prisma.authChallenge.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AuthChallengeFindFirstArgs>(args?: SelectSubset<T, AuthChallengeFindFirstArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuthChallenge that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthChallengeFindFirstOrThrowArgs} args - Arguments to find a AuthChallenge
+     * @example
+     * // Get one AuthChallenge
+     * const authChallenge = await prisma.authChallenge.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AuthChallengeFindFirstOrThrowArgs>(args?: SelectSubset<T, AuthChallengeFindFirstOrThrowArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AuthChallenges that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthChallengeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AuthChallenges
+     * const authChallenges = await prisma.authChallenge.findMany()
+     * 
+     * // Get first 10 AuthChallenges
+     * const authChallenges = await prisma.authChallenge.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const authChallengeWithIdOnly = await prisma.authChallenge.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AuthChallengeFindManyArgs>(args?: SelectSubset<T, AuthChallengeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AuthChallenge.
+     * @param {AuthChallengeCreateArgs} args - Arguments to create a AuthChallenge.
+     * @example
+     * // Create one AuthChallenge
+     * const AuthChallenge = await prisma.authChallenge.create({
+     *   data: {
+     *     // ... data to create a AuthChallenge
+     *   }
+     * })
+     * 
+     */
+    create<T extends AuthChallengeCreateArgs>(args: SelectSubset<T, AuthChallengeCreateArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AuthChallenges.
+     * @param {AuthChallengeCreateManyArgs} args - Arguments to create many AuthChallenges.
+     * @example
+     * // Create many AuthChallenges
+     * const authChallenge = await prisma.authChallenge.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AuthChallengeCreateManyArgs>(args?: SelectSubset<T, AuthChallengeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AuthChallenges and returns the data saved in the database.
+     * @param {AuthChallengeCreateManyAndReturnArgs} args - Arguments to create many AuthChallenges.
+     * @example
+     * // Create many AuthChallenges
+     * const authChallenge = await prisma.authChallenge.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AuthChallenges and only return the `id`
+     * const authChallengeWithIdOnly = await prisma.authChallenge.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AuthChallengeCreateManyAndReturnArgs>(args?: SelectSubset<T, AuthChallengeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AuthChallenge.
+     * @param {AuthChallengeDeleteArgs} args - Arguments to delete one AuthChallenge.
+     * @example
+     * // Delete one AuthChallenge
+     * const AuthChallenge = await prisma.authChallenge.delete({
+     *   where: {
+     *     // ... filter to delete one AuthChallenge
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AuthChallengeDeleteArgs>(args: SelectSubset<T, AuthChallengeDeleteArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AuthChallenge.
+     * @param {AuthChallengeUpdateArgs} args - Arguments to update one AuthChallenge.
+     * @example
+     * // Update one AuthChallenge
+     * const authChallenge = await prisma.authChallenge.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AuthChallengeUpdateArgs>(args: SelectSubset<T, AuthChallengeUpdateArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AuthChallenges.
+     * @param {AuthChallengeDeleteManyArgs} args - Arguments to filter AuthChallenges to delete.
+     * @example
+     * // Delete a few AuthChallenges
+     * const { count } = await prisma.authChallenge.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AuthChallengeDeleteManyArgs>(args?: SelectSubset<T, AuthChallengeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuthChallenges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthChallengeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AuthChallenges
+     * const authChallenge = await prisma.authChallenge.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AuthChallengeUpdateManyArgs>(args: SelectSubset<T, AuthChallengeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuthChallenges and returns the data updated in the database.
+     * @param {AuthChallengeUpdateManyAndReturnArgs} args - Arguments to update many AuthChallenges.
+     * @example
+     * // Update many AuthChallenges
+     * const authChallenge = await prisma.authChallenge.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AuthChallenges and only return the `id`
+     * const authChallengeWithIdOnly = await prisma.authChallenge.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AuthChallengeUpdateManyAndReturnArgs>(args: SelectSubset<T, AuthChallengeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AuthChallenge.
+     * @param {AuthChallengeUpsertArgs} args - Arguments to update or create a AuthChallenge.
+     * @example
+     * // Update or create a AuthChallenge
+     * const authChallenge = await prisma.authChallenge.upsert({
+     *   create: {
+     *     // ... data to create a AuthChallenge
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AuthChallenge we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AuthChallengeUpsertArgs>(args: SelectSubset<T, AuthChallengeUpsertArgs<ExtArgs>>): Prisma__AuthChallengeClient<$Result.GetResult<Prisma.$AuthChallengePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AuthChallenges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthChallengeCountArgs} args - Arguments to filter AuthChallenges to count.
+     * @example
+     * // Count the number of AuthChallenges
+     * const count = await prisma.authChallenge.count({
+     *   where: {
+     *     // ... the filter for the AuthChallenges we want to count
+     *   }
+     * })
+    **/
+    count<T extends AuthChallengeCountArgs>(
+      args?: Subset<T, AuthChallengeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AuthChallengeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AuthChallenge.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthChallengeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AuthChallengeAggregateArgs>(args: Subset<T, AuthChallengeAggregateArgs>): Prisma.PrismaPromise<GetAuthChallengeAggregateType<T>>
+
+    /**
+     * Group by AuthChallenge.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthChallengeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AuthChallengeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AuthChallengeGroupByArgs['orderBy'] }
+        : { orderBy?: AuthChallengeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AuthChallengeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuthChallengeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AuthChallenge model
+   */
+  readonly fields: AuthChallengeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AuthChallenge.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AuthChallengeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AuthChallenge model
+   */
+  interface AuthChallengeFieldRefs {
+    readonly id: FieldRef<"AuthChallenge", 'String'>
+    readonly accountId: FieldRef<"AuthChallenge", 'String'>
+    readonly nonce: FieldRef<"AuthChallenge", 'String'>
+    readonly nonceHash: FieldRef<"AuthChallenge", 'String'>
+    readonly challengeMessage: FieldRef<"AuthChallenge", 'String'>
+    readonly audience: FieldRef<"AuthChallenge", 'String'>
+    readonly network: FieldRef<"AuthChallenge", 'String'>
+    readonly issuedAt: FieldRef<"AuthChallenge", 'DateTime'>
+    readonly expiresAt: FieldRef<"AuthChallenge", 'DateTime'>
+    readonly consumedAt: FieldRef<"AuthChallenge", 'DateTime'>
+    readonly attemptCount: FieldRef<"AuthChallenge", 'Int'>
+    readonly createdAt: FieldRef<"AuthChallenge", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AuthChallenge findUnique
+   */
+  export type AuthChallengeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthChallenge to fetch.
+     */
+    where: AuthChallengeWhereUniqueInput
+  }
+
+  /**
+   * AuthChallenge findUniqueOrThrow
+   */
+  export type AuthChallengeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthChallenge to fetch.
+     */
+    where: AuthChallengeWhereUniqueInput
+  }
+
+  /**
+   * AuthChallenge findFirst
+   */
+  export type AuthChallengeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthChallenge to fetch.
+     */
+    where?: AuthChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthChallenges to fetch.
+     */
+    orderBy?: AuthChallengeOrderByWithRelationInput | AuthChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthChallenges.
+     */
+    cursor?: AuthChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthChallenges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthChallenges.
+     */
+    distinct?: AuthChallengeScalarFieldEnum | AuthChallengeScalarFieldEnum[]
+  }
+
+  /**
+   * AuthChallenge findFirstOrThrow
+   */
+  export type AuthChallengeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthChallenge to fetch.
+     */
+    where?: AuthChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthChallenges to fetch.
+     */
+    orderBy?: AuthChallengeOrderByWithRelationInput | AuthChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthChallenges.
+     */
+    cursor?: AuthChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthChallenges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthChallenges.
+     */
+    distinct?: AuthChallengeScalarFieldEnum | AuthChallengeScalarFieldEnum[]
+  }
+
+  /**
+   * AuthChallenge findMany
+   */
+  export type AuthChallengeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthChallenges to fetch.
+     */
+    where?: AuthChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthChallenges to fetch.
+     */
+    orderBy?: AuthChallengeOrderByWithRelationInput | AuthChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AuthChallenges.
+     */
+    cursor?: AuthChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthChallenges.
+     */
+    skip?: number
+    distinct?: AuthChallengeScalarFieldEnum | AuthChallengeScalarFieldEnum[]
+  }
+
+  /**
+   * AuthChallenge create
+   */
+  export type AuthChallengeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * The data needed to create a AuthChallenge.
+     */
+    data: XOR<AuthChallengeCreateInput, AuthChallengeUncheckedCreateInput>
+  }
+
+  /**
+   * AuthChallenge createMany
+   */
+  export type AuthChallengeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AuthChallenges.
+     */
+    data: AuthChallengeCreateManyInput | AuthChallengeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuthChallenge createManyAndReturn
+   */
+  export type AuthChallengeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * The data used to create many AuthChallenges.
+     */
+    data: AuthChallengeCreateManyInput | AuthChallengeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuthChallenge update
+   */
+  export type AuthChallengeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * The data needed to update a AuthChallenge.
+     */
+    data: XOR<AuthChallengeUpdateInput, AuthChallengeUncheckedUpdateInput>
+    /**
+     * Choose, which AuthChallenge to update.
+     */
+    where: AuthChallengeWhereUniqueInput
+  }
+
+  /**
+   * AuthChallenge updateMany
+   */
+  export type AuthChallengeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AuthChallenges.
+     */
+    data: XOR<AuthChallengeUpdateManyMutationInput, AuthChallengeUncheckedUpdateManyInput>
+    /**
+     * Filter which AuthChallenges to update
+     */
+    where?: AuthChallengeWhereInput
+    /**
+     * Limit how many AuthChallenges to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthChallenge updateManyAndReturn
+   */
+  export type AuthChallengeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * The data used to update AuthChallenges.
+     */
+    data: XOR<AuthChallengeUpdateManyMutationInput, AuthChallengeUncheckedUpdateManyInput>
+    /**
+     * Filter which AuthChallenges to update
+     */
+    where?: AuthChallengeWhereInput
+    /**
+     * Limit how many AuthChallenges to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthChallenge upsert
+   */
+  export type AuthChallengeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * The filter to search for the AuthChallenge to update in case it exists.
+     */
+    where: AuthChallengeWhereUniqueInput
+    /**
+     * In case the AuthChallenge found by the `where` argument doesn't exist, create a new AuthChallenge with this data.
+     */
+    create: XOR<AuthChallengeCreateInput, AuthChallengeUncheckedCreateInput>
+    /**
+     * In case the AuthChallenge was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AuthChallengeUpdateInput, AuthChallengeUncheckedUpdateInput>
+  }
+
+  /**
+   * AuthChallenge delete
+   */
+  export type AuthChallengeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+    /**
+     * Filter which AuthChallenge to delete.
+     */
+    where: AuthChallengeWhereUniqueInput
+  }
+
+  /**
+   * AuthChallenge deleteMany
+   */
+  export type AuthChallengeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthChallenges to delete
+     */
+    where?: AuthChallengeWhereInput
+    /**
+     * Limit how many AuthChallenges to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthChallenge without action
+   */
+  export type AuthChallengeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthChallenge
+     */
+    select?: AuthChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthChallenge
+     */
+    omit?: AuthChallengeOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RateLimitBucket
+   */
+
+  export type AggregateRateLimitBucket = {
+    _count: RateLimitBucketCountAggregateOutputType | null
+    _avg: RateLimitBucketAvgAggregateOutputType | null
+    _sum: RateLimitBucketSumAggregateOutputType | null
+    _min: RateLimitBucketMinAggregateOutputType | null
+    _max: RateLimitBucketMaxAggregateOutputType | null
+  }
+
+  export type RateLimitBucketAvgAggregateOutputType = {
+    tokens: number | null
+  }
+
+  export type RateLimitBucketSumAggregateOutputType = {
+    tokens: number | null
+  }
+
+  export type RateLimitBucketMinAggregateOutputType = {
+    key: string | null
+    tokens: number | null
+    resetAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RateLimitBucketMaxAggregateOutputType = {
+    key: string | null
+    tokens: number | null
+    resetAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RateLimitBucketCountAggregateOutputType = {
+    key: number
+    tokens: number
+    resetAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RateLimitBucketAvgAggregateInputType = {
+    tokens?: true
+  }
+
+  export type RateLimitBucketSumAggregateInputType = {
+    tokens?: true
+  }
+
+  export type RateLimitBucketMinAggregateInputType = {
+    key?: true
+    tokens?: true
+    resetAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RateLimitBucketMaxAggregateInputType = {
+    key?: true
+    tokens?: true
+    resetAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RateLimitBucketCountAggregateInputType = {
+    key?: true
+    tokens?: true
+    resetAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RateLimitBucketAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RateLimitBucket to aggregate.
+     */
+    where?: RateLimitBucketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitBuckets to fetch.
+     */
+    orderBy?: RateLimitBucketOrderByWithRelationInput | RateLimitBucketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RateLimitBucketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitBuckets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitBuckets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RateLimitBuckets
+    **/
+    _count?: true | RateLimitBucketCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RateLimitBucketAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RateLimitBucketSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RateLimitBucketMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RateLimitBucketMaxAggregateInputType
+  }
+
+  export type GetRateLimitBucketAggregateType<T extends RateLimitBucketAggregateArgs> = {
+        [P in keyof T & keyof AggregateRateLimitBucket]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRateLimitBucket[P]>
+      : GetScalarType<T[P], AggregateRateLimitBucket[P]>
+  }
+
+
+
+
+  export type RateLimitBucketGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RateLimitBucketWhereInput
+    orderBy?: RateLimitBucketOrderByWithAggregationInput | RateLimitBucketOrderByWithAggregationInput[]
+    by: RateLimitBucketScalarFieldEnum[] | RateLimitBucketScalarFieldEnum
+    having?: RateLimitBucketScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RateLimitBucketCountAggregateInputType | true
+    _avg?: RateLimitBucketAvgAggregateInputType
+    _sum?: RateLimitBucketSumAggregateInputType
+    _min?: RateLimitBucketMinAggregateInputType
+    _max?: RateLimitBucketMaxAggregateInputType
+  }
+
+  export type RateLimitBucketGroupByOutputType = {
+    key: string
+    tokens: number
+    resetAt: Date
+    createdAt: Date
+    updatedAt: Date
+    _count: RateLimitBucketCountAggregateOutputType | null
+    _avg: RateLimitBucketAvgAggregateOutputType | null
+    _sum: RateLimitBucketSumAggregateOutputType | null
+    _min: RateLimitBucketMinAggregateOutputType | null
+    _max: RateLimitBucketMaxAggregateOutputType | null
+  }
+
+  type GetRateLimitBucketGroupByPayload<T extends RateLimitBucketGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RateLimitBucketGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RateLimitBucketGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RateLimitBucketGroupByOutputType[P]>
+            : GetScalarType<T[P], RateLimitBucketGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RateLimitBucketSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    tokens?: boolean
+    resetAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["rateLimitBucket"]>
+
+  export type RateLimitBucketSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    tokens?: boolean
+    resetAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["rateLimitBucket"]>
+
+  export type RateLimitBucketSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    tokens?: boolean
+    resetAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["rateLimitBucket"]>
+
+  export type RateLimitBucketSelectScalar = {
+    key?: boolean
+    tokens?: boolean
+    resetAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RateLimitBucketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"key" | "tokens" | "resetAt" | "createdAt" | "updatedAt", ExtArgs["result"]["rateLimitBucket"]>
+
+  export type $RateLimitBucketPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RateLimitBucket"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      key: string
+      tokens: number
+      resetAt: Date
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["rateLimitBucket"]>
+    composites: {}
+  }
+
+  type RateLimitBucketGetPayload<S extends boolean | null | undefined | RateLimitBucketDefaultArgs> = $Result.GetResult<Prisma.$RateLimitBucketPayload, S>
+
+  type RateLimitBucketCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RateLimitBucketFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RateLimitBucketCountAggregateInputType | true
+    }
+
+  export interface RateLimitBucketDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RateLimitBucket'], meta: { name: 'RateLimitBucket' } }
+    /**
+     * Find zero or one RateLimitBucket that matches the filter.
+     * @param {RateLimitBucketFindUniqueArgs} args - Arguments to find a RateLimitBucket
+     * @example
+     * // Get one RateLimitBucket
+     * const rateLimitBucket = await prisma.rateLimitBucket.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RateLimitBucketFindUniqueArgs>(args: SelectSubset<T, RateLimitBucketFindUniqueArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RateLimitBucket that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RateLimitBucketFindUniqueOrThrowArgs} args - Arguments to find a RateLimitBucket
+     * @example
+     * // Get one RateLimitBucket
+     * const rateLimitBucket = await prisma.rateLimitBucket.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RateLimitBucketFindUniqueOrThrowArgs>(args: SelectSubset<T, RateLimitBucketFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RateLimitBucket that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitBucketFindFirstArgs} args - Arguments to find a RateLimitBucket
+     * @example
+     * // Get one RateLimitBucket
+     * const rateLimitBucket = await prisma.rateLimitBucket.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RateLimitBucketFindFirstArgs>(args?: SelectSubset<T, RateLimitBucketFindFirstArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RateLimitBucket that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitBucketFindFirstOrThrowArgs} args - Arguments to find a RateLimitBucket
+     * @example
+     * // Get one RateLimitBucket
+     * const rateLimitBucket = await prisma.rateLimitBucket.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RateLimitBucketFindFirstOrThrowArgs>(args?: SelectSubset<T, RateLimitBucketFindFirstOrThrowArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RateLimitBuckets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitBucketFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RateLimitBuckets
+     * const rateLimitBuckets = await prisma.rateLimitBucket.findMany()
+     * 
+     * // Get first 10 RateLimitBuckets
+     * const rateLimitBuckets = await prisma.rateLimitBucket.findMany({ take: 10 })
+     * 
+     * // Only select the `key`
+     * const rateLimitBucketWithKeyOnly = await prisma.rateLimitBucket.findMany({ select: { key: true } })
+     * 
+     */
+    findMany<T extends RateLimitBucketFindManyArgs>(args?: SelectSubset<T, RateLimitBucketFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RateLimitBucket.
+     * @param {RateLimitBucketCreateArgs} args - Arguments to create a RateLimitBucket.
+     * @example
+     * // Create one RateLimitBucket
+     * const RateLimitBucket = await prisma.rateLimitBucket.create({
+     *   data: {
+     *     // ... data to create a RateLimitBucket
+     *   }
+     * })
+     * 
+     */
+    create<T extends RateLimitBucketCreateArgs>(args: SelectSubset<T, RateLimitBucketCreateArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RateLimitBuckets.
+     * @param {RateLimitBucketCreateManyArgs} args - Arguments to create many RateLimitBuckets.
+     * @example
+     * // Create many RateLimitBuckets
+     * const rateLimitBucket = await prisma.rateLimitBucket.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RateLimitBucketCreateManyArgs>(args?: SelectSubset<T, RateLimitBucketCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RateLimitBuckets and returns the data saved in the database.
+     * @param {RateLimitBucketCreateManyAndReturnArgs} args - Arguments to create many RateLimitBuckets.
+     * @example
+     * // Create many RateLimitBuckets
+     * const rateLimitBucket = await prisma.rateLimitBucket.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RateLimitBuckets and only return the `key`
+     * const rateLimitBucketWithKeyOnly = await prisma.rateLimitBucket.createManyAndReturn({
+     *   select: { key: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RateLimitBucketCreateManyAndReturnArgs>(args?: SelectSubset<T, RateLimitBucketCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RateLimitBucket.
+     * @param {RateLimitBucketDeleteArgs} args - Arguments to delete one RateLimitBucket.
+     * @example
+     * // Delete one RateLimitBucket
+     * const RateLimitBucket = await prisma.rateLimitBucket.delete({
+     *   where: {
+     *     // ... filter to delete one RateLimitBucket
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RateLimitBucketDeleteArgs>(args: SelectSubset<T, RateLimitBucketDeleteArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RateLimitBucket.
+     * @param {RateLimitBucketUpdateArgs} args - Arguments to update one RateLimitBucket.
+     * @example
+     * // Update one RateLimitBucket
+     * const rateLimitBucket = await prisma.rateLimitBucket.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RateLimitBucketUpdateArgs>(args: SelectSubset<T, RateLimitBucketUpdateArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RateLimitBuckets.
+     * @param {RateLimitBucketDeleteManyArgs} args - Arguments to filter RateLimitBuckets to delete.
+     * @example
+     * // Delete a few RateLimitBuckets
+     * const { count } = await prisma.rateLimitBucket.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RateLimitBucketDeleteManyArgs>(args?: SelectSubset<T, RateLimitBucketDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RateLimitBuckets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitBucketUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RateLimitBuckets
+     * const rateLimitBucket = await prisma.rateLimitBucket.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RateLimitBucketUpdateManyArgs>(args: SelectSubset<T, RateLimitBucketUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RateLimitBuckets and returns the data updated in the database.
+     * @param {RateLimitBucketUpdateManyAndReturnArgs} args - Arguments to update many RateLimitBuckets.
+     * @example
+     * // Update many RateLimitBuckets
+     * const rateLimitBucket = await prisma.rateLimitBucket.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RateLimitBuckets and only return the `key`
+     * const rateLimitBucketWithKeyOnly = await prisma.rateLimitBucket.updateManyAndReturn({
+     *   select: { key: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RateLimitBucketUpdateManyAndReturnArgs>(args: SelectSubset<T, RateLimitBucketUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RateLimitBucket.
+     * @param {RateLimitBucketUpsertArgs} args - Arguments to update or create a RateLimitBucket.
+     * @example
+     * // Update or create a RateLimitBucket
+     * const rateLimitBucket = await prisma.rateLimitBucket.upsert({
+     *   create: {
+     *     // ... data to create a RateLimitBucket
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RateLimitBucket we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RateLimitBucketUpsertArgs>(args: SelectSubset<T, RateLimitBucketUpsertArgs<ExtArgs>>): Prisma__RateLimitBucketClient<$Result.GetResult<Prisma.$RateLimitBucketPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RateLimitBuckets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitBucketCountArgs} args - Arguments to filter RateLimitBuckets to count.
+     * @example
+     * // Count the number of RateLimitBuckets
+     * const count = await prisma.rateLimitBucket.count({
+     *   where: {
+     *     // ... the filter for the RateLimitBuckets we want to count
+     *   }
+     * })
+    **/
+    count<T extends RateLimitBucketCountArgs>(
+      args?: Subset<T, RateLimitBucketCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RateLimitBucketCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RateLimitBucket.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitBucketAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RateLimitBucketAggregateArgs>(args: Subset<T, RateLimitBucketAggregateArgs>): Prisma.PrismaPromise<GetRateLimitBucketAggregateType<T>>
+
+    /**
+     * Group by RateLimitBucket.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitBucketGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RateLimitBucketGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RateLimitBucketGroupByArgs['orderBy'] }
+        : { orderBy?: RateLimitBucketGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RateLimitBucketGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRateLimitBucketGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RateLimitBucket model
+   */
+  readonly fields: RateLimitBucketFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RateLimitBucket.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RateLimitBucketClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RateLimitBucket model
+   */
+  interface RateLimitBucketFieldRefs {
+    readonly key: FieldRef<"RateLimitBucket", 'String'>
+    readonly tokens: FieldRef<"RateLimitBucket", 'Int'>
+    readonly resetAt: FieldRef<"RateLimitBucket", 'DateTime'>
+    readonly createdAt: FieldRef<"RateLimitBucket", 'DateTime'>
+    readonly updatedAt: FieldRef<"RateLimitBucket", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RateLimitBucket findUnique
+   */
+  export type RateLimitBucketFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * Filter, which RateLimitBucket to fetch.
+     */
+    where: RateLimitBucketWhereUniqueInput
+  }
+
+  /**
+   * RateLimitBucket findUniqueOrThrow
+   */
+  export type RateLimitBucketFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * Filter, which RateLimitBucket to fetch.
+     */
+    where: RateLimitBucketWhereUniqueInput
+  }
+
+  /**
+   * RateLimitBucket findFirst
+   */
+  export type RateLimitBucketFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * Filter, which RateLimitBucket to fetch.
+     */
+    where?: RateLimitBucketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitBuckets to fetch.
+     */
+    orderBy?: RateLimitBucketOrderByWithRelationInput | RateLimitBucketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RateLimitBuckets.
+     */
+    cursor?: RateLimitBucketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitBuckets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitBuckets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RateLimitBuckets.
+     */
+    distinct?: RateLimitBucketScalarFieldEnum | RateLimitBucketScalarFieldEnum[]
+  }
+
+  /**
+   * RateLimitBucket findFirstOrThrow
+   */
+  export type RateLimitBucketFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * Filter, which RateLimitBucket to fetch.
+     */
+    where?: RateLimitBucketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitBuckets to fetch.
+     */
+    orderBy?: RateLimitBucketOrderByWithRelationInput | RateLimitBucketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RateLimitBuckets.
+     */
+    cursor?: RateLimitBucketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitBuckets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitBuckets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RateLimitBuckets.
+     */
+    distinct?: RateLimitBucketScalarFieldEnum | RateLimitBucketScalarFieldEnum[]
+  }
+
+  /**
+   * RateLimitBucket findMany
+   */
+  export type RateLimitBucketFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * Filter, which RateLimitBuckets to fetch.
+     */
+    where?: RateLimitBucketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitBuckets to fetch.
+     */
+    orderBy?: RateLimitBucketOrderByWithRelationInput | RateLimitBucketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RateLimitBuckets.
+     */
+    cursor?: RateLimitBucketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitBuckets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitBuckets.
+     */
+    skip?: number
+    distinct?: RateLimitBucketScalarFieldEnum | RateLimitBucketScalarFieldEnum[]
+  }
+
+  /**
+   * RateLimitBucket create
+   */
+  export type RateLimitBucketCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * The data needed to create a RateLimitBucket.
+     */
+    data: XOR<RateLimitBucketCreateInput, RateLimitBucketUncheckedCreateInput>
+  }
+
+  /**
+   * RateLimitBucket createMany
+   */
+  export type RateLimitBucketCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RateLimitBuckets.
+     */
+    data: RateLimitBucketCreateManyInput | RateLimitBucketCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RateLimitBucket createManyAndReturn
+   */
+  export type RateLimitBucketCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * The data used to create many RateLimitBuckets.
+     */
+    data: RateLimitBucketCreateManyInput | RateLimitBucketCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RateLimitBucket update
+   */
+  export type RateLimitBucketUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * The data needed to update a RateLimitBucket.
+     */
+    data: XOR<RateLimitBucketUpdateInput, RateLimitBucketUncheckedUpdateInput>
+    /**
+     * Choose, which RateLimitBucket to update.
+     */
+    where: RateLimitBucketWhereUniqueInput
+  }
+
+  /**
+   * RateLimitBucket updateMany
+   */
+  export type RateLimitBucketUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RateLimitBuckets.
+     */
+    data: XOR<RateLimitBucketUpdateManyMutationInput, RateLimitBucketUncheckedUpdateManyInput>
+    /**
+     * Filter which RateLimitBuckets to update
+     */
+    where?: RateLimitBucketWhereInput
+    /**
+     * Limit how many RateLimitBuckets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RateLimitBucket updateManyAndReturn
+   */
+  export type RateLimitBucketUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * The data used to update RateLimitBuckets.
+     */
+    data: XOR<RateLimitBucketUpdateManyMutationInput, RateLimitBucketUncheckedUpdateManyInput>
+    /**
+     * Filter which RateLimitBuckets to update
+     */
+    where?: RateLimitBucketWhereInput
+    /**
+     * Limit how many RateLimitBuckets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RateLimitBucket upsert
+   */
+  export type RateLimitBucketUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * The filter to search for the RateLimitBucket to update in case it exists.
+     */
+    where: RateLimitBucketWhereUniqueInput
+    /**
+     * In case the RateLimitBucket found by the `where` argument doesn't exist, create a new RateLimitBucket with this data.
+     */
+    create: XOR<RateLimitBucketCreateInput, RateLimitBucketUncheckedCreateInput>
+    /**
+     * In case the RateLimitBucket was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RateLimitBucketUpdateInput, RateLimitBucketUncheckedUpdateInput>
+  }
+
+  /**
+   * RateLimitBucket delete
+   */
+  export type RateLimitBucketDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+    /**
+     * Filter which RateLimitBucket to delete.
+     */
+    where: RateLimitBucketWhereUniqueInput
+  }
+
+  /**
+   * RateLimitBucket deleteMany
+   */
+  export type RateLimitBucketDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RateLimitBuckets to delete
+     */
+    where?: RateLimitBucketWhereInput
+    /**
+     * Limit how many RateLimitBuckets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RateLimitBucket without action
+   */
+  export type RateLimitBucketDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitBucket
+     */
+    select?: RateLimitBucketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RateLimitBucket
+     */
+    omit?: RateLimitBucketOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -101888,6 +104219,35 @@ export namespace Prisma {
   };
 
   export type DispatchIntentScalarFieldEnum = (typeof DispatchIntentScalarFieldEnum)[keyof typeof DispatchIntentScalarFieldEnum]
+
+
+  export const AuthChallengeScalarFieldEnum: {
+    id: 'id',
+    accountId: 'accountId',
+    nonce: 'nonce',
+    nonceHash: 'nonceHash',
+    challengeMessage: 'challengeMessage',
+    audience: 'audience',
+    network: 'network',
+    issuedAt: 'issuedAt',
+    expiresAt: 'expiresAt',
+    consumedAt: 'consumedAt',
+    attemptCount: 'attemptCount',
+    createdAt: 'createdAt'
+  };
+
+  export type AuthChallengeScalarFieldEnum = (typeof AuthChallengeScalarFieldEnum)[keyof typeof AuthChallengeScalarFieldEnum]
+
+
+  export const RateLimitBucketScalarFieldEnum: {
+    key: 'key',
+    tokens: 'tokens',
+    resetAt: 'resetAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RateLimitBucketScalarFieldEnum = (typeof RateLimitBucketScalarFieldEnum)[keyof typeof RateLimitBucketScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -110197,6 +112557,149 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"DispatchIntent"> | Date | string
     dispatchedAt?: DateTimeNullableWithAggregatesFilter<"DispatchIntent"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"DispatchIntent"> | Date | string | null
+  }
+
+  export type AuthChallengeWhereInput = {
+    AND?: AuthChallengeWhereInput | AuthChallengeWhereInput[]
+    OR?: AuthChallengeWhereInput[]
+    NOT?: AuthChallengeWhereInput | AuthChallengeWhereInput[]
+    id?: StringFilter<"AuthChallenge"> | string
+    accountId?: StringFilter<"AuthChallenge"> | string
+    nonce?: StringFilter<"AuthChallenge"> | string
+    nonceHash?: StringFilter<"AuthChallenge"> | string
+    challengeMessage?: StringFilter<"AuthChallenge"> | string
+    audience?: StringFilter<"AuthChallenge"> | string
+    network?: StringFilter<"AuthChallenge"> | string
+    issuedAt?: DateTimeFilter<"AuthChallenge"> | Date | string
+    expiresAt?: DateTimeFilter<"AuthChallenge"> | Date | string
+    consumedAt?: DateTimeNullableFilter<"AuthChallenge"> | Date | string | null
+    attemptCount?: IntFilter<"AuthChallenge"> | number
+    createdAt?: DateTimeFilter<"AuthChallenge"> | Date | string
+  }
+
+  export type AuthChallengeOrderByWithRelationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    nonce?: SortOrder
+    nonceHash?: SortOrder
+    challengeMessage?: SortOrder
+    audience?: SortOrder
+    network?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuthChallengeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    nonce?: string
+    AND?: AuthChallengeWhereInput | AuthChallengeWhereInput[]
+    OR?: AuthChallengeWhereInput[]
+    NOT?: AuthChallengeWhereInput | AuthChallengeWhereInput[]
+    accountId?: StringFilter<"AuthChallenge"> | string
+    nonceHash?: StringFilter<"AuthChallenge"> | string
+    challengeMessage?: StringFilter<"AuthChallenge"> | string
+    audience?: StringFilter<"AuthChallenge"> | string
+    network?: StringFilter<"AuthChallenge"> | string
+    issuedAt?: DateTimeFilter<"AuthChallenge"> | Date | string
+    expiresAt?: DateTimeFilter<"AuthChallenge"> | Date | string
+    consumedAt?: DateTimeNullableFilter<"AuthChallenge"> | Date | string | null
+    attemptCount?: IntFilter<"AuthChallenge"> | number
+    createdAt?: DateTimeFilter<"AuthChallenge"> | Date | string
+  }, "id" | "nonce">
+
+  export type AuthChallengeOrderByWithAggregationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    nonce?: SortOrder
+    nonceHash?: SortOrder
+    challengeMessage?: SortOrder
+    audience?: SortOrder
+    network?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    createdAt?: SortOrder
+    _count?: AuthChallengeCountOrderByAggregateInput
+    _avg?: AuthChallengeAvgOrderByAggregateInput
+    _max?: AuthChallengeMaxOrderByAggregateInput
+    _min?: AuthChallengeMinOrderByAggregateInput
+    _sum?: AuthChallengeSumOrderByAggregateInput
+  }
+
+  export type AuthChallengeScalarWhereWithAggregatesInput = {
+    AND?: AuthChallengeScalarWhereWithAggregatesInput | AuthChallengeScalarWhereWithAggregatesInput[]
+    OR?: AuthChallengeScalarWhereWithAggregatesInput[]
+    NOT?: AuthChallengeScalarWhereWithAggregatesInput | AuthChallengeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AuthChallenge"> | string
+    accountId?: StringWithAggregatesFilter<"AuthChallenge"> | string
+    nonce?: StringWithAggregatesFilter<"AuthChallenge"> | string
+    nonceHash?: StringWithAggregatesFilter<"AuthChallenge"> | string
+    challengeMessage?: StringWithAggregatesFilter<"AuthChallenge"> | string
+    audience?: StringWithAggregatesFilter<"AuthChallenge"> | string
+    network?: StringWithAggregatesFilter<"AuthChallenge"> | string
+    issuedAt?: DateTimeWithAggregatesFilter<"AuthChallenge"> | Date | string
+    expiresAt?: DateTimeWithAggregatesFilter<"AuthChallenge"> | Date | string
+    consumedAt?: DateTimeNullableWithAggregatesFilter<"AuthChallenge"> | Date | string | null
+    attemptCount?: IntWithAggregatesFilter<"AuthChallenge"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"AuthChallenge"> | Date | string
+  }
+
+  export type RateLimitBucketWhereInput = {
+    AND?: RateLimitBucketWhereInput | RateLimitBucketWhereInput[]
+    OR?: RateLimitBucketWhereInput[]
+    NOT?: RateLimitBucketWhereInput | RateLimitBucketWhereInput[]
+    key?: StringFilter<"RateLimitBucket"> | string
+    tokens?: IntFilter<"RateLimitBucket"> | number
+    resetAt?: DateTimeFilter<"RateLimitBucket"> | Date | string
+    createdAt?: DateTimeFilter<"RateLimitBucket"> | Date | string
+    updatedAt?: DateTimeFilter<"RateLimitBucket"> | Date | string
+  }
+
+  export type RateLimitBucketOrderByWithRelationInput = {
+    key?: SortOrder
+    tokens?: SortOrder
+    resetAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RateLimitBucketWhereUniqueInput = Prisma.AtLeast<{
+    key?: string
+    AND?: RateLimitBucketWhereInput | RateLimitBucketWhereInput[]
+    OR?: RateLimitBucketWhereInput[]
+    NOT?: RateLimitBucketWhereInput | RateLimitBucketWhereInput[]
+    tokens?: IntFilter<"RateLimitBucket"> | number
+    resetAt?: DateTimeFilter<"RateLimitBucket"> | Date | string
+    createdAt?: DateTimeFilter<"RateLimitBucket"> | Date | string
+    updatedAt?: DateTimeFilter<"RateLimitBucket"> | Date | string
+  }, "key">
+
+  export type RateLimitBucketOrderByWithAggregationInput = {
+    key?: SortOrder
+    tokens?: SortOrder
+    resetAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RateLimitBucketCountOrderByAggregateInput
+    _avg?: RateLimitBucketAvgOrderByAggregateInput
+    _max?: RateLimitBucketMaxOrderByAggregateInput
+    _min?: RateLimitBucketMinOrderByAggregateInput
+    _sum?: RateLimitBucketSumOrderByAggregateInput
+  }
+
+  export type RateLimitBucketScalarWhereWithAggregatesInput = {
+    AND?: RateLimitBucketScalarWhereWithAggregatesInput | RateLimitBucketScalarWhereWithAggregatesInput[]
+    OR?: RateLimitBucketScalarWhereWithAggregatesInput[]
+    NOT?: RateLimitBucketScalarWhereWithAggregatesInput | RateLimitBucketScalarWhereWithAggregatesInput[]
+    key?: StringWithAggregatesFilter<"RateLimitBucket"> | string
+    tokens?: IntWithAggregatesFilter<"RateLimitBucket"> | number
+    resetAt?: DateTimeWithAggregatesFilter<"RateLimitBucket"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"RateLimitBucket"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RateLimitBucket"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -119706,6 +122209,167 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type AuthChallengeCreateInput = {
+    id?: string
+    accountId: string
+    nonce: string
+    nonceHash: string
+    challengeMessage: string
+    audience?: string
+    network?: string
+    issuedAt?: Date | string
+    expiresAt: Date | string
+    consumedAt?: Date | string | null
+    attemptCount?: number
+    createdAt?: Date | string
+  }
+
+  export type AuthChallengeUncheckedCreateInput = {
+    id?: string
+    accountId: string
+    nonce: string
+    nonceHash: string
+    challengeMessage: string
+    audience?: string
+    network?: string
+    issuedAt?: Date | string
+    expiresAt: Date | string
+    consumedAt?: Date | string | null
+    attemptCount?: number
+    createdAt?: Date | string
+  }
+
+  export type AuthChallengeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    nonce?: StringFieldUpdateOperationsInput | string
+    nonceHash?: StringFieldUpdateOperationsInput | string
+    challengeMessage?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthChallengeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    nonce?: StringFieldUpdateOperationsInput | string
+    nonceHash?: StringFieldUpdateOperationsInput | string
+    challengeMessage?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthChallengeCreateManyInput = {
+    id?: string
+    accountId: string
+    nonce: string
+    nonceHash: string
+    challengeMessage: string
+    audience?: string
+    network?: string
+    issuedAt?: Date | string
+    expiresAt: Date | string
+    consumedAt?: Date | string | null
+    attemptCount?: number
+    createdAt?: Date | string
+  }
+
+  export type AuthChallengeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    nonce?: StringFieldUpdateOperationsInput | string
+    nonceHash?: StringFieldUpdateOperationsInput | string
+    challengeMessage?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthChallengeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    nonce?: StringFieldUpdateOperationsInput | string
+    nonceHash?: StringFieldUpdateOperationsInput | string
+    challengeMessage?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitBucketCreateInput = {
+    key: string
+    tokens?: number
+    resetAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RateLimitBucketUncheckedCreateInput = {
+    key: string
+    tokens?: number
+    resetAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RateLimitBucketUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    tokens?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitBucketUncheckedUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    tokens?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitBucketCreateManyInput = {
+    key: string
+    tokens?: number
+    resetAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RateLimitBucketUpdateManyMutationInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    tokens?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitBucketUncheckedUpdateManyInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    tokens?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -125223,6 +127887,91 @@ export namespace Prisma {
 
   export type DispatchIntentSumOrderByAggregateInput = {
     leaseGeneration?: SortOrder
+  }
+
+  export type AuthChallengeCountOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    nonce?: SortOrder
+    nonceHash?: SortOrder
+    challengeMessage?: SortOrder
+    audience?: SortOrder
+    network?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrder
+    attemptCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuthChallengeAvgOrderByAggregateInput = {
+    attemptCount?: SortOrder
+  }
+
+  export type AuthChallengeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    nonce?: SortOrder
+    nonceHash?: SortOrder
+    challengeMessage?: SortOrder
+    audience?: SortOrder
+    network?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrder
+    attemptCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuthChallengeMinOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    nonce?: SortOrder
+    nonceHash?: SortOrder
+    challengeMessage?: SortOrder
+    audience?: SortOrder
+    network?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrder
+    attemptCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuthChallengeSumOrderByAggregateInput = {
+    attemptCount?: SortOrder
+  }
+
+  export type RateLimitBucketCountOrderByAggregateInput = {
+    key?: SortOrder
+    tokens?: SortOrder
+    resetAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RateLimitBucketAvgOrderByAggregateInput = {
+    tokens?: SortOrder
+  }
+
+  export type RateLimitBucketMaxOrderByAggregateInput = {
+    key?: SortOrder
+    tokens?: SortOrder
+    resetAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RateLimitBucketMinOrderByAggregateInput = {
+    key?: SortOrder
+    tokens?: SortOrder
+    resetAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RateLimitBucketSumOrderByAggregateInput = {
+    tokens?: SortOrder
   }
 
   export type AgentCreateNestedManyWithoutUserInput = {

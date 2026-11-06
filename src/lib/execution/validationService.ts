@@ -398,19 +398,67 @@ export class ExecutionValidationService {
       };
     }
 
-    // Optional on-chain RPC balance verification
+    // 8b. On-Chain RPC Balance & Account Verification
     if (!bypassRpcCheck && wallet.nearAccountId) {
+      const isProd = process.env.NODE_ENV === "production";
+      const allowOfflineTestBalances = !isProd && process.env.MANDATE_ALLOW_OFFLINE_TEST_BALANCES === "true";
+
       try {
         const onChainState = await getNearAccountState(wallet.nearAccountId);
         if (!onChainState) {
+          // In production, an account MUST exist on-chain. Stored DB balance cannot substitute.
+          if (allowOfflineTestBalances && storedBalance > BigInt(0) && requestedAmount + storageBuffer <= storedBalance) {
+            // Permitted ONLY in explicit non-production offline test suites
+          } else {
+            checks.push({
+              name: "onchain_balance",
+              passed: false,
+              details: `Agent custody account ${wallet.nearAccountId} does not exist on-chain or has zero balance.`,
+            });
+            return {
+              valid: false,
+              reason: "On-chain balance insufficient: Account does not exist on-chain or has zero balance",
+              checks,
+              amountYocto,
+              amountNear: yoctoToNear(amountYocto),
+              balanceAvailableYocto: "0",
+              storageBufferYocto: STORAGE_BUFFER_YOCTO,
+              network: wallet.network,
+              recipient: cleanRecipient,
+            };
+          }
+        } else {
+          const onChainBal = BigInt(onChainState.amountYocto || "0");
+          if (requestedAmount + storageBuffer > onChainBal) {
+            checks.push({
+              name: "onchain_balance",
+              passed: false,
+              details: `On-chain balance (${yoctoToNear(onChainBal.toString())} NEAR) insufficient for transfer plus 0.05 NEAR reserve buffer.`,
+            });
+            return {
+              valid: false,
+              reason: "On-chain balance insufficient for transaction",
+              checks,
+              amountYocto,
+              amountNear: yoctoToNear(amountYocto),
+              balanceAvailableYocto: onChainBal.toString(),
+              storageBufferYocto: STORAGE_BUFFER_YOCTO,
+              network: wallet.network,
+              recipient: cleanRecipient,
+            };
+          }
+        }
+      } catch (rpcErr: any) {
+        // In production, RPC network errors fail closed!
+        if (isProd) {
           checks.push({
             name: "onchain_balance",
             passed: false,
-            details: `Agent custody account ${wallet.nearAccountId} does not exist on-chain or has zero balance.`,
+            details: `On-chain balance check failed to query NEAR RPC: ${rpcErr?.message || "RPC connection failed"}`,
           });
           return {
             valid: false,
-            reason: "On-chain balance insufficient: Account does not exist on-chain or has zero balance",
+            reason: "On-chain balance check failed: Unable to verify account on NEAR RPC",
             checks,
             amountYocto,
             amountNear: yoctoToNear(amountYocto),
@@ -420,28 +468,26 @@ export class ExecutionValidationService {
             recipient: cleanRecipient,
           };
         }
-        const onChainBal = BigInt(onChainState.amountYocto || "0");
-        if (requestedAmount + storageBuffer > onChainBal) {
+
+        // In non-production, fallback to stored balance check
+        if (storedBalance === BigInt(0) || requestedAmount + storageBuffer > storedBalance) {
           checks.push({
             name: "onchain_balance",
             passed: false,
-            details: `On-chain balance (${yoctoToNear(onChainBal.toString())} NEAR) insufficient for transfer.`,
+            details: `On-chain verification unreachable and stored balance is insufficient.`,
           });
           return {
             valid: false,
-            reason: "On-chain balance insufficient for transaction",
+            reason: "Insufficient balance",
             checks,
             amountYocto,
             amountNear: yoctoToNear(amountYocto),
-            balanceAvailableYocto: onChainBal.toString(),
+            balanceAvailableYocto: storedBalance.toString(),
             storageBufferYocto: STORAGE_BUFFER_YOCTO,
             network: wallet.network,
             recipient: cleanRecipient,
           };
         }
-      } catch (rpcErr) {
-        // Log RPC warning but do not strictly block if stored balance is valid
-        console.warn("Preflight RPC balance query warning:", rpcErr);
       }
     }
     checks.push({ name: "balance_sufficient", passed: true });

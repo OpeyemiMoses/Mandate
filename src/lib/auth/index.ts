@@ -5,6 +5,7 @@
 
 export * from "./sessionService";
 export * from "./walletAuthService";
+export * from "./nearAccountKeyVerification";
 export * from "./authenticateRequest";
 export * from "./tenantAccessService";
 export * from "./authorizationService";

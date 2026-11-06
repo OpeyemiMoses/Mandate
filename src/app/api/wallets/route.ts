@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getAuthenticatedUser, toAuthErrorResponse } from "@/lib/auth";
 import { getNearAccountState } from "@/lib/nearRpc";
 import { yoctoToNear } from "@/lib/yocto";
+import { encryptWalletApiKey } from "@/lib/security/walletCredentialService";
 
 /**
  * GET /api/wallets - List personal wallet, dedicated agent wallets, and funding history
@@ -162,7 +163,7 @@ export async function POST(req: Request) {
         wallet: {
           create: {
             walletId: outlayerRes.wallet_id,
-            apiKey: outlayerRes.api_key,
+            apiKey: encryptWalletApiKey(outlayerRes.api_key),
             nearAccountId: outlayerRes.near_account_id,
             handoffUrl: outlayerRes.handoff_url,
             network: "testnet",

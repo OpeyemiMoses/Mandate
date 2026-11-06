@@ -11,6 +11,30 @@ import { prisma } from "@/lib/db";
 import { ExecutionRecord } from "@prisma/client";
 import { ExecutionStatus } from "./types";
 
+// In-memory mutex per idempotencyKey to serialize concurrent race requests in non-distributed/embedded environments
+const idempotencyLocks = new Map<string, Promise<void>>();
+
+async function acquireIdempotencyLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  while (idempotencyLocks.has(key)) {
+    try {
+      await idempotencyLocks.get(key);
+    } catch {}
+  }
+
+  let resolveLock!: () => void;
+  const lockPromise = new Promise<void>((resolve) => {
+    resolveLock = resolve;
+  });
+  idempotencyLocks.set(key, lockPromise);
+
+  try {
+    return await fn();
+  } finally {
+    idempotencyLocks.delete(key);
+    resolveLock();
+  }
+}
+
 export class DistributedIdempotencyManager {
   /**
    * Executes a critical financial operation protected by database-level synchronization.
@@ -64,31 +88,33 @@ export class DistributedIdempotencyManager {
       }
     }
 
-    // Fallback for non-Postgres environments: execute directly with atomic DB constraint handling
-    try {
-      return await operation();
-    } catch (err: any) {
-      if (err?.code === "P2002") {
-        const existing = await prisma.executionRecord.findUnique({
-          where: { idempotencyKey },
-        });
-        if (existing) {
-          return {
-            success: existing.status === "CONFIRMED",
-            executionId: existing.id,
-            status: "DUPLICATE_IDEMPOTENT" as unknown as ExecutionStatus,
-            txHash: existing.txHash || undefined,
-            blockHash: existing.blockHash || undefined,
-            blockHeight: existing.blockHeight || undefined,
-            error: existing.errorReason || undefined,
-            recoveryStatus: existing.recoveryStatus || undefined,
-            settled: existing.status === "CONFIRMED",
-            isSimulated: existing.isSimulated,
-            durationMs: 0,
-          } as unknown as T;
+    // Fallback for non-Postgres environments: execute with mutex synchronization
+    return acquireIdempotencyLock(idempotencyKey, async () => {
+      try {
+        return await operation();
+      } catch (err: any) {
+        if (err?.code === "P2002") {
+          const existing = await prisma.executionRecord.findUnique({
+            where: { idempotencyKey },
+          });
+          if (existing) {
+            return {
+              success: existing.status === "CONFIRMED",
+              executionId: existing.id,
+              status: "DUPLICATE_IDEMPOTENT" as unknown as ExecutionStatus,
+              txHash: existing.txHash || undefined,
+              blockHash: existing.blockHash || undefined,
+              blockHeight: existing.blockHeight || undefined,
+              error: existing.errorReason || undefined,
+              recoveryStatus: existing.recoveryStatus || undefined,
+              settled: existing.status === "CONFIRMED",
+              isSimulated: existing.isSimulated,
+              durationMs: 0,
+            } as unknown as T;
+          }
         }
+        throw err;
       }
-      throw err;
-    }
+    });
   }
 }

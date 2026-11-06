@@ -53,6 +53,30 @@ export async function POST(req: Request) {
 
     const cleanTxHash = txHash ? String(txHash).trim() : "";
     const isBase58TxHash = /^[1-9A-HJ-NP-Za-km-z]{40,64}$/.test(cleanTxHash);
+    const isTestHash =
+      cleanTxHash.startsWith("tx-") ||
+      cleanTxHash.startsWith("mock-") ||
+      cleanTxHash.startsWith("test-") ||
+      cleanTxHash.startsWith("simulated-");
+
+    // Production Isolation Invariant:
+    // Simulated or test-tagged hashes are strictly rejected in production mode.
+    // Client headers, query parameters, or payload flags CANNOT override production mode.
+    const isProd = process.env.NODE_ENV === "production";
+    if (isTestHash) {
+      if (isProd || process.env.MANDATE_ALLOW_TEST_TX !== "true") {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Simulated test transaction hashes are strictly prohibited in production mode. Valid on-chain NEAR transaction hash required.",
+            status: "REJECTED_TEST_TX",
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    const isTestTx = isTestHash && !isProd && process.env.MANDATE_ALLOW_TEST_TX === "true";
 
     // If an on-chain transaction hash is provided, verify it on NEAR RPC
     if (isBase58TxHash) {
@@ -101,6 +125,8 @@ export async function POST(req: Request) {
           { status: 400 }
         );
       }
+    } else if (isTestTx) {
+      // Test/simulated transactions bypass onchain RPC deposit requirement
     } else {
       // If no valid base58 hash is provided, check if the agent custody account already holds on-chain funds
       const onChainState = await getNearAccountState(wallet.nearAccountId);
@@ -116,7 +142,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const recordedTxHash = isBase58TxHash ? cleanTxHash : `verified-deposit-${Date.now()}`;
+    const recordedTxHash = (isBase58TxHash || isTestTx) ? cleanTxHash : `verified-deposit-${Date.now()}`;
 
     // Check duplicate
     const existingRecord = await prisma.fundingRecord.findUnique({

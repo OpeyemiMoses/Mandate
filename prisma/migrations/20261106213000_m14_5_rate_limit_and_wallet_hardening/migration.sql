@@ -1,0 +1,13 @@
+-- AlterTable RateLimitBucket
+ALTER TABLE "RateLimitBucket"
+    ALTER COLUMN "resetAt" TYPE TIMESTAMPTZ(3) USING "resetAt" AT TIME ZONE 'UTC',
+    ALTER COLUMN "createdAt" TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+    ALTER COLUMN "updatedAt" TYPE TIMESTAMPTZ(3) USING "updatedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable AuthChallenge
+ALTER TABLE "AuthChallenge"
+    ALTER COLUMN "issuedAt" TYPE TIMESTAMPTZ(3) USING "issuedAt" AT TIME ZONE 'UTC',
+    ALTER COLUMN "expiresAt" TYPE TIMESTAMPTZ(3) USING "expiresAt" AT TIME ZONE 'UTC',
+    ALTER COLUMN "consumedAt" TYPE TIMESTAMPTZ(3) USING "consumedAt" AT TIME ZONE 'UTC',
+    ALTER COLUMN "createdAt" TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC';
+

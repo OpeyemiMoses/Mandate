@@ -17,6 +17,12 @@ export interface TransferResult {
   isRedirect?: boolean;
 }
 
+export interface SignedAuthResult {
+  accountId: string;
+  publicKey: string;
+  signature: string;
+}
+
 interface NearWalletSelectorContextValue {
   connector: NearConnector | null;
   accounts: Account[];
@@ -31,6 +37,11 @@ interface NearWalletSelectorContextValue {
     amountNear: string;
     callbackUrl?: string;
   }) => Promise<TransferResult>;
+  signAuthChallenge: (params: {
+    message: string;
+    recipient: string;
+    nonce: string;
+  }) => Promise<SignedAuthResult>;
 }
 
 const NearWalletSelectorContext = createContext<NearWalletSelectorContextValue | null>(null);
@@ -152,6 +163,13 @@ export function NearWalletSelectorProvider({
    */
   const signOut = useCallback(async () => {
     try {
+      await fetch("/api/auth", {
+        method: "DELETE",
+        credentials: "include",
+      });
+    } catch {}
+
+    try {
       localStorage.setItem("mandate_explicitly_disconnected", "true");
       localStorage.removeItem("selected-wallet");
       localStorage.removeItem("mandate_active_account_v2");
@@ -232,6 +250,65 @@ export function NearWalletSelectorProvider({
     [connector, activeWallet]
   );
 
+  /**
+   * Signs an NEP-413 authentication challenge using the active connected NEAR wallet.
+   */
+  const signAuthChallenge = useCallback(
+    async (params: { message: string; recipient: string; nonce: string }): Promise<SignedAuthResult> => {
+      let wallet = activeWallet;
+      if (!wallet && connector) {
+        try {
+          const connected = await connector.getConnectedWallet();
+          wallet = connected.wallet;
+        } catch {}
+      }
+
+      if (!wallet) {
+        throw new Error("No active NEAR wallet connected. Please connect your wallet first.");
+      }
+
+      if (typeof (wallet as any).signMessage !== "function") {
+        throw new Error(`The connected wallet (${walletName || "Wallet"}) does not support message signing (NEP-413).`);
+      }
+
+      const nonceBytes = Buffer.from(params.nonce, "hex");
+      const signed = await (wallet as any).signMessage({
+        message: params.message,
+        recipient: params.recipient,
+        nonce: nonceBytes,
+      });
+
+      if (!signed || !signed.signature) {
+        throw new Error("Wallet signature was rejected or aborted by user.");
+      }
+
+      let sigStr = "";
+      if (typeof signed.signature === "string") {
+        sigStr = signed.signature;
+      } else if (Buffer.isBuffer(signed.signature) || signed.signature instanceof Uint8Array) {
+        sigStr = Buffer.from(signed.signature).toString("base64");
+      } else if (signed.signature && typeof signed.signature === "object") {
+        sigStr = Buffer.from(Object.values(signed.signature) as number[]).toString("base64");
+      }
+
+      let pubKeyStr = "";
+      if (typeof signed.publicKey === "string") {
+        pubKeyStr = signed.publicKey;
+      } else if (signed.publicKey && typeof (signed.publicKey as any).toString === "function") {
+        pubKeyStr = (signed.publicKey as any).toString();
+      } else if (signed.publicKey) {
+        pubKeyStr = String(signed.publicKey);
+      }
+
+      return {
+        accountId: signed.accountId || accountId || "",
+        publicKey: pubKeyStr,
+        signature: sigStr,
+      };
+    },
+    [connector, activeWallet, walletName, accountId]
+  );
+
   return (
     <NearWalletSelectorContext.Provider
       value={{
@@ -244,6 +321,7 @@ export function NearWalletSelectorProvider({
         openWalletModal,
         signOut,
         signAndSendTransfer,
+        signAuthChallenge,
       }}
     >
       {children}

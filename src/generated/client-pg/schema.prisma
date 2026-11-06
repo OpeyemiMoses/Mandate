@@ -2090,3 +2090,35 @@ model DispatchIntent {
   @@index([idempotencyKey])
   @@index([jobId])
 }
+
+// Milestone 14.3: Secure Pre-Authentication Challenge Storage
+// Guarantees zero User table state pollution before cryptographic proof is verified
+model AuthChallenge {
+  id               String    @id @default(cuid())
+  accountId        String // normalized near account ID
+  nonce            String    @unique // 32-byte hex nonce
+  nonceHash        String // sha256 hash of nonce
+  challengeMessage String // authoritative server-generated message
+  audience         String    @default("mandate.app")
+  network          String    @default("testnet")
+  issuedAt         DateTime  @default(now()) @db.Timestamptz(3)
+  expiresAt        DateTime  @db.Timestamptz(3)
+  consumedAt       DateTime? @db.Timestamptz(3)
+  attemptCount     Int       @default(0)
+  createdAt        DateTime  @default(now()) @db.Timestamptz(3)
+
+  @@index([accountId])
+  @@index([nonce])
+  @@index([expiresAt])
+}
+
+// Distributed rate-limiting store for authentication and abuse protection
+model RateLimitBucket {
+  key       String   @id // e.g. "ip:1.2.3.4", "acct:alice.testnet", "global:challenges"
+  tokens    Int      @default(0)
+  resetAt   DateTime @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([resetAt])
+}

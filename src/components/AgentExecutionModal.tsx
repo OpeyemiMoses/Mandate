@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
+import { ModalPortal } from "./ModalPortal";
 import {
   Bot,
   Play,
@@ -320,11 +320,10 @@ export function AgentExecutionModal({
     }
   }
 
-  return createPortal(
-    <div className="fixed inset-0 z-[9999] overflow-y-auto bg-black/80 dark:bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="flex min-h-full items-center justify-center p-4 sm:p-6 text-center">
-        <div className="relative w-full max-w-3xl text-left max-h-[90vh] flex flex-col rounded-2xl bg-white dark:bg-[#0F0F14] border border-slate-200 dark:border-[#23232C] shadow-2xl text-slate-900 dark:text-[#E5E7EB] overflow-hidden animate-pop">
-          {/* Header */}
+  return (
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-3xl" customCard={true}>
+      <div className="relative w-full max-w-3xl text-left max-h-[90vh] flex flex-col rounded-2xl bg-white dark:bg-[#0F0F14] border border-slate-200 dark:border-[#23232C] shadow-2xl text-slate-900 dark:text-[#E5E7EB] overflow-hidden animate-pop">
+        {/* Header */}
           <div className="p-5 border-b border-slate-200 dark:border-white/5 flex items-center justify-between bg-slate-50 dark:bg-[#141419]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-[#1C1417] border border-red-200 dark:border-[#FF3B30]/30 flex items-center justify-center text-[#FF3B30]">
@@ -746,9 +745,7 @@ export function AgentExecutionModal({
           )}
         </div>
       </div>
-      </div>
-    </div>,
-    document.body
+    </ModalPortal>
   );
 }
 

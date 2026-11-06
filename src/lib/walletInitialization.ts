@@ -10,6 +10,7 @@ import { getNearAccountState, verifyNearTransaction } from "@/lib/nearRpc";
 import { getOutlayerWalletBalance } from "@/lib/outlayer";
 import { yoctoToNear, nearToYocto, isPositiveYoctoString } from "@/lib/yocto";
 import { recordAuditEvent } from "@/lib/auditLedger";
+import { getDecryptedWalletApiKey } from "@/lib/security/walletCredentialService";
 
 export const RECOMMENDED_INITIALIZATION_NEAR = "0.05";
 export const MINIMUM_STORAGE_STAKE_NEAR = "0.00182";
@@ -55,7 +56,7 @@ export async function checkWalletInitializationStatus(
   let outlayerBalanceYocto = "0";
 
   try {
-    const outlayerRes = await getOutlayerWalletBalance(wallet.apiKey);
+    const outlayerRes = await getOutlayerWalletBalance(getDecryptedWalletApiKey(wallet));
     if (outlayerRes && outlayerRes.balance !== undefined) {
       outlayerAccessible = true;
       outlayerBalanceYocto = outlayerRes.balance;
@@ -164,7 +165,7 @@ export async function completeWalletInitialization(
   }
 
   // 3. Confirm OutLayer can retrieve account balance
-  const outlayerRes = await getOutlayerWalletBalance(wallet.apiKey);
+  const outlayerRes = await getOutlayerWalletBalance(getDecryptedWalletApiKey(wallet));
   const outlayerBalanceYocto = outlayerRes?.balance || rpcState.amountYocto;
 
   // 4. Mark wallet READY

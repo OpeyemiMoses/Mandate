@@ -210,10 +210,22 @@ export class SessionService {
   }
 
   /**
-   * Serializes a cookie clearing header for logout.
+   * Serializes a cookie clearing header for logout with consistent security attributes.
+   * Matches serializeCookie default behavior (Secure, HttpOnly, SameSite=Lax, Path=/).
    */
-  public static serializeClearCookie(): string {
-    return `${SESSION_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  public static serializeClearCookie(isSecure = true): string {
+    const parts = [
+      `${SESSION_COOKIE_NAME}=`,
+      "Path=/",
+      "HttpOnly",
+      "SameSite=Lax",
+      "Max-Age=0",
+      "Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+    ];
+    if (isSecure) {
+      parts.push("Secure");
+    }
+    return parts.join("; ");
   }
 
   /**

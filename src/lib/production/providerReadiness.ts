@@ -14,6 +14,7 @@ import { ExecutionAuthorizationService } from "@/lib/execution/authorizationServ
 import { PolicyEngine } from "@/lib/governance/engine";
 import { prisma } from "@/lib/db";
 import { recordAuditEvent } from "@/lib/auditLedger";
+import { getDecryptedWalletApiKey } from "@/lib/security/walletCredentialService";
 
 export interface NearRpcHealthResult {
   endpoint: string;
@@ -475,7 +476,7 @@ export class ProviderReadinessService {
         });
 
         const outlayerRes = await executeOutlayerTransfer({
-          apiKey: wallet.apiKey,
+          apiKey: getDecryptedWalletApiKey(wallet),
           to: recipient,
           amountYocto,
           idempotencyKey: probeIdempotencyKey,
