@@ -42,3 +42,7 @@ CREATE INDEX IF NOT EXISTS "AuthChallenge_expiresAt_idx" ON "AuthChallenge"("exp
 -- CreateIndex
 CREATE INDEX IF NOT EXISTS "RateLimitBucket_resetAt_idx" ON "RateLimitBucket"("resetAt");
 
+-- Add optional User metadata columns
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "isTestAccount" BOOLEAN DEFAULT false;
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "classification" TEXT;
+

@@ -7,6 +7,7 @@
  */
 
 import fs from "fs";
+import path from "path";
 import { Client } from "pg";
 import { PostgresBackupService } from "./postgresBackupService";
 import { prismaPg } from "@/lib/postgresDb";
@@ -107,17 +108,18 @@ export class PostgresRestoreService {
       await prodClient.connect();
 
       // Read all table definitions / run schema migration
-      // We can read prisma/migrations/20261104025734_init_postgresql/migration.sql
-      const migrationFile = fs
+      // Apply all Prisma PostgreSQL migrations in chronological order
+      const migrationDirs = fs
         .readdirSync("prisma/migrations")
-        .find((f) => f.includes("init_postgresql"));
+        .filter((f) => fs.statSync(path.join("prisma", "migrations", f)).isDirectory())
+        .sort();
 
-      if (migrationFile) {
-        const migrationSql = fs.readFileSync(
-          `prisma/migrations/${migrationFile}/migration.sql`,
-          "utf8"
-        );
-        await targetClient.query(migrationSql);
+      for (const dir of migrationDirs) {
+        const sqlPath = path.join("prisma", "migrations", dir, "migration.sql");
+        if (fs.existsSync(sqlPath)) {
+          const migrationSql = fs.readFileSync(sqlPath, "utf8");
+          await targetClient.query(migrationSql);
+        }
       }
       await prodClient.end();
 

@@ -38,9 +38,52 @@ jobs:
       - name: ESLint Check
         run: npm run lint
 
-  build-verification:
-    name: Next.js Production Build
+  postgresql-integration-and-finance:
+    name: PostgreSQL Integration & Financial Concurrency
     needs: [quality-gate]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: mandate_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgrespassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Clients
+        run: |
+          npx prisma generate --schema=prisma/schema.postgresql.prisma
+          npx prisma generate --schema=prisma/schema.prisma
+
+      - name: Verify PostgreSQL Schema & Financial Parity
+        env:
+          DATABASE_URL: "postgresql://postgres:postgrespassword@localhost:5432/mandate_test?schema=public"
+          MANDATE_DATABASE_TYPE: "postgres"
+        run: |
+          npx prisma db push --schema=prisma/schema.postgresql.prisma
+
+  build-and-containerize:
+    name: Next.js Production Build & Containerization
+    needs: [postgresql-integration-and-finance]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
