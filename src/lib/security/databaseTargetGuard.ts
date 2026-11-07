@@ -662,3 +662,4 @@ export function installTestHttpIsolationGuard(): void {
 if (isTestOrHarnessRuntime()) {
   installTestHttpIsolationGuard();
 }
+
