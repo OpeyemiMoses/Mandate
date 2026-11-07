@@ -148,7 +148,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-nowrap shrink-0 overflow-x-auto max-w-full pb-1 sm:pb-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-nowrap shrink-0 overflow-x-auto no-scrollbar max-w-full pb-1 sm:pb-0">
             {/* Agent Custody Pill */}
             <div className="h-9 flex items-center gap-2 px-3 sm:px-3.5 rounded-xl bg-white dark:bg-[#141113] border border-[#FF3B30]/30 text-xs text-slate-500 dark:text-[#A1A1AA] shadow-sm whitespace-nowrap shrink-0 animate-pop hover-pop stagger-1">
               <Bot className="w-3.5 h-3.5 text-[#FF3B30] shrink-0" />

@@ -533,6 +533,16 @@ article section {
   visibility: visible !important;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .landing-page section:not(#top),
+  .reveal-on-scroll,
+  .glowing-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Staggered cascades for child cards in grids */
 .grid > div:nth-child(1) { animation-delay: 40ms; }
 .grid > div:nth-child(2) { animation-delay: 80ms; }
