@@ -103,7 +103,12 @@ export function getAllowedOrigins(): string[] {
   allowed.add("https://www.mandate.app");
   allowed.add("https://testnet.mandate.app");
 
-  // 2. Configured application URLs (validated)
+  // 2. Production Vercel Aliases
+  allowed.add("https://mandate-sandy-nine.vercel.app");
+  allowed.add("https://mandate-yemigraffixs-projects.vercel.app");
+  allowed.add("https://mandate-git-main-yemigraffixs-projects.vercel.app");
+
+  // 3. Environment-provided Vercel and App URLs
   if (process.env.APP_URL) {
     const parsed = normalizeOrigin(process.env.APP_URL);
     if (parsed) allowed.add(parsed);
@@ -116,8 +121,26 @@ export function getAllowedOrigins(): string[] {
     const parsed = normalizeOrigin(process.env.APP_BASE_URL);
     if (parsed) allowed.add(parsed);
   }
+  if (process.env.VERCEL_URL) {
+    const parsed = normalizeOrigin(`https://${process.env.VERCEL_URL}`);
+    if (parsed) allowed.add(parsed);
+  }
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    const parsed = normalizeOrigin(`https://${process.env.NEXT_PUBLIC_VERCEL_URL}`);
+    if (parsed) allowed.add(parsed);
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    const parsed = normalizeOrigin(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
+    if (parsed) allowed.add(parsed);
+  }
+  if (process.env.ALLOWED_ORIGINS) {
+    for (const item of process.env.ALLOWED_ORIGINS.split(",")) {
+      const parsed = normalizeOrigin(item.trim());
+      if (parsed) allowed.add(parsed);
+    }
+  }
 
-  // 3. Local development origins — strictly non-production ONLY
+  // 4. Local development origins — strictly non-production ONLY
   const isProduction = process.env.NODE_ENV === "production" && process.env.MANDATE_ALLOW_DEV_ORIGINS !== "true";
   if (!isProduction) {
     allowed.add("http://localhost:3000");
@@ -127,6 +150,29 @@ export function getAllowedOrigins(): string[] {
   }
 
   return Array.from(allowed);
+}
+
+/**
+ * Checks whether an origin or referer is trusted.
+ * Supports exact allowlist matches as well as official Mandate Vercel deployment URLs.
+ */
+export function isAllowedOrigin(originStr: string | null | undefined): boolean {
+  if (!originStr || typeof originStr !== "string") return false;
+  const cleanOrigin = originStr.trim().toLowerCase();
+  const allowedOrigins = getAllowedOrigins();
+
+  if (allowedOrigins.includes(cleanOrigin)) {
+    return true;
+  }
+
+  // Authoritatively allow all official Mandate Vercel deployment URLs (production & preview)
+  // e.g. https://mandate-sandy-nine.vercel.app, https://mandate-yemigraffixs-projects.vercel.app,
+  // https://mandate-*.vercel.app, or https://*-yemigraffixs-projects.vercel.app
+  if (/^https:\/\/(mandate[a-z0-9-]*|.*-yemigraffixs-projects)\.vercel\.app$/i.test(cleanOrigin)) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -147,12 +193,11 @@ export async function validateRequestOrigin(
 
   const originHeader = req.headers.get("origin");
   const refererHeader = req.headers.get("referer");
-  const allowedOrigins = getAllowedOrigins();
 
   // 1. If Origin header is present, it must be in the allowlist
   if (originHeader) {
     const cleanOrigin = originHeader.trim().toLowerCase();
-    const isAllowed = allowedOrigins.includes(cleanOrigin);
+    const isAllowed = isAllowedOrigin(cleanOrigin);
 
     if (!isAllowed) {
       return {
@@ -168,7 +213,7 @@ export async function validateRequestOrigin(
   if (refererHeader) {
     try {
       const refererOrigin = new URL(refererHeader).origin.toLowerCase();
-      const isAllowed = allowedOrigins.includes(refererOrigin);
+      const isAllowed = isAllowedOrigin(refererOrigin);
 
       if (!isAllowed) {
         return {
