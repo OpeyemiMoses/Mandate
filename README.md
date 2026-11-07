@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/mandate-logo.svg" alt="Mandate Logo" width="380" />
+  <img src="public/mandate-logo.svg" alt="Mandate Logo" width="340" />
 </p>
 
 <p align="center">
@@ -10,38 +10,30 @@
   <em>"AI proposes. Mandate enforces. The user controls. OutLayer executes."</em>
 </p>
 
-<p align="center">
-  <a href="https://mandate-yemigraffixs-projects.vercel.app"><img src="https://img.shields.io/badge/Live%20App-mandate.vercel.app-FF3B30?style=for-the-badge&logo=vercel" alt="Live App"></a>
-  <a href="https://mandate-yemigraffixs-projects.vercel.app/api/health/ready"><img src="https://img.shields.io/badge/System%20Status-READY%20(PostgreSQL%2018)-10B981?style=for-the-badge" alt="Status READY"></a>
-  <a href="https://testnet.nearblocks.io/txns/F5AFpgRzngjJnsqE6QHtEMJYXnLhPMbwKtVG9pHXyACC"><img src="https://img.shields.io/badge/Settlement-NEAR%20Testnet-00C08B?style=for-the-badge&logo=near" alt="NEAR Testnet"></a>
-  <a href="https://outlayer.ai"><img src="https://img.shields.io/badge/Custody-Intel%20SGX%20TEE-0071C5?style=for-the-badge&logo=intel" alt="OutLayer TEE"></a>
-  <a href="https://github.com/OpeyemiMoses/Mandate"><img src="https://img.shields.io/badge/GitHub-OpeyemiMoses%2FMandate-181717?style=for-the-badge&logo=github" alt="GitHub Repo"></a>
-</p>
-
 ---
 
-## ⚖️ Judges' Corner: Live Evaluation & Verification
+## Judges' Corner: Live Evaluation & Verification
 
 Mandate provides a **deterministic spending firewall** for AI agents. It gives autonomous agents the ability to execute on-chain financial workflows **without ever possessing raw private keys, exceeding user-defined budgets, or transferring funds to unauthorized recipients**.
 
 ---
 
-### 🔗 Quick Links Reference
+### Quick Links Reference
 
 | Destination | Live URL | Purpose |
 | :--- | :--- | :--- |
-| 🚀 **Live Production Application** | [mandate-yemigraffixs-projects.vercel.app](https://mandate-yemigraffixs-projects.vercel.app) | Public production web app ready for live testing |
-| 🔍 **System Readiness API** | [/api/health/ready](https://mandate-yemigraffixs-projects.vercel.app/api/health/ready) | Live telemetry (Railway PostgreSQL 18.6 & Worker Fleet status) |
-| ⚡ **Service Health Check** | [/api/health](https://mandate-yemigraffixs-projects.vercel.app/api/health) | Testnet node connectivity & OutLayer TEE gateway status |
-| 🔗 **Verified On-Chain Settlement** | [`F5AFpgRzngj...`](https://testnet.nearblocks.io/txns/F5AFpgRzngjJnsqE6QHtEMJYXnLhPMbwKtVG9pHXyACC) | Autonomous 0.05 NEAR payment executed via OutLayer TEE |
-| 🛡️ **Interactive Policy Simulator** | [/governance/simulator](https://mandate-yemigraffixs-projects.vercel.app/governance/simulator) | Test deterministic policy evaluation in real-time |
-| 📖 **System Documentation** | [/docs](https://mandate-yemigraffixs-projects.vercel.app/docs) | Complete technical specifications and architecture guides |
-| ⚙️ **Railway Production Dashboard** | [Project `mandate`](https://railway.com/project/f060e7a8-6f75-4962-9d2d-b6337907785f) | PostgreSQL 18.6 + Background Worker Daemon runtime |
-| 💻 **Vercel Project Console** | [Project `mandate`](https://vercel.com/yemigraffixs-projects/mandate) | Edge routing, Next.js 14 App Router, and serverless APIs |
+| **Live Production Application** | [mandate-yemigraffixs-projects.vercel.app](https://mandate-yemigraffixs-projects.vercel.app) | Public production web app ready for live testing |
+| **System Readiness API** | [/api/health/ready](https://mandate-yemigraffixs-projects.vercel.app/api/health/ready) | Live telemetry (Railway PostgreSQL 18.6 & Worker Fleet status) |
+| **Service Health Check** | [/api/health](https://mandate-yemigraffixs-projects.vercel.app/api/health) | Testnet node connectivity & OutLayer TEE gateway status |
+| **Verified On-Chain Settlement** | [`F5AFpgRzngj...`](https://testnet.nearblocks.io/txns/F5AFpgRzngjJnsqE6QHtEMJYXnLhPMbwKtVG9pHXyACC) | Autonomous 0.05 NEAR payment executed via OutLayer TEE |
+| **Interactive Policy Simulator** | [/governance/simulator](https://mandate-yemigraffixs-projects.vercel.app/governance/simulator) | Test deterministic policy evaluation in real-time |
+| **System Documentation** | [/docs](https://mandate-yemigraffixs-projects.vercel.app/docs) | Complete technical specifications and architecture guides |
+| **Railway Production Dashboard** | [Project `mandate`](https://railway.com/project/f060e7a8-6f75-4962-9d2d-b6337907785f) | PostgreSQL 18.6 + Background Worker Daemon runtime |
+| **Vercel Project Console** | [Project `mandate`](https://vercel.com/yemigraffixs-projects/mandate) | Edge routing, Next.js 14 App Router, and serverless APIs |
 
 ---
 
-### 🎯 3-Minute Live Walkthrough for Evaluators
+### 3-Minute Live Walkthrough for Evaluators
 
 ```text
   [1. Connect NEAR Wallet] ──> [2. Create Agent] ──> [3. Define Mandate Policy]
@@ -95,7 +87,7 @@ Test that rogue agent behavior is deterministically intercepted:
 
 ---
 
-### 📸 Application Interface Preview
+### Application Interface Preview
 
 <p align="center">
   <img src="shots-dashboard-dark.png" alt="Mandate Live Dashboard" width="90%" />
@@ -111,7 +103,7 @@ Test that rogue agent behavior is deterministically intercepted:
 
 ---
 
-## 💡 The Problem & The Solution
+## The Problem & The Solution
 
 ### The Vulnerability of AI Agent Wallets Today
 Autonomous AI agents can analyze markets, interact with web APIs, and write code. However, giving an LLM direct access to private keys or custodial wallets creates severe systemic vulnerabilities:
@@ -128,7 +120,7 @@ Mandate introduces a **deterministic firewall layer** between AI agent intent an
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -175,7 +167,7 @@ Mandate introduces a **deterministic firewall layer** between AI agent intent an
 
 ---
 
-## 🔬 Core Technical Features
+## Core Technical Features
 
 ### 1. Deterministic Policy Engine
 Spending limits and allowlists are evaluated using strict `yoctoNEAR` integer arithmetic (`1 NEAR = 10^24 yoctoNEAR`). Floating-point approximations are completely eliminated from financial pathways to prevent rounding exploits and precision leakage.
@@ -202,7 +194,7 @@ Every transfer requires an HMAC-SHA256 signed `BoundaryExecutionTicket` containi
 
 ---
 
-## 💻 Technology Stack
+## Technology Stack
 
 | Layer | Technologies |
 | :--- | :--- |
@@ -215,7 +207,7 @@ Every transfer requires an HMAC-SHA256 signed `BoundaryExecutionTicket` containi
 
 ---
 
-## 🛠️ Quickstart & Local Setup
+## Quickstart & Local Setup
 
 ### Prerequisites
 - Node.js `v20.x` or higher
@@ -268,7 +260,7 @@ Every transfer requires an HMAC-SHA256 signed `BoundaryExecutionTicket` containi
 
 ---
 
-## 🌐 Production Deployment Architecture
+## Production Deployment Architecture
 
 Mandate is deployed across **Railway** and **Vercel** for optimal reliability:
 
@@ -290,7 +282,7 @@ Mandate is deployed across **Railway** and **Vercel** for optimal reliability:
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 ├── docs/                      # Architectural & threat model documentation
@@ -334,7 +326,7 @@ Mandate is deployed across **Railway** and **Vercel** for optimal reliability:
 
 ---
 
-## 👥 Community & Security
+## Community & Security
 
 - **Code of Conduct:** Please review our [Code of Conduct](CODE_OF_CONDUCT.md).
 - **Contributing:** Guidelines for issues and pull requests are detailed in [CONTRIBUTING.md](CONTRIBUTING.md).
