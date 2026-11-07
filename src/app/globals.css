@@ -484,9 +484,9 @@ header {
   animation: riseIn 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Sections and cards below the fold start prepared for scroll reveal */
+/* Sections and cards below the fold start prepared for scroll reveal (landing page only) */
+.landing-page section:not(#top),
 .reveal-on-scroll,
-section:not(#top),
 .glowing-card {
   opacity: 0;
   transform: translateY(28px);
@@ -509,10 +509,21 @@ section:not(#top),
 
 /* Triggered by IntersectionObserver when scrolled into viewport */
 .reveal-on-scroll.revealed,
-section:not(#top).revealed,
+.landing-page section:not(#top).revealed,
+section.revealed,
 .glowing-card.revealed {
   opacity: 1 !important;
   transform: translateY(0) scale(1) translateX(0) !important;
+}
+
+/* Documentation, platform pages, and article content are never hidden */
+.docs-content,
+.docs-content section,
+main section,
+article section {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
 }
 
 /* Staggered cascades for child cards in grids */

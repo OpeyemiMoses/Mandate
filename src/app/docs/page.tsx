@@ -42,7 +42,7 @@ export default function DocsHomePage() {
   ];
 
   return (
-    <DocsLayout activeSlug="introduction" headings={headings}>
+    <DocsLayout isOverview={true} headings={headings}>
       <div className="space-y-12">
         {/* Hub Hero Banner */}
         <div className="p-8 rounded-2xl bg-white dark:bg-gradient-to-br dark:from-[#1C1215] dark:via-[#121114] dark:to-[#0A0A0C] border border-red-200/80 dark:border-[#FF3B30]/30 shadow-xl dark:shadow-2xl relative overflow-hidden animate-pop">

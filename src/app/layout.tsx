@@ -23,6 +23,13 @@ export const metadata: Metadata = {
   title: "Mandate — Your rules. Our execution. | NEAR Autonomous Spending Firewall",
   description:
     "Mandate is a deterministic spending firewall and policy-enforced custody layer for autonomous AI agents on the NEAR ecosystem.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

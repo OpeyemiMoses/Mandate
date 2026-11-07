@@ -39,14 +39,18 @@ interface DocsLayoutProps {
   children: React.ReactNode;
   activeSlug?: string;
   headings?: HeadingItem[];
+  isOverview?: boolean;
 }
 
 export function DocsLayout({
   children,
-  activeSlug = "introduction",
+  activeSlug,
   headings = [],
+  isOverview = false,
 }: DocsLayoutProps) {
   const pathname = usePathname();
+  const effectiveOverview = isOverview || activeSlug === "overview" || pathname === "/docs";
+  const effectiveSlug = activeSlug || (effectiveOverview ? "" : "introduction");
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
@@ -63,7 +67,7 @@ export function DocsLayout({
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Active page lookup
-  const currentPage = getDocPageBySlug(activeSlug) || ALL_DOC_PAGES[0];
+  const currentPage = getDocPageBySlug(effectiveSlug) || ALL_DOC_PAGES[0];
   const { prev, next } = getPrevNextPages(currentPage.slug);
   const currentSection = DOC_SECTIONS.find((s) => s.id === currentPage.sectionId);
 
@@ -316,36 +320,40 @@ export function DocsLayout({
 
         {/* Center Main Content Area */}
         <main key={currentPage.slug} className="flex-1 min-w-0 px-6 sm:px-12 py-10 max-w-4xl mx-auto w-full animate-rise">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs text-slate-500 dark:text-[#71717A] mb-6 font-mono">
-            <Link href="/docs" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-              Docs
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5" />
-            {currentSection && (
-              <>
-                <span className="truncate">{currentSection.title.split("—")[1]?.trim() || currentSection.title}</span>
+          {!effectiveOverview && (
+            <>
+              {/* Breadcrumbs */}
+              <nav className="flex items-center gap-2 text-xs text-slate-500 dark:text-[#71717A] mb-6 font-mono">
+                <Link href="/docs" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+                  Docs
+                </Link>
                 <ChevronRight className="w-3.5 h-3.5" />
-              </>
-            )}
-            <span className="text-slate-900 dark:text-[#E5E7EB] font-bold truncate">{currentPage.title}</span>
-          </nav>
+                {currentSection && (
+                  <>
+                    <span className="truncate">{currentSection.title.split("—")[1]?.trim() || currentSection.title}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </>
+                )}
+                <span className="text-slate-900 dark:text-[#E5E7EB] font-bold truncate">{currentPage.title}</span>
+              </nav>
 
-          {/* Page Header */}
-          <header className="border-b border-slate-200 dark:border-white/[0.08] pb-6 mb-8">
-            <div className="flex items-center gap-2.5 mb-2">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-50 text-[#FF3B30] border border-red-200 dark:bg-[#FF3B30]/10 dark:border-[#FF3B30]/20 font-bold uppercase tracking-wider">
-                {currentSection?.title.split("—")[0].trim() || "Documentation"}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-[#71717A]">• Last verified November 2026</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-950 dark:text-white tracking-tight">
-              {currentPage.title}
-            </h1>
-            <p className="text-base text-slate-600 dark:text-[#A1A1AA] mt-3 leading-relaxed font-normal">
-              {currentPage.description}
-            </p>
-          </header>
+              {/* Page Header */}
+              <header className="border-b border-slate-200 dark:border-white/[0.08] pb-6 mb-8">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-50 text-[#FF3B30] border border-red-200 dark:bg-[#FF3B30]/10 dark:border-[#FF3B30]/20 font-bold uppercase tracking-wider">
+                    {currentSection?.title.split("—")[0].trim() || "Documentation"}
+                  </span>
+                  <span className="text-xs text-slate-500 dark:text-[#71717A]">• Last verified November 2026</span>
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-slate-950 dark:text-white tracking-tight">
+                  {currentPage.title}
+                </h1>
+                <p className="text-base text-slate-600 dark:text-[#A1A1AA] mt-3 leading-relaxed font-normal">
+                  {currentPage.description}
+                </p>
+              </header>
+            </>
+          )}
 
           {/* Page Body */}
           <div className="docs-content text-sm text-slate-800 dark:text-[#D4D4D8] leading-relaxed space-y-6">
@@ -353,41 +361,43 @@ export function DocsLayout({
           </div>
 
           {/* Previous / Next Navigation */}
-          <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-16 pt-8 border-t border-slate-200 dark:border-white/[0.08]">
-            {prev ? (
-              <Link
-                href={prev.route}
-                className="group p-4 rounded-xl bg-white hover:bg-slate-50 dark:bg-[#121215] dark:hover:bg-[#18181D] border border-slate-200 dark:border-white/[0.06] hover:border-red-300 dark:hover:border-[#FF3B30]/30 transition-all hover-pop shadow-sm flex flex-col justify-between"
-              >
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-[#71717A] group-hover:text-[#FF3B30] transition-colors">
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Previous</span>
-                </div>
-                <div className="text-sm font-semibold text-slate-900 dark:text-white mt-1 group-hover:text-[#FF3B30] dark:group-hover:text-white transition-colors">
-                  {prev.title}
-                </div>
-              </Link>
-            ) : (
-              <div />
-            )}
+          {!effectiveOverview && (
+            <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-16 pt-8 border-t border-slate-200 dark:border-white/[0.08]">
+              {prev ? (
+                <Link
+                  href={prev.route}
+                  className="group p-4 rounded-xl bg-white hover:bg-slate-50 dark:bg-[#121215] dark:hover:bg-[#18181D] border border-slate-200 dark:border-white/[0.06] hover:border-red-300 dark:hover:border-[#FF3B30]/30 transition-all hover-pop shadow-sm flex flex-col justify-between"
+                >
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-[#71717A] group-hover:text-[#FF3B30] transition-colors">
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>Previous</span>
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900 dark:text-white mt-1 group-hover:text-[#FF3B30] dark:group-hover:text-white transition-colors">
+                    {prev.title}
+                  </div>
+                </Link>
+              ) : (
+                <div />
+              )}
 
-            {next ? (
-              <Link
-                href={next.route}
-                className="group p-4 rounded-xl bg-white hover:bg-slate-50 dark:bg-[#121215] dark:hover:bg-[#18181D] border border-slate-200 dark:border-white/[0.06] hover:border-red-300 dark:hover:border-[#FF3B30]/30 transition-all hover-pop shadow-sm flex flex-col justify-between text-right sm:text-right"
-              >
-                <div className="flex items-center justify-end gap-1.5 text-xs text-slate-500 dark:text-[#71717A] group-hover:text-[#FF3B30] transition-colors">
-                  <span>Next</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-                <div className="text-sm font-semibold text-slate-900 dark:text-white mt-1 group-hover:text-[#FF3B30] dark:group-hover:text-white transition-colors">
-                  {next.title}
-                </div>
-              </Link>
-            ) : (
-              <div />
-            )}
-          </nav>
+              {next ? (
+                <Link
+                  href={next.route}
+                  className="group p-4 rounded-xl bg-white hover:bg-slate-50 dark:bg-[#121215] dark:hover:bg-[#18181D] border border-slate-200 dark:border-white/[0.06] hover:border-red-300 dark:hover:border-[#FF3B30]/30 transition-all hover-pop shadow-sm flex flex-col justify-between text-right sm:text-right"
+                >
+                  <div className="flex items-center justify-end gap-1.5 text-xs text-slate-500 dark:text-[#71717A] group-hover:text-[#FF3B30] transition-colors">
+                    <span>Next</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900 dark:text-white mt-1 group-hover:text-[#FF3B30] dark:group-hover:text-white transition-colors">
+                    {next.title}
+                  </div>
+                </Link>
+              ) : (
+                <div />
+              )}
+            </nav>
+          )}
         </main>
 
         {/* Right Sidebar ("On this page") (Desktop only) */}

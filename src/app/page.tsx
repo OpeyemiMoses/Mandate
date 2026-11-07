@@ -86,7 +86,7 @@ export default function LandingPage() {
   const activeCardProfile = STACKED_CARD_PROFILES[selectedCardIdx];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0B0B0B] text-slate-900 dark:text-[#E5E7EB] overflow-x-hidden">
+    <div className="landing-page min-h-screen bg-white dark:bg-[#0B0B0B] text-slate-900 dark:text-[#E5E7EB] overflow-x-hidden">
       <ScrollRevealInit />
       {/* =====================================================================
           1. TOP HERO SECTION — EXACT MATCH TO 01. LANDING PAGE MOCKUP

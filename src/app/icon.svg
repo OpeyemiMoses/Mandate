@@ -1,0 +1,13 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="10" fill="#0B0B0B" />
+  <g transform="translate(3, 5) scale(0.92)">
+    <!-- Left slanted pillar -->
+    <path d="M4 36L14.5 4H23.5L13 36H4Z" fill="#FF3B30" />
+    <!-- Center fold shadow -->
+    <path d="M17.5 14L23.5 4L28.5 24L21.5 32L17.5 14Z" fill="#B91C1C" />
+    <!-- Right slanted pillar -->
+    <path d="M21 36L31.5 4H40.5L30 36H21Z" fill="#FF3B30" />
+    <!-- Right outer wing -->
+    <path d="M34.5 15L40.5 4L45 36H36.5L34.5 15Z" fill="#DC2626" />
+  </g>
+</svg>
