@@ -91,9 +91,9 @@ export default function LandingPage() {
       {/* =====================================================================
           1. TOP HERO SECTION — EXACT MATCH TO 01. LANDING PAGE MOCKUP
       ====================================================================== */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden w-full max-w-full">
         <div
-          className="pointer-events-none absolute top-[6%] right-[4%] w-[540px] h-[540px] rounded-full opacity-45 blur-[130px]"
+          className="pointer-events-none absolute top-[6%] right-0 sm:right-[4%] w-[280px] sm:w-[540px] h-[280px] sm:h-[540px] rounded-full opacity-45 blur-[80px] sm:blur-[130px]"
           style={{
             background:
               "radial-gradient(circle, rgba(255,59,48,0.85) 0%, rgba(180,20,15,0.35) 48%, transparent 75%)",
@@ -147,8 +147,8 @@ export default function LandingPage() {
         </svg>
 
         {/* Top Navbar Fixed */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-[#0B0B0B]/85 backdrop-blur-md border-b border-slate-200 dark:border-white/[0.06] transition-all">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 z-50 w-full max-w-full bg-white/85 dark:bg-[#0B0B0B]/85 backdrop-blur-md border-b border-slate-200 dark:border-white/[0.06] transition-all">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between w-full">
             <Link href="/" className="hover:opacity-90 transition-opacity flex items-center">
               <MandateLogo size="sm" className="sm:hidden" />
               <MandateLogo size="md" className="hidden sm:inline-flex" />
@@ -318,9 +318,9 @@ export default function LandingPage() {
       {/* =====================================================================
           2. CAPPED SPENDING VIRTUAL CREDIT CARD STACK (RED, GOLD, WHITE)
       ====================================================================== */}
-      <section className="relative border-t border-slate-200 dark:border-[#1A1A20] py-24 overflow-hidden bg-slate-50/50 dark:bg-transparent">
+      <section className="relative border-t border-slate-200 dark:border-[#1A1A20] py-16 sm:py-24 overflow-hidden bg-slate-50/50 dark:bg-transparent w-full max-w-full">
         <div
-          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] rounded-full opacity-15 blur-[130px]"
+          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[700px] h-[220px] sm:h-[360px] rounded-full opacity-15 blur-[80px] sm:blur-[130px]"
           style={{ background: "#FF3B30" }}
         />
 

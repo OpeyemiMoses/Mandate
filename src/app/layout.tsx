@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-[#0B0B0B] text-[#E5E7EB] antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-[#0B0B0B] text-[#E5E7EB] antialiased overflow-x-hidden max-w-full w-full`}
       >
         <ThemeProvider>
           <MandateProvider>
