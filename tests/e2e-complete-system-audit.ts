@@ -10,8 +10,20 @@
  * 7. Disaster Recovery & Backup Integrity
  */
 
+import fs from "fs";
 import crypto from "crypto";
-import { assertNotProductionDatabase } from "./helpers/assertNotProductionDatabase";
+import {
+  assertNotProductionDatabase,
+  assertDisposableHttpServer,
+  startDisposableTestHttpServer,
+} from "./helpers/assertNotProductionDatabase";
+
+const DISPOSABLE_URL =
+  "postgresql://postgres:postgrespassword@localhost:5432/mandate_disposable_m147?schema=public";
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith("postgres")
+    ? process.env.DATABASE_URL
+    : DISPOSABLE_URL;
 
 assertNotProductionDatabase(process.env.DATABASE_URL);
 
@@ -51,14 +63,31 @@ async function runE2ECompleteAudit() {
   console.log("🚀 MANDATE COMPREHENSIVE END-TO-END SYSTEM INTEGRATION AUDIT");
   console.log("================================================================================\n");
 
-  const baseUrl = "http://localhost:3001";
   const runId = Date.now().toString(36);
+  let ephemeralServer: { baseUrl: string; close: () => Promise<void> } | null = null;
+  let baseUrl = process.env.TEST_BASE_URL || "";
 
+  if (baseUrl) {
+    await assertDisposableHttpServer(baseUrl);
+  } else {
+    ephemeralServer = await startDisposableTestHttpServer();
+    baseUrl = ephemeralServer.baseUrl;
+  }
+
+  try {
   // ---------------------------------------------------------------------------
   // LAYER 1: RUNTIME HEALTH & READINESS PROBES
   // ---------------------------------------------------------------------------
   console.log("--- [LAYER 1: Runtime Health & Probes] ---");
   try {
+    const serverTarget = await assertDisposableHttpServer(baseUrl);
+    record(
+      "Layer 1: Health",
+      "HTTP Server Disposable Database Target Verification",
+      "PASS",
+      `Verified server at ${baseUrl} is connected to approved disposable database "${serverTarget.databaseName}" (${serverTarget.classification})`
+    );
+
     const liveRes = await fetch(`${baseUrl}/api/health/live`);
     const liveJson = await liveRes.json();
     if (liveRes.status === 200 && liveJson.status === "ALIVE") {
@@ -69,8 +98,13 @@ async function runE2ECompleteAudit() {
 
     const readyRes = await fetch(`${baseUrl}/api/health/ready`);
     const readyJson = await readyRes.json();
-    if (readyRes.status === 200 && readyJson.status === "READY" && readyJson.databaseHealthy === true) {
-      record("Layer 1: Health", "Readiness Probe (GET /api/health/ready)", "PASS", `HTTP 200 OK, Mode: ${readyJson.operationalMode}, Database Healthy: true, Gates: db=${readyJson.checks.database}, fleet=${readyJson.checks.workerFleet}`);
+    if (
+      readyRes.status === 200 &&
+      readyJson.status === "READY" &&
+      readyJson.databaseHealthy === true &&
+      readyJson.databaseTarget?.isDisposableTestDatabase === true
+    ) {
+      record("Layer 1: Health", "Readiness Probe (GET /api/health/ready)", "PASS", `HTTP 200 OK, Mode: ${readyJson.operationalMode}, Database: ${readyJson.databaseTarget.databaseName}, Gates: db=${readyJson.checks.database}, fleet=${readyJson.checks.workerFleet}`);
     } else {
       record("Layer 1: Health", "Readiness Probe (GET /api/health/ready)", "FAIL", `Unexpected status: ${readyRes.status}`);
     }
@@ -82,9 +116,10 @@ async function runE2ECompleteAudit() {
   // LAYER 2: CRYPTOGRAPHIC IDENTITY & AUTHENTICATION
   // ---------------------------------------------------------------------------
   console.log("\n--- [LAYER 2: Cryptographic Identity & NEP-413 Auth Firewall] ---");
+  const testAuthAccount = `e2e_audit_${runId}.testnet`;
   try {
-    // 2.1 Challenge Generation
-    const challengeRes = await fetch(`${baseUrl}/api/auth?action=challenge&accountId=yemigraffix.testnet`);
+    // 2.1 Challenge Generation (against verified disposable server)
+    const challengeRes = await fetch(`${baseUrl}/api/auth?action=challenge&accountId=${testAuthAccount}`);
     const challengeJson = await challengeRes.json();
     if (challengeRes.status === 200 && challengeJson.success && challengeJson.challenge?.nonce) {
       record("Layer 2: Auth", "NEP-413 Challenge Generation", "PASS", `HTTP 200 OK, Nonce: ${challengeJson.challenge.nonce.slice(0, 16)}..., Recipient: ${challengeJson.challenge.recipient}, Expiry: 5 minutes`);
@@ -95,8 +130,8 @@ async function runE2ECompleteAudit() {
     // 2.2 Unauthenticated Access Rejection
     const unauthRes = await fetch(`${baseUrl}/api/auth`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Origin": baseUrl },
-      body: JSON.stringify({ accountId: "yemigraffix.testnet" }),
+      headers: { "Content-Type": "application/json", "Origin": "http://localhost:3001" },
+      body: JSON.stringify({ accountId: testAuthAccount }),
     });
     const unauthJson = await unauthRes.json();
     if (unauthRes.status === 401 && unauthJson.code === "AUTHENTICATION_PROOF_REQUIRED") {
@@ -109,7 +144,7 @@ async function runE2ECompleteAudit() {
     const originRes = await fetch(`${baseUrl}/api/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Origin": "https://malicious-phishing.com" },
-      body: JSON.stringify({ accountId: "yemigraffix.testnet" }),
+      body: JSON.stringify({ accountId: testAuthAccount }),
     });
     const originJson = await originRes.json();
     if (originRes.status === 403 && originJson.code === "UNTRUSTED_ORIGIN") {
@@ -117,6 +152,10 @@ async function runE2ECompleteAudit() {
     } else {
       record("Layer 2: Auth", "Origin Firewall Cross-Site Defense", "FAIL", `Untrusted origin not blocked: status ${originRes.status}`);
     }
+
+    // Clean up disposable challenge and rate limit records created by Layer 2
+    await prisma.authChallenge.deleteMany({ where: { accountId: testAuthAccount } });
+    await prisma.rateLimitBucket.deleteMany({ where: { key: `acct:${testAuthAccount}` } });
 
     // 2.4 Challenge Anti-Replay Protection
     const replayAccountId = `m14_replay_audit_${runId}.testnet`;
@@ -453,8 +492,20 @@ async function runE2ECompleteAudit() {
     } else {
       record("Layer 7: Backup", "PostgreSQL Transactional Backup", "FAIL", `Backup failed: ${JSON.stringify(backupResult)}`);
     }
+
+    if (backupResult.backupId) {
+      await prisma.databaseBackupRecord.deleteMany({ where: { id: backupResult.backupId } });
+    }
+    if (backupResult.filePath && fs.existsSync(backupResult.filePath)) {
+      fs.unlinkSync(backupResult.filePath);
+    }
   } catch (err: any) {
     record("Layer 7: Backup", "Disaster Recovery", "FAIL", `Error: ${err.message}`);
+  }
+  } finally {
+    if (ephemeralServer) {
+      await ephemeralServer.close();
+    }
   }
 
   // ---------------------------------------------------------------------------

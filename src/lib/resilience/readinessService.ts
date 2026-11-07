@@ -5,6 +5,11 @@
  */
 
 import { prisma } from "@/lib/db";
+import { getPostgresUrl } from "@/lib/postgresDb";
+import {
+  classifyDatabaseTarget,
+  isTestOrHarnessRuntime,
+} from "@/lib/security/databaseTargetGuard";
 import { OperationalControlService } from "@/lib/operations/operationalControlService";
 import { ReadinessStatus } from "./types";
 
@@ -20,13 +25,32 @@ export class ReadinessService {
     };
     let errorMessage: string | undefined;
 
-    // 1. Database Check
+    let resolvedUrl = "";
+    let urlValid = false;
     try {
-      await prisma.$queryRaw`SELECT 1`;
-      checks.database = true;
-    } catch (err: any) {
+      resolvedUrl = getPostgresUrl();
+      urlValid = true;
+    } catch (urlErr: any) {
+      resolvedUrl =
+        process.env.DATABASE_URL ||
+        process.env.POSTGRES_URL ||
+        process.env.DIRECT_URL ||
+        "";
+      errorMessage = urlErr.message;
+    }
+    const targetClassification = classifyDatabaseTarget(resolvedUrl);
+
+    // 1. Database Check
+    if (urlValid) {
+      try {
+        await prisma.$queryRaw`SELECT 1`;
+        checks.database = true;
+      } catch (err: any) {
+        checks.database = false;
+        errorMessage = `Database check failed: ${err.message}`;
+      }
+    } else {
       checks.database = false;
-      errorMessage = `Database check failed: ${err.message}`;
     }
 
     // 2. Operational Mode Check
@@ -57,6 +81,13 @@ export class ReadinessService {
       operationalMode: opMode,
       circuitBreakersHealthy: true,
       checks,
+      databaseTarget: {
+        databaseName: targetClassification.databaseName,
+        hostname: targetClassification.hostname,
+        classification: targetClassification.classification,
+        isDisposableTestDatabase: targetClassification.isApprovedDisposable,
+        testModeActive: isTestOrHarnessRuntime(),
+      },
       timestamp: new Date().toISOString(),
       error: errorMessage,
     };

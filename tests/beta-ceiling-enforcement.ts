@@ -1,17 +1,19 @@
 /**
- * MANDATE — PUBLIC BETA TRANSACTION CEILING & TICKET BINDING TEST SUITE
- * Milestone 13.10 Conditional GO Remediation (Section 2.1 & 2.2)
+ * MANDATE — USER-GOVERNED MANDATE CEILING & BOUNDARY TICKET BINDING TEST SUITE
+ * Remediated in M14.7-R1 Workstream D:
  *
- * Verifies:
- * 1. Hard platform-wide beta ceiling of 0.1 NEAR per transaction.
- * 2. BoundaryExecutionTicket binds all 12 parameters including objectiveId.
- * 3. Exact yoctoNEAR boundary enforcement:
- *    - 0.001 NEAR accepted
- *    - 0.099 NEAR accepted
- *    - 0.1 NEAR accepted
- *    - 0.1000000000000000000000001 NEAR (10^23 + 1 yoctoNEAR) rejected
- *    - Oversized payments (0.5 NEAR, 1.0 NEAR) rejected
- * 4. Objective ID tampering detection.
+ * Verifies the authoritative current policy:
+ * 1. Global 0.1 NEAR hard cap is removed (`GLOBAL_TRANSACTION_CEILING_REMOVED === true`);
+ *    user-defined mandate limits (`perTxLimitYocto`, `totalBudgetYocto`), recipient
+ *    allowlists, and approval thresholds govern spending.
+ * 2. BoundaryExecutionTicket binds all 12 parameters including `objectiveId`,
+ *    rejects non-positive amounts and `mainnet` network, and supports user-authorized
+ *    amounts above 0.1 NEAR (e.g., 0.5 NEAR, 1.0 NEAR).
+ * 3. Exact yoctoNEAR boundary enforcement against user-defined `Mandate.perTxLimitYocto`
+ *    (1.0 NEAR accepted; 1.0 NEAR + 1 yoctoNEAR rejected) in both
+ *    `ExecutionValidationService` and `ExecutionBoundaryService`.
+ * 4. Executed strictly against disposable database `mandate_disposable_m147` with
+ *    v2-encrypted wallet credentials and complete test record cleanup.
  */
 
 import dotenv from "dotenv";
@@ -20,24 +22,26 @@ dotenv.config();
 
 import { assertNotProductionDatabase } from "./helpers/assertNotProductionDatabase";
 
+const DISPOSABLE_URL =
+  "postgresql://postgres:postgrespassword@localhost:5432/mandate_disposable_m147?schema=public";
 process.env.DATABASE_URL =
   process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith("postgres")
     ? process.env.DATABASE_URL
-    : "postgresql://postgres:postgrespassword@localhost:5432/mandate_disposable_m147?schema=public";
+    : DISPOSABLE_URL;
 process.env.MANDATE_DATABASE_TYPE = "postgres";
 
 assertNotProductionDatabase(process.env.DATABASE_URL);
 
-import { prisma } from "../src/lib/db";
-import { nearToYocto, yoctoToNear } from "../src/lib/yocto";
+import { prismaPg as prisma } from "../src/lib/postgresDb";
+import { nearToYocto } from "../src/lib/yocto";
 import {
   mintBoundaryExecutionTicket,
   validateBoundaryExecutionTicket,
-  PUBLIC_BETA_MAX_TX_YOCTO,
-  PUBLIC_BETA_MAX_TX_NEAR,
+  GLOBAL_TRANSACTION_CEILING_REMOVED,
 } from "../src/lib/execution/boundaryTicket";
 import { ExecutionValidationService } from "../src/lib/execution/validationService";
 import { ExecutionBoundaryService } from "../src/lib/execution/boundaryService";
+import { encryptWalletApiKey } from "../src/lib/security/walletCredentialService";
 
 function assert(condition: boolean, message: string) {
   if (!condition) {
@@ -49,21 +53,24 @@ function assert(condition: boolean, message: string) {
 
 async function runCeilingAndTicketVerification() {
   console.log("================================================================================");
-  console.log("🛡️ MANDATE PUBLIC BETA TRANSACTION CEILING & TICKET BINDING VERIFICATION");
+  console.log("🛡️ MANDATE USER-GOVERNED CEILING & BOUNDARY TICKET BINDING VERIFICATION");
   console.log("================================================================================\n");
 
   const suffix = Date.now().toString(36);
+  const userMaxPerTxYocto = nearToYocto("1.0");
+  const oneYoctoOverUserLimit = (BigInt(userMaxPerTxYocto) + BigInt(1)).toString();
 
   // ---------------------------------------------------------------------------
-  // 1. TICKET MINTING BOUNDARY & CEILING CHECKS
+  // 1. TICKET MINTING & NETWORK/AMOUNT BOUNDARY CHECKS
   // ---------------------------------------------------------------------------
   console.log("--------------------------------------------------------------------------------");
-  console.log("1. BoundaryExecutionTicket Minting & Exact Ceiling Tests");
+  console.log("1. BoundaryExecutionTicket Minting & Policy Invariants");
   console.log("--------------------------------------------------------------------------------");
 
-  const oneYoctoOverCeiling = (BigInt(PUBLIC_BETA_MAX_TX_YOCTO) + BigInt(1)).toString();
-  console.log(`  - Ceiling Yocto:       ${PUBLIC_BETA_MAX_TX_YOCTO} (0.1 NEAR)`);
-  console.log(`  - 1 Yocto Over Ceiling: ${oneYoctoOverCeiling} (0.1000000000000000000000001 NEAR)`);
+  assert(
+    GLOBAL_TRANSACTION_CEILING_REMOVED === true,
+    "GLOBAL_TRANSACTION_CEILING_REMOVED === true (user-governed mandate ceilings active)"
+  );
 
   // Test 1: 0.001 NEAR accepted
   const ticket001 = mintBoundaryExecutionTicket({
@@ -81,77 +88,77 @@ async function runCeilingAndTicketVerification() {
   assert(Boolean(ticket001.isSealed()), "0.001 NEAR ticket minted and sealed successfully");
   assert(ticket001.objectiveId === "objective-test-1", "Ticket binds objectiveId: objective-test-1");
 
-  // Test 2: 0.099 NEAR accepted
-  const ticket099 = mintBoundaryExecutionTicket({
-    executionId: `exec-099-${suffix}`,
+  // Test 2: 0.5 NEAR accepted (above legacy 0.1 NEAR cap)
+  const ticket050 = mintBoundaryExecutionTicket({
+    executionId: `exec-050-${suffix}`,
     mandateId: "mandate-test",
     objectiveId: "objective-test-1",
     userId: "user-test",
     operation: "cloud_payment",
     recipient: "provider.testnet",
-    amountYocto: nearToYocto("0.099"),
+    amountYocto: nearToYocto("0.5"),
     network: "testnet",
-    idempotencyKey: `idem-099-${suffix}`,
-    nonce: `nonce-099-${suffix}`,
+    idempotencyKey: `idem-050-${suffix}`,
+    nonce: `nonce-050-${suffix}`,
   });
-  assert(Boolean(ticket099.isSealed()), "0.099 NEAR ticket minted successfully");
+  assert(Boolean(ticket050.isSealed()), "0.5 NEAR ticket minted and sealed successfully");
 
-  // Test 3: Exactly 0.1 NEAR accepted
-  const ticket010 = mintBoundaryExecutionTicket({
-    executionId: `exec-010-${suffix}`,
+  // Test 3: 1.0 NEAR (user mandate per-tx limit) accepted
+  const ticket100 = mintBoundaryExecutionTicket({
+    executionId: `exec-100-${suffix}`,
     mandateId: "mandate-test",
     objectiveId: "objective-test-1",
     userId: "user-test",
     operation: "cloud_payment",
     recipient: "provider.testnet",
-    amountYocto: PUBLIC_BETA_MAX_TX_YOCTO,
+    amountYocto: userMaxPerTxYocto,
     network: "testnet",
-    idempotencyKey: `idem-010-${suffix}`,
-    nonce: `nonce-010-${suffix}`,
+    idempotencyKey: `idem-100-${suffix}`,
+    nonce: `nonce-100-${suffix}`,
   });
-  assert(Boolean(ticket010.isSealed()), "0.1 NEAR (ceiling boundary) ticket minted successfully");
+  assert(Boolean(ticket100.isSealed()), "1.0 NEAR ticket minted and sealed successfully");
 
-  // Test 4: 0.1000000000000000000000001 NEAR (1 yocto over) REJECTED
-  let rejectedOver1Yocto = false;
+  // Test 4: Missing required amount parameter rejected
+  let rejectedEmptyAmount = false;
   try {
     mintBoundaryExecutionTicket({
-      executionId: `exec-over1-${suffix}`,
+      executionId: `exec-empty-${suffix}`,
       mandateId: "mandate-test",
       userId: "user-test",
       operation: "cloud_payment",
       recipient: "provider.testnet",
-      amountYocto: oneYoctoOverCeiling,
+      amountYocto: "",
       network: "testnet",
-      idempotencyKey: `idem-over1-${suffix}`,
-      nonce: `nonce-over1-${suffix}`,
+      idempotencyKey: `idem-empty-${suffix}`,
+      nonce: `nonce-empty-${suffix}`,
     });
   } catch (err: any) {
-    if (err.message.includes("PLATFORM_BETA_CEILING_EXCEEDED")) {
-      rejectedOver1Yocto = true;
+    if (err.message.includes("UNAUTHORIZED_EXECUTION_BOUNDARY_BYPASS")) {
+      rejectedEmptyAmount = true;
     }
   }
-  assert(rejectedOver1Yocto, "0.1000000000000000000000001 NEAR strictly rejected by mintBoundaryExecutionTicket");
+  assert(rejectedEmptyAmount, "Missing required amountYocto strictly rejected by mintBoundaryExecutionTicket");
 
-  // Test 5: 0.5 NEAR REJECTED
-  let rejected05 = false;
+  // Test 5: Mainnet network rejected
+  let rejectedMainnet = false;
   try {
     mintBoundaryExecutionTicket({
-      executionId: `exec-05-${suffix}`,
+      executionId: `exec-main-${suffix}`,
       mandateId: "mandate-test",
       userId: "user-test",
       operation: "cloud_payment",
-      recipient: "provider.testnet",
-      amountYocto: nearToYocto("0.5"),
-      network: "testnet",
-      idempotencyKey: `idem-05-${suffix}`,
-      nonce: `nonce-05-${suffix}`,
+      recipient: "provider.near",
+      amountYocto: nearToYocto("0.1"),
+      network: "mainnet",
+      idempotencyKey: `idem-main-${suffix}`,
+      nonce: `nonce-main-${suffix}`,
     });
   } catch (err: any) {
-    if (err.message.includes("PLATFORM_BETA_CEILING_EXCEEDED")) {
-      rejected05 = true;
+    if (err.message.includes("MAINNET_EXECUTION_PROHIBITED")) {
+      rejectedMainnet = true;
     }
   }
-  assert(rejected05, "0.5 NEAR strictly rejected by mintBoundaryExecutionTicket");
+  assert(rejectedMainnet, "NEAR Mainnet strictly rejected by mintBoundaryExecutionTicket");
 
   // ---------------------------------------------------------------------------
   // 2. TICKET VALIDATION & OBJECTIVE BINDING CHECKS
@@ -161,19 +168,19 @@ async function runCeilingAndTicketVerification() {
   console.log("--------------------------------------------------------------------------------");
 
   // Test 6: Valid transfer matches ticket
-  const validCheck = validateBoundaryExecutionTicket(ticket010, {
+  const validCheck = validateBoundaryExecutionTicket(ticket100, {
     to: "provider.testnet",
-    amountYocto: PUBLIC_BETA_MAX_TX_YOCTO,
-    idempotencyKey: `idem-010-${suffix}`,
+    amountYocto: userMaxPerTxYocto,
+    idempotencyKey: `idem-100-${suffix}`,
     objectiveId: "objective-test-1",
   });
   assert(validCheck.valid, "Valid ticket with matching objectiveId passes validation");
 
   // Test 7: Mismatched objectiveId rejected
-  const mismatchedObjective = validateBoundaryExecutionTicket(ticket010, {
+  const mismatchedObjective = validateBoundaryExecutionTicket(ticket100, {
     to: "provider.testnet",
-    amountYocto: PUBLIC_BETA_MAX_TX_YOCTO,
-    idempotencyKey: `idem-010-${suffix}`,
+    amountYocto: userMaxPerTxYocto,
+    idempotencyKey: `idem-100-${suffix}`,
     objectiveId: "attacker-objective",
   });
   assert(!mismatchedObjective.valid, "Mismatched objectiveId rejected by validator");
@@ -182,36 +189,61 @@ async function runCeilingAndTicketVerification() {
     `Validator reported: ${mismatchedObjective.reason}`
   );
 
-  // Test 8: Tampered transfer amount over ceiling rejected
-  const tamperedCeiling = validateBoundaryExecutionTicket(ticket001, {
+  // Test 8: Tampered transfer amount rejected
+  const tamperedAmount = validateBoundaryExecutionTicket(ticket001, {
     to: "provider.testnet",
-    amountYocto: oneYoctoOverCeiling,
+    amountYocto: oneYoctoOverUserLimit,
   });
-  assert(!tamperedCeiling.valid, "Tampered amount over ceiling rejected by validator");
+  assert(!tamperedAmount.valid, "Tampered amount mismatch rejected by validator");
 
   // ---------------------------------------------------------------------------
-  // 3. SERVICE-LEVEL PREFLIGHT VALIDATION (ExecutionValidationService)
+  // 3. SERVICE-LEVEL PREFLIGHT & GATEWAY USER-MANDATE CEILING ENFORCEMENT
   // ---------------------------------------------------------------------------
   console.log("\n--------------------------------------------------------------------------------");
-  console.log("3. Service-Level Preflight Validation (ExecutionValidationService)");
+  console.log("3. User-Defined Mandate Ceiling Enforcement (Preflight & Gateway)");
   console.log("--------------------------------------------------------------------------------");
 
-  // Setup test tenant and high-budget mandate (e.g. 5 NEAR mandate, 1 NEAR per-tx)
-  const user = await prisma.user.findUniqueOrThrow({ where: { id: "cmvy0hwds0000sbpigdca711i" } });
-  const agent = await prisma.agent.findUniqueOrThrow({ where: { id: "cmw172diy0002sbokl7yqsdaw" } });
-  const wallet = await prisma.wallet.findUniqueOrThrow({ where: { id: "cmw172diy0003sboktabqi0yl" } });
+  const testUser = await prisma.user.create({
+    data: {
+      nearAccountId: `ceiling_user_${suffix}.testnet`,
+      role: "MEMBER",
+    },
+  });
+
+  const walletProviderId = `w_ceiling_${suffix}`;
+  const walletNearAccount = `agent_ceiling_${suffix}.testnet`;
+  const testAgent = await prisma.agent.create({
+    data: {
+      name: `Ceiling Test Agent ${suffix}`,
+      userId: testUser.id,
+      status: "ACTIVE",
+      wallet: {
+        create: {
+          walletId: walletProviderId,
+          nearAccountId: walletNearAccount,
+          apiKey: encryptWalletApiKey(`wk_ceiling_secret_${suffix}`, {
+            walletId: walletProviderId,
+            nearAccountId: walletNearAccount,
+          }),
+          network: "testnet",
+          balanceYocto: nearToYocto("10.0"),
+        },
+      },
+    },
+    include: { wallet: true },
+  });
 
   const testMandate = await prisma.mandate.create({
     data: {
-      userId: user.id,
-      agentId: agent.id,
-      walletId: wallet.id,
-      name: `Ceiling Test Mandate ${suffix}`,
+      userId: testUser.id,
+      agentId: testAgent.id,
+      walletId: testAgent.wallet!.id,
+      name: `User Ceiling Mandate ${suffix}`,
       status: "ACTIVE",
-      totalBudgetYocto: nearToYocto("5.0"), // 5 NEAR total
+      totalBudgetYocto: nearToYocto("5.0"),
       spentYocto: "0",
       reservedYocto: "0",
-      perTxLimitYocto: nearToYocto("1.0"), // Customer set 1.0 NEAR, but platform ceiling must override!
+      perTxLimitYocto: userMaxPerTxYocto, // User set 1.0 NEAR per-tx limit
       approvalThresholdYocto: nearToYocto("2.0"),
       allowedRecipientsJson: JSON.stringify(["test.testnet"]),
       policyVersion: 1,
@@ -219,77 +251,100 @@ async function runCeilingAndTicketVerification() {
     },
   });
 
-  // Test 9: Preflight with 0.1 NEAR passes
-  const preflight01 = await ExecutionValidationService.validateNearTransferPreflight({
-    userId: user.id,
-    mandateId: testMandate.id,
-    recipient: "test.testnet",
-    amountYocto: PUBLIC_BETA_MAX_TX_YOCTO, // 0.1 NEAR
-    bypassRpcCheck: true,
-  });
-  assert(preflight01.valid, "Preflight accepts 0.1 NEAR (ceiling boundary)");
-
-  // Test 10: Preflight with 0.1000000000000000000000001 NEAR rejected even though mandate limit is 1.0 NEAR
-  const preflightOver1 = await ExecutionValidationService.validateNearTransferPreflight({
-    userId: user.id,
-    mandateId: testMandate.id,
-    recipient: "test.testnet",
-    amountYocto: oneYoctoOverCeiling,
-    bypassRpcCheck: true,
-  });
-  assert(!preflightOver1.valid, "Preflight rejects 0.1000000000000000000000001 NEAR despite mandate perTxLimit being 1.0 NEAR");
-  assert(
-    preflightOver1.reason?.includes("PLATFORM_BETA_CEILING_EXCEEDED") === true,
-    `Preflight reported: ${preflightOver1.reason}`
-  );
-
-  // ---------------------------------------------------------------------------
-  // 4. AUTHORITATIVE GATEWAY ENFORCEMENT (ExecutionBoundaryService)
-  // ---------------------------------------------------------------------------
-  console.log("\n--------------------------------------------------------------------------------");
-  console.log("4. Authoritative Gateway Enforcement (ExecutionBoundaryService.execute)");
-  console.log("--------------------------------------------------------------------------------");
-
-  // Test 11: Execute 0.1 NEAR passes
-  const exec01 = await ExecutionBoundaryService.execute({
-    userId: user.id,
-    mandateId: testMandate.id,
-    agentId: agent.id,
-    operation: "cloud_payment",
-    recipient: "test.testnet",
-    amountYocto: PUBLIC_BETA_MAX_TX_YOCTO,
-    idempotencyKey: `exec-gate-01-${suffix}`,
-    isSimulated: true,
-  });
-  assert(exec01.success && exec01.status === "CONFIRMED", "ExecutionBoundaryService accepts exactly 0.1 NEAR");
-
-  // Test 12: Execute over-ceiling throws PLATFORM_BETA_CEILING_EXCEEDED
-  let execOverRejected = false;
   try {
-    await ExecutionBoundaryService.execute({
-      userId: user.id,
+    // Test 9: Preflight with 0.5 NEAR and 1.0 NEAR passes
+    const preflight05 = await ExecutionValidationService.validateNearTransferPreflight({
+      userId: testUser.id,
       mandateId: testMandate.id,
-      agentId: agent.id,
+      recipient: "test.testnet",
+      amountYocto: nearToYocto("0.5"),
+      bypassRpcCheck: true,
+    });
+    assert(preflight05.valid, "Preflight accepts 0.5 NEAR (within 1.0 NEAR user perTxLimit)");
+
+    const preflight10 = await ExecutionValidationService.validateNearTransferPreflight({
+      userId: testUser.id,
+      mandateId: testMandate.id,
+      recipient: "test.testnet",
+      amountYocto: userMaxPerTxYocto,
+      bypassRpcCheck: true,
+    });
+    assert(preflight10.valid, "Preflight accepts 1.0 NEAR (exact user perTxLimit boundary)");
+
+    // Test 10: Preflight with 1.0 NEAR + 1 yoctoNEAR rejected by user mandate perTxLimit
+    const preflightOver1Yocto = await ExecutionValidationService.validateNearTransferPreflight({
+      userId: testUser.id,
+      mandateId: testMandate.id,
+      recipient: "test.testnet",
+      amountYocto: oneYoctoOverUserLimit,
+      bypassRpcCheck: true,
+    });
+    assert(
+      !preflightOver1Yocto.valid,
+      "Preflight rejects 1.0 NEAR + 1 yoctoNEAR exceeding user mandate perTxLimit"
+    );
+    assert(
+      preflightOver1Yocto.reason?.includes("per-transaction limit") === true,
+      `Preflight reported: ${preflightOver1Yocto.reason}`
+    );
+
+    // Test 11: Gateway simulated execution of 0.5 NEAR succeeds
+    const exec05 = await ExecutionBoundaryService.execute({
+      userId: testUser.id,
+      mandateId: testMandate.id,
+      agentId: testAgent.id,
       operation: "cloud_payment",
       recipient: "test.testnet",
-      amountYocto: oneYoctoOverCeiling,
-      idempotencyKey: `exec-gate-over-${suffix}`,
+      amountYocto: nearToYocto("0.5"),
+      idempotencyKey: `exec-gate-05-${suffix}`,
       isSimulated: true,
     });
-  } catch (err: any) {
-    if (err.message.includes("PLATFORM_BETA_CEILING_EXCEEDED")) {
-      execOverRejected = true;
+    assert(
+      exec05.success && exec05.status === "CONFIRMED",
+      "ExecutionBoundaryService accepts 0.5 NEAR within user mandate limits"
+    );
+
+    // Test 12: Gateway execution of 1.0 NEAR + 1 yoctoNEAR strictly throws
+    let execOverRejected = false;
+    try {
+      const execOver = await ExecutionBoundaryService.execute({
+        userId: testUser.id,
+        mandateId: testMandate.id,
+        agentId: testAgent.id,
+        operation: "cloud_payment",
+        recipient: "test.testnet",
+        amountYocto: oneYoctoOverUserLimit,
+        idempotencyKey: `exec-gate-over-${suffix}`,
+        isSimulated: true,
+      });
+      if (!execOver.success) {
+        execOverRejected = true;
+      }
+    } catch (err: any) {
+      if (err.message.includes("per-transaction limit")) {
+        execOverRejected = true;
+      }
     }
+    assert(
+      execOverRejected,
+      "ExecutionBoundaryService strictly rejects 1.0 NEAR + 1 yoctoNEAR exceeding user mandate perTxLimit"
+    );
+  } finally {
+    await prisma.executionEvent.deleteMany({
+      where: { execution: { mandateId: testMandate.id } },
+    });
+    await prisma.executionRecord.deleteMany({
+      where: { mandateId: testMandate.id },
+    });
+    await prisma.auditLog.deleteMany({ where: { userId: testUser.id } });
+    await prisma.mandate.deleteMany({ where: { id: testMandate.id } });
+    await prisma.wallet.deleteMany({ where: { id: testAgent.wallet!.id } });
+    await prisma.agent.deleteMany({ where: { id: testAgent.id } });
+    await prisma.user.deleteMany({ where: { id: testUser.id } });
   }
-  assert(execOverRejected, "ExecutionBoundaryService.execute strictly throws PLATFORM_BETA_CEILING_EXCEEDED on over-ceiling attempt");
 
   console.log("\n================================================================================");
-  console.log("🏆 PUBLIC BETA TRANSACTION CEILING & TICKET BINDING VERIFICATION: ALL PASSED");
-  console.log("   - 0.001 NEAR: ACCEPTED");
-  console.log("   - 0.099 NEAR: ACCEPTED");
-  console.log("   - 0.100 NEAR: ACCEPTED");
-  console.log("   - 0.1000000000000000000000001 NEAR: STRICTLY REJECTED");
-  console.log("   - Objective ID parameter binding: VERIFIED");
+  console.log("🏆 USER-GOVERNED MANDATE CEILING & TICKET BINDING VERIFICATION: ALL PASSED");
   console.log("================================================================================");
 }
 
@@ -299,4 +354,3 @@ runCeilingAndTicketVerification()
     console.error("Test failure:", err);
     process.exit(1);
   });
-

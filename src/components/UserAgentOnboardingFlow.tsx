@@ -50,6 +50,7 @@ export function UserAgentOnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [requiresReconciliation, setRequiresReconciliation] = useState(false);
   const [confirmedTxHash, setConfirmedTxHash] = useState<string | null>(null);
   const [showManualInput, setShowManualInput] = useState(false);
   const [manualTxHash, setManualTxHash] = useState("");
@@ -93,13 +94,22 @@ export function UserAgentOnboardingFlow({ onComplete }: OnboardingFlowProps) {
     }
   };
 
-  const handleCreateAgent = async () => {
+  const handleCreateAgent = async (reconcile = false) => {
     setIsProcessing(true);
     setErrorMessage(null);
     setStatusMessage(null);
     try {
-      const res = await createAgentWallet();
-      if (!res.ok) setErrorMessage(res.error || "Failed to create agent wallet");
+      const res = await createAgentWallet(reconcile ? { reconcile: true } : undefined);
+      if (!res.ok) {
+        setErrorMessage(res.error || "Failed to create agent wallet");
+        setRequiresReconciliation(
+          res.code === "ONBOARDING_RECONCILIATION_REQUIRED" ||
+            res.code === "ONBOARDING_POST_PROVIDER_FAILURE" ||
+            res.code === "OUTLAYER_PROVISIONING_AMBIGUOUS"
+        );
+      } else {
+        setRequiresReconciliation(false);
+      }
     } catch (err: any) {
       setErrorMessage(err.message);
     } finally {
@@ -404,15 +414,28 @@ export function UserAgentOnboardingFlow({ onComplete }: OnboardingFlowProps) {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={handleCreateAgent}
-            disabled={isProcessing}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] transition-all shadow-[0_0_24px_rgba(255,59,48,0.4)] disabled:opacity-50"
-          >
-            <Sparkles className="w-4 h-4" />
-            {isProcessing ? "Provisioning Agent in TEE..." : "Create Dedicated Agent"}
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => handleCreateAgent(false)}
+              disabled={isProcessing}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] transition-all shadow-[0_0_24px_rgba(255,59,48,0.4)] disabled:opacity-50"
+            >
+              <Sparkles className="w-4 h-4" />
+              {isProcessing ? "Provisioning Agent in TEE..." : "Create Dedicated Agent"}
+            </button>
+            {requiresReconciliation && (
+              <button
+                type="button"
+                onClick={() => handleCreateAgent(true)}
+                disabled={isProcessing}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-semibold text-amber-300 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 transition-all disabled:opacity-50"
+              >
+                <RotateCw className="w-4 h-4" />
+                Reconcile &amp; Recover Provisioning
+              </button>
+            )}
+          </div>
         </div>
       )}
 

@@ -5,8 +5,11 @@
  * Communicates state markers via stdout for external process lifecycle and crash testing.
  */
 
+import { assertNotProductionDatabase } from "../src/lib/security/databaseTargetGuard";
 import { JobWorkerService } from "../src/lib/jobs/workerService";
 import { prisma } from "../src/lib/db";
+
+assertNotProductionDatabase(undefined, "scripts/worker-process.ts");
 
 // Parse CLI args
 const args = process.argv.slice(2);

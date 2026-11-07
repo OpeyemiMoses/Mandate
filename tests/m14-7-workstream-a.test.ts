@@ -15,13 +15,24 @@
 
 import { Client } from "pg";
 import crypto from "crypto";
-import { prismaPg as prisma } from "../src/lib/postgresDb";
+import { assertNotProductionDatabase } from "./helpers/assertNotProductionDatabase";
+
+const DISPOSABLE_URL =
+  "postgresql://postgres:postgrespassword@localhost:5432/mandate_disposable_m147?schema=public";
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith("postgres")
+    ? process.env.DATABASE_URL
+    : DISPOSABLE_URL;
+
+assertNotProductionDatabase(process.env.DATABASE_URL, "m14-7-workstream-a.test.ts");
+
+import { getPostgresUrl, prismaPg as prisma } from "../src/lib/postgresDb";
 import { WalletAuthService, AUTH_AUDIENCE, AUTH_NETWORK } from "../src/lib/auth/walletAuthService";
 
-const DISPOSABLE_URL = "postgresql://postgres:postgrespassword@localhost:5432/mandate_disposable_m147?schema=public";
-
 async function verifyDatabaseTarget() {
-  const client = new Client({ connectionString: DISPOSABLE_URL });
+  const resolvedUrl = getPostgresUrl();
+  assertNotProductionDatabase(resolvedUrl, "verifyDatabaseTarget");
+  const client = new Client({ connectionString: resolvedUrl });
   await client.connect();
   const res = await client.query("SELECT current_database();");
   await client.end();

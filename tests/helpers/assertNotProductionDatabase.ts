@@ -1,89 +1,152 @@
 /**
- * MANDATE — Fail-Closed Test Database Safety Guard
- * 
- * Strictly prevents mutating test suites from connecting to or executing against
- * production databases (e.g. mandate_prod, mandate_production, prod).
+ * MANDATE — M14.7 / M14.7-R1: Fail-Closed Test & Script Database Safety Guard
+ *
+ * Re-exports the central connection-boundary database and HTTP target guards
+ * from `src/lib/security/databaseTargetGuard.ts` and provides an ephemeral
+ * in-process disposable HTTP server helper for integration tests.
  */
 
-export function parseDatabaseName(connectionUrl?: string): string | null {
-  if (!connectionUrl) return null;
-  try {
-    // Handle standard URL formats postgresql://...
-    if (connectionUrl.startsWith("postgres://") || connectionUrl.startsWith("postgresql://")) {
-      const url = new URL(connectionUrl);
-      const pathname = url.pathname.replace(/^\//, "");
-      return pathname.split("?")[0] || null;
-    }
-    // Handle raw db name string
-    return connectionUrl.split("?")[0].trim() || null;
-  } catch {
-    // Fallback regex matching
-    const match = connectionUrl.match(/\/([^/?#]+)(\?.*)?$/);
-    return match ? match[1].trim() : null;
-  }
-}
+import http from "http";
+import { NextRequest } from "next/server";
+import {
+  assertNotProductionDatabase,
+  assertDisposableHttpServer,
+  classifyDatabaseTarget,
+  validateDatabaseEnvironmentConsistency,
+  isTestOrHarnessRuntime,
+  installTestHttpIsolationGuard,
+  DatabaseTargetClassification,
+} from "../../src/lib/security/databaseTargetGuard";
 
-export function isProductionDatabaseName(dbName: string): boolean {
-  const normalized = dbName.trim().toLowerCase();
-  const prohibitedExact = [
-    "mandate_prod",
-    "mandate-prod",
-    "mandate_production",
-    "mandate-production",
-    "prod",
-    "production",
-  ];
-  if (prohibitedExact.includes(normalized)) return true;
-  if (
-    normalized.endsWith("_prod") ||
-    normalized.endsWith("-prod") ||
-    normalized.endsWith("_production") ||
-    normalized.endsWith("-production")
-  ) {
-    return true;
-  }
-  return false;
-}
+export {
+  assertNotProductionDatabase,
+  assertDisposableHttpServer,
+  classifyDatabaseTarget,
+  validateDatabaseEnvironmentConsistency,
+  isTestOrHarnessRuntime,
+  installTestHttpIsolationGuard,
+  type DatabaseTargetClassification,
+};
 
-export function isAllowedTestDatabaseName(dbName: string): boolean {
-  const normalized = dbName.trim().toLowerCase();
-  if (isProductionDatabaseName(normalized)) return false;
-  // Must contain test, disposable, tmp, scratch, or fixture
-  return (
-    normalized.includes("test") ||
-    normalized.includes("disposable") ||
-    normalized.includes("tmp") ||
-    normalized.includes("fixture") ||
-    normalized.includes("scratch")
+/**
+ * Starts an ephemeral, in-process HTTP server bound to `127.0.0.1:0` that
+ * serves Mandate API routes strictly against the verified disposable database.
+ * Prevents HTTP-based integration tests from ever touching a production-connected
+ * server on port 3001.
+ */
+export async function startDisposableTestHttpServer(): Promise<{
+  baseUrl: string;
+  close: () => Promise<void>;
+}> {
+  const verifiedDb = assertNotProductionDatabase(
+    undefined,
+    "startDisposableTestHttpServer"
   );
-}
 
-export function assertNotProductionDatabase(connectionUrl?: string): string {
-  const url = connectionUrl || process.env.DATABASE_URL || process.env.POSTGRES_URL;
-  if (!url) {
-    throw new Error(
-      "[assertNotProductionDatabase] SAFETY VIOLATION: No database connection URL provided. Mutating tests cannot run without an explicit test database."
-    );
-  }
+  const liveRoute = await import("../../src/app/api/health/live/route");
+  const readyRoute = await import("../../src/app/api/health/ready/route");
+  const authRoute = await import("../../src/app/api/auth/route");
+  const walletsRoute = await import("../../src/app/api/wallets/route");
+  const walletsFundRoute = await import("../../src/app/api/wallets/fund/route");
+  const agentsRoute = await import("../../src/app/api/agents/route");
 
-  const dbName = parseDatabaseName(url);
-  if (!dbName) {
-    throw new Error(
-      `[assertNotProductionDatabase] SAFETY VIOLATION: Could not parse database name from connection URL "${url}". Execution aborted.`
-    );
-  }
+  const server = http.createServer(async (req, res) => {
+    try {
+      const host = req.headers.host || "127.0.0.1";
+      const fullUrl = `http://${host}${req.url || "/"}`;
+      const parsedUrl = new URL(fullUrl);
+      const pathname = parsedUrl.pathname;
+      const method = (req.method || "GET").toUpperCase();
 
-  if (isProductionDatabaseName(dbName)) {
-    throw new Error(
-      `[assertNotProductionDatabase] SAFETY VIOLATION: Mutating test harness attempted to run against production database "${dbName}". Tests must run against a disposable/test database.`
-    );
-  }
+      const bodyChunks: Buffer[] = [];
+      for await (const chunk of req) {
+        bodyChunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+      }
+      const rawBody = Buffer.concat(bodyChunks);
 
-  if (!isAllowedTestDatabaseName(dbName)) {
-    throw new Error(
-      `[assertNotProductionDatabase] SAFETY VIOLATION: Database "${dbName}" is not recognized as an allowed test or disposable database. Target database name must contain 'test', 'disposable', 'tmp', or 'fixture'.`
-    );
-  }
+      const headers = new Headers();
+      for (const [k, v] of Object.entries(req.headers)) {
+        if (Array.isArray(v)) {
+          for (const item of v) headers.append(k, item);
+        } else if (typeof v === "string") {
+          headers.set(k, v);
+        }
+      }
 
-  return dbName;
+      const nextReq = new NextRequest(fullUrl, {
+        method,
+        headers,
+        body:
+          method !== "GET" && method !== "HEAD" && rawBody.length > 0
+            ? rawBody
+            : undefined,
+      });
+
+      let response: Response | null = null;
+
+      if (pathname === "/api/health/live" && method === "GET") {
+        response = await liveRoute.GET();
+      } else if (pathname === "/api/health/ready" && method === "GET") {
+        response = await readyRoute.GET();
+      } else if (pathname === "/api/auth") {
+        if (method === "GET") response = await authRoute.GET(nextReq);
+        else if (method === "POST") response = await authRoute.POST(nextReq);
+        else if (method === "DELETE") response = await authRoute.DELETE(nextReq);
+      } else if (pathname === "/api/wallets") {
+        if (method === "GET") response = await walletsRoute.GET(nextReq);
+        else if (method === "POST") response = await walletsRoute.POST(nextReq);
+      } else if (pathname === "/api/wallets/fund") {
+        if (method === "POST") response = await walletsFundRoute.POST(nextReq);
+      } else if (pathname === "/api/agents") {
+        if (method === "GET") response = await agentsRoute.GET(nextReq);
+        else if (method === "POST") response = await agentsRoute.POST(nextReq);
+      }
+
+      if (!response) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            error: `Route ${method} ${pathname} not mounted in disposable test HTTP server (${verifiedDb})`,
+          })
+        );
+        return;
+      }
+
+      const outHeaders: Record<string, string | string[]> = {};
+      response.headers.forEach((val, key) => {
+        outHeaders[key] = val;
+      });
+      const setCookie = (response.headers as any).getSetCookie?.();
+      if (Array.isArray(setCookie) && setCookie.length > 0) {
+        outHeaders["set-cookie"] = setCookie;
+      }
+
+      const textBody = await response.text();
+      res.writeHead(response.status, outHeaders);
+      res.end(textBody);
+    } catch (err: any) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: err.message || "Internal Server Error" }));
+    }
+  });
+
+  await new Promise<void>((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => resolve());
+  });
+
+  const addr = server.address();
+  const port = typeof addr === "object" && addr ? addr.port : 0;
+  const baseUrl = `http://127.0.0.1:${port}`;
+
+  // Verify the server reports disposable database target before returning
+  await assertDisposableHttpServer(baseUrl);
+
+  return {
+    baseUrl,
+    close: () =>
+      new Promise<void>((resolve) => {
+        server.close(() => resolve());
+      }),
+  };
 }

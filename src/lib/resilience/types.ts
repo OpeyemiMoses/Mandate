@@ -49,6 +49,13 @@ export interface ReadinessStatus {
     operationalGate: boolean;
     workerFleet: boolean;
   };
+  databaseTarget?: {
+    databaseName: string;
+    hostname: string;
+    classification: "DISPOSABLE_TEST" | "PRODUCTION" | "UNAPPROVED";
+    isDisposableTestDatabase: boolean;
+    testModeActive: boolean;
+  };
   timestamp: string;
   error?: string;
 }

@@ -11,6 +11,7 @@ import path from "path";
 import { Client } from "pg";
 import { PostgresBackupService } from "./postgresBackupService";
 import { prismaPg } from "@/lib/postgresDb";
+import { assertNotProductionDatabase } from "@/lib/security/databaseTargetGuard";
 
 export interface IsolatedRestoreDrillResult {
   success: boolean;
@@ -45,6 +46,12 @@ export class PostgresRestoreService {
     const startTime = Date.now();
     const targetDatabase = params.targetDatabaseName || "mandate_restore_test";
     const executedBy = params.executedBy || "SYSTEM_DRILL";
+
+    // Never allow a restore drill to drop or overwrite a production or unapproved database
+    assertNotProductionDatabase(
+      targetDatabase,
+      "PostgresRestoreService.executeIsolatedRestoreDrill"
+    );
 
     // 1. Verify backup integrity
     if (params.expectedChecksum) {
@@ -96,19 +103,8 @@ export class PostgresRestoreService {
     await targetClient.connect();
 
     try {
-      // 2. We need schema in target database. We can apply migration.sql or copy schema from mandate_prod
+      // 2. Apply schema migrations to fresh isolated target database
       console.log(`[PG_RESTORE_DRILL] Applying schema to target database "${targetDatabase}"...`);
-      const prodClient = new Client({
-        host: "localhost",
-        port: 5432,
-        user: "postgres",
-        password: "postgrespassword",
-        database: "mandate_prod",
-      });
-      await prodClient.connect();
-
-      // Read all table definitions / run schema migration
-      // Apply all Prisma PostgreSQL migrations in chronological order
       const migrationDirs = fs
         .readdirSync("prisma/migrations")
         .filter((f) => fs.statSync(path.join("prisma", "migrations", f)).isDirectory())
@@ -121,7 +117,6 @@ export class PostgresRestoreService {
           await targetClient.query(migrationSql);
         }
       }
-      await prodClient.end();
 
       // 3. Restore data from backup SQL
       console.log(`[PG_RESTORE_DRILL] Restoring data into "${targetDatabase}"...`);

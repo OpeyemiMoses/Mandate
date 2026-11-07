@@ -29,6 +29,7 @@ import { fork } from "child_process";
 import path from "path";
 import { prisma } from "../src/lib/db";
 import { nearToYocto, yoctoToNear } from "../src/lib/yocto";
+import { encryptWalletApiKey } from "../src/lib/security/walletCredentialService";
 
 // Child process worker entrypoint
 if (process.argv[2] === "--worker") {
@@ -91,16 +92,36 @@ if (process.argv[2] === "--worker") {
     const suffix = Date.now().toString(36);
     const idempotencyKey = `multi-proc-idem-${suffix}`;
 
-    // Setup tenant & mandate
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id: "cmvy0hwds0000sbpigdca711i" },
+    // Setup isolated disposable tenant & mandate
+    const user = await prisma.user.create({
+      data: {
+        nearAccountId: `mproc_idem_${suffix}.testnet`,
+        role: "MEMBER",
+      },
     });
-    const agent = await prisma.agent.findUniqueOrThrow({
-      where: { id: "cmw172diy0002sbokl7yqsdaw" },
+    const wProviderId = `w_mproc_${suffix}`;
+    const wNearAcc = `agent_mproc_${suffix}.testnet`;
+    const agent = await prisma.agent.create({
+      data: {
+        name: `Multi-Process Idempotency Agent ${suffix}`,
+        userId: user.id,
+        status: "ACTIVE",
+        wallet: {
+          create: {
+            walletId: wProviderId,
+            nearAccountId: wNearAcc,
+            apiKey: encryptWalletApiKey(`wk_mproc_secret_${suffix}`, {
+              walletId: wProviderId,
+              nearAccountId: wNearAcc,
+            }),
+            network: "testnet",
+            balanceYocto: nearToYocto("1.0"),
+          },
+        },
+      },
+      include: { wallet: true },
     });
-    const wallet = await prisma.wallet.findUniqueOrThrow({
-      where: { id: "cmw172diy0003sboktabqi0yl" },
-    });
+    const wallet = agent.wallet!;
 
     const initialTotal = nearToYocto("0.05");
     const mandate = await prisma.mandate.create({
@@ -120,6 +141,8 @@ if (process.argv[2] === "--worker") {
         expiresAt: new Date(Date.now() + 86400000),
       },
     });
+
+    try {
 
     console.log(`✓ Mandate Created: ${mandate.id} with ${yoctoToNear(initialTotal)} NEAR budget`);
     console.log(`✓ Shared Idempotency Key: ${idempotencyKey}`);
@@ -210,6 +233,19 @@ if (process.argv[2] === "--worker") {
     } else {
       console.error("\n❌ DISTRIBUTED IDEMPOTENCY MULTI-PROCESS VERIFICATION: FAILED");
       process.exit(1);
+    }
+    } finally {
+      await prisma.executionEvent.deleteMany({
+        where: { execution: { mandateId: mandate.id } },
+      });
+      await prisma.executionRecord.deleteMany({
+        where: { mandateId: mandate.id },
+      });
+      await prisma.auditLog.deleteMany({ where: { userId: user.id } });
+      await prisma.mandate.deleteMany({ where: { id: mandate.id } });
+      await prisma.wallet.deleteMany({ where: { id: wallet.id } });
+      await prisma.agent.deleteMany({ where: { id: agent.id } });
+      await prisma.user.deleteMany({ where: { id: user.id } });
     }
   }
 

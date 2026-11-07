@@ -11,7 +11,24 @@
 !.yarn/versions
 
 # testing & scratch scripts
-tests/
+tests/*
+!tests/helpers/
+!tests/helpers/**
+!tests/security/
+tests/security/*
+!tests/security/m14-5-hardening-verification.test.ts
+!tests/audit-m14-6-workstream-*.ts
+!tests/beta-ceiling-enforcement.ts
+!tests/e2e-complete-system-audit.ts
+!tests/m14-7-*.test.ts
+!tests/milestone-13-7-production-infrastructure.ts
+!tests/milestone-13-10-acceptance.ts
+!tests/multi-process-idempotency.ts
+!tests/test-concurrency-financial-integrity.ts
+!tests/test-multiprocess-budget-concurrency.ts
+!tests/test-production-isolation-adversarial.ts
+!tests/verify-three-account-tenant-isolation.ts
+!tests/verify-user-mandate-governance.ts
 take-screenshots.js
 test-cdp-shots.js
 scripts/capture-all-views.js

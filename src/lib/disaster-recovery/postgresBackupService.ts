@@ -9,7 +9,11 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { Client } from "pg";
-import { prismaPg } from "@/lib/postgresDb";
+import { getPostgresUrl, prismaPg } from "@/lib/postgresDb";
+import {
+  assertNotProductionDatabase,
+  isTestOrHarnessRuntime,
+} from "@/lib/security/databaseTargetGuard";
 
 const BACKUPS_DIR = path.join(process.cwd(), "prisma", "backups");
 
@@ -129,16 +133,11 @@ export class PostgresBackupService {
     const createdBy = options.createdBy || "SYSTEM";
     const trigger = options.trigger || "MANUAL";
 
-    let connectionString = options.databaseUrl;
-    if (!connectionString && process.env.DATABASE_URL?.startsWith("postgres")) {
-      connectionString = process.env.DATABASE_URL;
-    }
-    if (!connectionString && process.env.POSTGRES_URL) {
-      connectionString = process.env.POSTGRES_URL;
-    }
-    if (!connectionString) {
-      throw new Error(
-        "[PostgresBackupService] No database URL provided in options or configured in DATABASE_URL/POSTGRES_URL environment variables."
+    const connectionString = options.databaseUrl || getPostgresUrl();
+    if (isTestOrHarnessRuntime()) {
+      assertNotProductionDatabase(
+        connectionString,
+        "PostgresBackupService.createBackup"
       );
     }
 

@@ -173,7 +173,15 @@ interface MandateContextValue {
     }
   ) => Promise<{ ok: boolean; error?: string; onchain?: any }>;
   disconnectWallet: () => void;
-  createAgentWallet: () => Promise<{ ok: boolean; error?: string; wallet?: AgentWalletState }>;
+  createAgentWallet: (options?: {
+    reconcile?: boolean;
+  }) => Promise<{
+    ok: boolean;
+    error?: string;
+    code?: string;
+    reconciliation?: any;
+    wallet?: AgentWalletState;
+  }>;
   fundAgentWallet: (amountNear: string, agentId?: string) => Promise<{ ok: boolean; error?: string; txHash?: string }>;
   createMandate: (input: {
     name: string;
@@ -860,15 +868,26 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Create Dedicated Agent Wallet
-  const createAgentWallet = async () => {
+  const createAgentWallet = async (options?: { reconcile?: boolean }) => {
     try {
       const res = await fetch("/api/wallets", {
         method: "POST",
         headers: getHeaders(),
+        body: options?.reconcile
+          ? JSON.stringify({
+              action: "reconcile",
+              acknowledgeUnresolvedOrphan: true,
+            })
+          : undefined,
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        return { ok: false, error: data.error || "Failed to provision agent wallet" };
+        return {
+          ok: false,
+          error: data.error || "Failed to provision agent wallet",
+          code: data.code,
+          reconciliation: data.reconciliation,
+        };
       }
 
       await refreshData();

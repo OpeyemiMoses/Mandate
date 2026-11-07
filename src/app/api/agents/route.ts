@@ -23,7 +23,23 @@ export async function GET(req: Request) {
     const user = await getAuthenticatedUser(req);
 
     const agents = await prisma.agent.findMany({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+        NOT: {
+          AND: [
+            { wallet: null },
+            {
+              status: {
+                in: [
+                  "PROVISIONING",
+                  "PROVISIONING_FAILED",
+                  "PROVISIONING_UNRESOLVED",
+                ],
+              },
+            },
+          ],
+        },
+      },
       include: {
         wallet: true,
         mandates: true,
@@ -157,18 +173,43 @@ export async function POST(req: Request) {
       ? colorVariant
       : COLORS[existingCount % COLORS.length];
 
-    // 1. Provision dedicated OutLayer TEE wallet for this new agent
+    // 1. Provision dedicated OutLayer TEE wallet for this new agent (Fail-Closed: zero synthetic fallback)
     let outlayerRes;
     try {
       outlayerRes = await registerOutlayerWallet();
     } catch (regErr: any) {
-      console.warn("OutLayer TEE remote registration fallback:", regErr.message);
-      outlayerRes = {
-        wallet_id: `outlayer-vault-${Date.now()}`,
-        api_key: `wk_local_${Date.now()}`,
-        near_account_id: `agent-vault-${Date.now()}.testnet`,
-        handoff_url: "",
-      };
+      return NextResponse.json(
+        {
+          success: false,
+          code: "OUTLAYER_PROVISIONING_FAILED",
+          recoverable: true,
+          error: `OutLayer TEE wallet provisioning failed: ${regErr.message || "Upstream provider unavailable"}`,
+        },
+        { status: 502 }
+      );
+    }
+
+    if (
+      !outlayerRes ||
+      typeof outlayerRes.wallet_id !== "string" ||
+      !outlayerRes.wallet_id.trim() ||
+      typeof outlayerRes.api_key !== "string" ||
+      !outlayerRes.api_key.trim() ||
+      typeof outlayerRes.near_account_id !== "string" ||
+      !outlayerRes.near_account_id.trim() ||
+      outlayerRes.api_key.startsWith("wk_local_") ||
+      outlayerRes.wallet_id.startsWith("outlayer-vault-")
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          code: "OUTLAYER_INVALID_RESPONSE",
+          recoverable: true,
+          error:
+            "OutLayer returned an incomplete or synthetic wallet registration payload. Refusing to create agent without authentic TEE custody.",
+        },
+        { status: 502 }
+      );
     }
 
     // 2. Create Agent and link dedicated wallet in an atomic transaction

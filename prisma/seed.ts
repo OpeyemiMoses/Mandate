@@ -1,6 +1,10 @@
+import { assertNotProductionDatabase } from "../src/lib/security/databaseTargetGuard";
 import { prisma } from "../src/lib/db";
-import { nearToYocto, yoctoToNear } from "../src/lib/yocto";
+import { nearToYocto } from "../src/lib/yocto";
 import { registerOutlayerWallet } from "../src/lib/outlayer";
+import { encryptWalletApiKey } from "../src/lib/security/walletCredentialService";
+
+assertNotProductionDatabase(undefined, "prisma/seed.ts");
 
 async function main() {
   console.log("🌱 Seeding Mandate database with Multi-Agent architecture...");
@@ -34,7 +38,10 @@ async function main() {
       wallet: {
         create: {
           walletId: reg1.wallet_id,
-          apiKey: reg1.api_key,
+          apiKey: encryptWalletApiKey(reg1.api_key, {
+            walletId: reg1.wallet_id,
+            nearAccountId: reg1.near_account_id,
+          }),
           nearAccountId: reg1.near_account_id,
           handoffUrl: reg1.handoff_url,
           network: "testnet",
@@ -59,7 +66,10 @@ async function main() {
       wallet: {
         create: {
           walletId: reg2.wallet_id,
-          apiKey: reg2.api_key,
+          apiKey: encryptWalletApiKey(reg2.api_key, {
+            walletId: reg2.wallet_id,
+            nearAccountId: reg2.near_account_id,
+          }),
           nearAccountId: reg2.near_account_id,
           handoffUrl: reg2.handoff_url,
           network: "testnet",

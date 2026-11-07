@@ -10,7 +10,18 @@
  */
 
 import "dotenv/config";
-import { assertNotProductionDatabase } from "./helpers/assertNotProductionDatabase";
+import {
+  assertNotProductionDatabase,
+  assertDisposableHttpServer,
+  startDisposableTestHttpServer,
+} from "./helpers/assertNotProductionDatabase";
+
+const DISPOSABLE_URL =
+  "postgresql://postgres:postgrespassword@localhost:5432/mandate_disposable_m147?schema=public";
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith("postgres")
+    ? process.env.DATABASE_URL
+    : DISPOSABLE_URL;
 
 assertNotProductionDatabase(process.env.DATABASE_URL);
 
@@ -21,12 +32,19 @@ import { ExecutionValidationService } from "../src/lib/execution/validationServi
 import { mintBoundaryExecutionTicket, validateBoundaryExecutionTicket } from "../src/lib/execution/boundaryTicket";
 import { assertProductionEnvironmentValid } from "../src/lib/production/environmentValidation";
 
-const BASE_URL = process.env.TEST_BASE_URL || "http://localhost:3001";
-
 async function runProductionIsolationTests() {
   console.log("================================================================================");
   console.log("  MANDATE — PRODUCTION ISOLATION & TEST-ONLY BYPASS ADVERSARIAL TEST");
   console.log("================================================================================\n");
+
+  let ephemeralServer: { baseUrl: string; close: () => Promise<void> } | null = null;
+  let BASE_URL = process.env.TEST_BASE_URL || "";
+  if (BASE_URL) {
+    await assertDisposableHttpServer(BASE_URL);
+  } else {
+    ephemeralServer = await startDisposableTestHttpServer();
+    BASE_URL = ephemeralServer.baseUrl;
+  }
 
   let passed = 0;
   let failed = 0;
@@ -241,12 +259,16 @@ async function runProductionIsolationTests() {
 
   // Teardown test fixtures
   try {
+    await prisma.mandate.deleteMany({ where: { userId: testUser.id } });
     if (testAgent.wallet) {
       await prisma.wallet.delete({ where: { id: testAgent.wallet.id } });
     }
     await prisma.agent.delete({ where: { id: testAgent.id } });
     await prisma.user.delete({ where: { id: testUser.id } });
   } catch {}
+  if (ephemeralServer) {
+    await ephemeralServer.close();
+  }
 
   console.log("\n================================================================================");
   console.log(`PRODUCTION ISOLATION TEST SUMMARY: ${passed} Passed, ${failed} Failed`);
