@@ -2,8 +2,9 @@
 // Multi-User, Multi-Agent Funding & OutLayer TEE Custody
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/client-pg"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/client-pg"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {

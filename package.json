@@ -5,7 +5,8 @@
   "description": "Mandate — Deterministic Spending Firewall & Policy-Enforced Custody Layer for AI Agents on NEAR Protocol",
   "scripts": {
     "dev": "next dev",
-    "build": "NEXT_IGNORE_INCORRECT_LOCKFILE=1 next build",
+    "build": "prisma generate --schema=prisma/schema.postgresql.prisma && NEXT_IGNORE_INCORRECT_LOCKFILE=1 next build",
+    "postinstall": "prisma generate --schema=prisma/schema.postgresql.prisma",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
