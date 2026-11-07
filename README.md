@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="public/mandate-logo.svg" alt="Mandate Logo" width="340" />
+  <a href="https://mandate-yemigraffixs-projects.vercel.app">
+    <img src="public/mandate-logo.png" alt="Mandate Logo" width="340" />
+  </a>
 </p>
 
 <p align="center">
@@ -90,15 +92,21 @@ Test that rogue agent behavior is deterministically intercepted:
 ### Application Interface Preview
 
 <p align="center">
-  <img src="shots-dashboard-dark.png" alt="Mandate Live Dashboard" width="90%" />
+  <a href="https://mandate-yemigraffixs-projects.vercel.app/dashboard">
+    <img src="shots-dashboard-dark.png" alt="Mandate Live Dashboard" width="90%" />
+  </a>
 </p>
 <p align="center">
   <em>Mandate Real-Time Governance Dashboard: Agent Status, Active Mandates, and Real-Time Policy Evaluations</em>
 </p>
 
 <p align="center">
-  <img src="shots-landing-dark.png" alt="Mandate Landing Page & Simulator" width="45%" />
-  <img src="shots-modal-dark.png" alt="Mandate Agent Custody Modal" width="45%" />
+  <a href="https://mandate-yemigraffixs-projects.vercel.app">
+    <img src="shots-landing-dark.png" alt="Mandate Landing Page & Simulator" width="48%" />
+  </a>
+  <a href="https://mandate-yemigraffixs-projects.vercel.app/wallets">
+    <img src="shots-modal-dark.png" alt="Mandate Agent Custody Modal" width="48%" />
+  </a>
 </p>
 
 ---
@@ -291,7 +299,8 @@ Mandate is deployed across **Railway** and **Vercel** for optimal reliability:
 ├── prisma/                    # Database schemas and versioned migrations
 │   ├── schema.postgresql.prisma
 │   └── migrations/
-├── public/                    # Static assets, branding, and logo SVGs
+├── public/                    # Static assets, branding, and logo assets
+│   ├── mandate-logo.png       # Official Mandate high-resolution logo banner
 │   ├── mandate-logo.svg       # Official Mandate vector logo
 │   └── favicon.ico
 ├── scripts/                   # Database migration and worker scripts

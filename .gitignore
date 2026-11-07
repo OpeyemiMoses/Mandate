@@ -77,6 +77,12 @@ data/**
 shots-*.png
 *-shot*.png
 test-*.png
+!shots-dashboard-dark.png
+!shots-landing-dark.png
+!shots-modal-dark.png
+!public/screenshots/**
+!public/mandate-logo.png
+!public/mandate-logo.svg
 
 # vercel
 .vercel

@@ -108,6 +108,8 @@ async function run() {
       console.log(`Saved ${outFile} (${buf.length} bytes)`);
     }
 
+    // 0. Landing Dark
+    await captureView("http://localhost:3001", "shots-landing-dark.png", "dark");
     // 1. Landing Light
     await captureView("http://localhost:3001", "shots-landing-light.png", "light");
     // 2. Landing Phone section Light
@@ -130,6 +132,12 @@ async function run() {
       "dark",
       `const btns = Array.from(document.querySelectorAll('button')); const b = btns.find(x => x.textContent && x.textContent.includes('Fund Agent')); if (b) b.click();`
     );
+
+    // Copy to public/screenshots/ as well
+    fs.mkdirSync("public/screenshots", { recursive: true });
+    fs.copyFileSync("shots-landing-dark.png", "public/screenshots/shots-landing-dark.png");
+    fs.copyFileSync("shots-dashboard-dark.png", "public/screenshots/shots-dashboard-dark.png");
+    fs.copyFileSync("shots-modal-dark.png", "public/screenshots/shots-modal-dark.png");
 
     ws.close();
   } finally {
