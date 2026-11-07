@@ -1,107 +1,134 @@
-# Mandate
+<p align="center">
+  <img src="public/mandate-logo.svg" alt="Mandate Logo" width="380" />
+</p>
 
-> Deterministic spending firewall and policy-enforced autonomous execution runtime for AI agents on NEAR Protocol & OutLayer Intel SGX TEE.
+<p align="center">
+  <strong>Deterministic spending firewall and policy-enforced autonomous execution runtime for AI agents on NEAR Protocol & OutLayer Intel SGX TEE.</strong>
+</p>
 
-**Core Philosophy:** *AI proposes. Mandate enforces. The user controls. OutLayer executes.*
+<p align="center">
+  <em>"AI proposes. Mandate enforces. The user controls. OutLayer executes."</em>
+</p>
+
+<p align="center">
+  <a href="https://mandate-yemigraffixs-projects.vercel.app"><img src="https://img.shields.io/badge/Live%20App-mandate.vercel.app-FF3B30?style=for-the-badge&logo=vercel" alt="Live App"></a>
+  <a href="https://mandate-yemigraffixs-projects.vercel.app/api/health/ready"><img src="https://img.shields.io/badge/System%20Status-READY%20(PostgreSQL%2018)-10B981?style=for-the-badge" alt="Status READY"></a>
+  <a href="https://testnet.nearblocks.io/txns/F5AFpgRzngjJnsqE6QHtEMJYXnLhPMbwKtVG9pHXyACC"><img src="https://img.shields.io/badge/Settlement-NEAR%20Testnet-00C08B?style=for-the-badge&logo=near" alt="NEAR Testnet"></a>
+  <a href="https://outlayer.ai"><img src="https://img.shields.io/badge/Custody-Intel%20SGX%20TEE-0071C5?style=for-the-badge&logo=intel" alt="OutLayer TEE"></a>
+  <a href="https://github.com/OpeyemiMoses/Mandate"><img src="https://img.shields.io/badge/GitHub-OpeyemiMoses%2FMandate-181717?style=for-the-badge&logo=github" alt="GitHub Repo"></a>
+</p>
 
 ---
 
-## Note for Judges: How to Test
+## ⚖️ Judges' Corner: Live Evaluation & Verification
 
-Mandate is designed to give AI agents financial authority without ever giving them custody of private keys or unlimited spending rights.
-
-Judges can test the platform either locally or via the deployed public web interface. Follow the step-by-step guide below to observe both autonomous execution and deterministic policy rejection.
-
-### Live Testnet Verification Reference
-- **Verified On-Chain Transaction Hash:** [`F5AFpgRzngjJnsqE6QHtEMJYXnLhPMbwKtVG9pHXyACC`](https://testnet.nearblocks.io/txns/F5AFpgRzngjJnsqE6QHtEMJYXnLhPMbwKtVG9pHXyACC)
-- **Network:** NEAR Testnet
-- **Execution Infrastructure:** OutLayer Managed Cloud TEE (Intel SGX secure enclave)
-- **Settlement:** 0.05 NEAR transferred from dedicated agent TEE custody vault to allowlisted recipient with final execution outcome.
+Mandate provides a **deterministic spending firewall** for AI agents. It gives autonomous agents the ability to execute on-chain financial workflows **without ever possessing raw private keys, exceeding user-defined budgets, or transferring funds to unauthorized recipients**.
 
 ---
 
-### Step-by-Step Testing Walkthrough
+### 🔗 Quick Links Reference
+
+| Destination | Live URL | Purpose |
+| :--- | :--- | :--- |
+| 🚀 **Live Production Application** | [mandate-yemigraffixs-projects.vercel.app](https://mandate-yemigraffixs-projects.vercel.app) | Public production web app ready for live testing |
+| 🔍 **System Readiness API** | [/api/health/ready](https://mandate-yemigraffixs-projects.vercel.app/api/health/ready) | Live telemetry (Railway PostgreSQL 18.6 & Worker Fleet status) |
+| ⚡ **Service Health Check** | [/api/health](https://mandate-yemigraffixs-projects.vercel.app/api/health) | Testnet node connectivity & OutLayer TEE gateway status |
+| 🔗 **Verified On-Chain Settlement** | [`F5AFpgRzngj...`](https://testnet.nearblocks.io/txns/F5AFpgRzngjJnsqE6QHtEMJYXnLhPMbwKtVG9pHXyACC) | Autonomous 0.05 NEAR payment executed via OutLayer TEE |
+| 🛡️ **Interactive Policy Simulator** | [/governance/simulator](https://mandate-yemigraffixs-projects.vercel.app/governance/simulator) | Test deterministic policy evaluation in real-time |
+| 📖 **System Documentation** | [/docs](https://mandate-yemigraffixs-projects.vercel.app/docs) | Complete technical specifications and architecture guides |
+| ⚙️ **Railway Production Dashboard** | [Project `mandate`](https://railway.com/project/f060e7a8-6f75-4962-9d2d-b6337907785f) | PostgreSQL 18.6 + Background Worker Daemon runtime |
+| 💻 **Vercel Project Console** | [Project `mandate`](https://vercel.com/yemigraffixs-projects/mandate) | Edge routing, Next.js 14 App Router, and serverless APIs |
+
+---
+
+### 🎯 3-Minute Live Walkthrough for Evaluators
 
 ```text
-  [1. Connect Wallet] ──> [2. Create Agent] ──> [3. Define Mandate]
-           │
-           ▼
+  [1. Connect NEAR Wallet] ──> [2. Create Agent] ──> [3. Define Mandate Policy]
+             │
+             ▼
   [4. 1-Click Fund TEE Vault] ──> [5. Run Autonomous Objective]
-           │
-           ▼
-  [6. Negative Testing (Policy Firewall)] ──> [7. Inspect Explorer & Audit Ledger]
+             │
+             ▼
+  [6. Negative Testing (Firewall Rejection)] ──> [7. Inspect Immutable Audit Trail]
 ```
 
-#### Step 1: Connect NEAR Testnet Wallet
-1. Navigate to the web application.
-2. Click **Connect NEAR Wallet** in the top navigation bar.
-3. Select your preferred NEAR wallet (MyNearWallet, Meteor, Here Wallet, Sender, or Bitte).
-4. Once connected, your account is automatically authenticated via cryptographic session tokens with isolated tenant scoping.
+#### Step 1: Connect Your NEAR Testnet Wallet
+- Visit [https://mandate-yemigraffixs-projects.vercel.app](https://mandate-yemigraffixs-projects.vercel.app).
+- Click **Connect NEAR Wallet** in the navigation bar.
+- Compatible with all major NEAR wallets: **MyNearWallet**, **Meteor**, **Here Wallet**, **Sender**, or **Bitte**.
+- Your account is instantly authenticated via secure cryptographic sessions with multi-tenant row-level isolation.
 
-#### Step 2: Create a Dedicated AI Agent
-1. Navigate to **Agents** (`/agents`) from the sidebar.
-2. Click **+ New Agent**.
-3. Provide a name (e.g., `DeFi Research Agent`) and assign a specialized role (`Procurement`, `Treasury`, `Auditor`, or `Operations`).
-4. Mandate automatically provisions a dedicated **OutLayer TEE Custody Vault** address for this agent.
+#### Step 2: Create an AI Agent ([/agents](https://mandate-yemigraffixs-projects.vercel.app/agents))
+- Click **+ New Agent**.
+- Choose a role (e.g. `Treasury`, `Procurement`, `Auditor`, or `Operations`).
+- Mandate automatically provisions a dedicated **OutLayer TEE Custody Vault** enclave address for your agent.
 
-#### Step 3: Define a Financial Mandate
-1. Navigate to **Mandates** (`/mandates`) and click **+ Create Mandate**.
-2. Configure your financial boundaries:
-   - **Total Budget:** e.g., `5.0 NEAR`
-   - **Per-Transaction Ceiling:** e.g., `1.0 NEAR`
-   - **Human Approval Threshold:** e.g., `0.5 NEAR` (transactions $\le$ 0.5 NEAR execute autonomously; transactions $>$ 0.5 NEAR require human sign-off)
-   - **Recipient Allowlist:** Specify allowed NEAR Testnet accounts (e.g., `treasury.testnet`, `data-provider.testnet`).
-   - **Agent Binding:** Select the agent created in Step 2.
-3. Submit the mandate.
+#### Step 3: Define a Financial Mandate ([/mandates](https://mandate-yemigraffixs-projects.vercel.app/mandates))
+- Click **+ Create Mandate** to set hard guardrails:
+  - **Total Budget:** e.g., `5.0 NEAR`
+  - **Per-Transaction Ceiling:** e.g., `1.0 NEAR`
+  - **Human Approval Threshold:** e.g., `0.5 NEAR` *(Transfers $\le$ 0.5 NEAR execute autonomously; transfers $>$ 0.5 NEAR halt for human sign-off)*.
+  - **Recipient Allowlist:** e.g., `treasury.testnet`, `data-provider.testnet`.
+  - **Agent Binding:** Bind to your newly created agent.
 
-#### Step 4: 1-Click Agent TEE Custody Funding
-1. Navigate to **Wallets** (`/wallets`) or click **Fund Agent** from the dashboard header.
-2. Select your agent. The modal displays the agent's dedicated OutLayer TEE enclave account ID.
-3. Enter `1.0 NEAR` and click **Connect NEAR Wallet for 1-Click Funding**.
-4. Approve the deposit transaction in your wallet. The agent's vault balance updates instantly.
+#### Step 4: 1-Click Fund the Agent Vault ([/wallets](https://mandate-yemigraffixs-projects.vercel.app/wallets))
+- Select your agent in the **Wallets** tab and enter deposit amount (e.g., `1.0 NEAR`).
+- Click **Connect NEAR Wallet for 1-Click Funding** to deposit Testnet NEAR directly into the agent's OutLayer TEE enclave custody.
 
-#### Step 5: Execute an Autonomous Task
-1. Navigate to **Objectives** (`/tasks`) and click **+ New Objective**.
-2. Select your agent and mandate. Enter a task description:
-   - *Example:* "Procure 0.05 NEAR market research subscription from allowlisted provider."
-3. Click **Plan & Evaluate Policy**.
-4. **Observe Autonomous Execution:**
-   - Because `0.05 NEAR` is within the total budget, below the per-transaction ceiling, below the human approval threshold (`0.5 NEAR`), and sent to an allowlisted recipient, Mandate **automatically evaluates, issues a cryptographically signed Boundary Ticket, dispatches to OutLayer TEE, and settles on NEAR Testnet without prompting for manual human transaction confirmation.**
-5. Review the resulting transaction hash, block height, and gas consumption in the activity stream.
+#### Step 5: Test Autonomous Execution ([/tasks](https://mandate-yemigraffixs-projects.vercel.app/tasks))
+- Create an objective: *"Procure 0.05 NEAR market research subscription from allowlisted provider."*
+- Click **Plan & Evaluate Policy**.
+- **Observe Autonomous Execution:** Because the request is $\le$ 0.5 NEAR and targets an allowlisted account, Mandate generates an HMAC-SHA256 Boundary Ticket, dispatches it to the OutLayer TEE, and settles on NEAR Testnet **without prompting for manual wallet confirmation**.
 
-#### Step 6: Negative Testing (Verify Policy Firewall Blocking)
-To verify that agents cannot bypass your rules:
-- **Test Case A (Unauthorized Recipient):** Propose a payment to an account NOT on your allowlist (e.g., `unverified-actor.testnet`).
-  - **Result:** Instant deterministic rejection: `RECIPIENT_NOT_ALLOWED`. Zero funds leave the vault.
-- **Test Case B (Exceeding Per-Transaction Limit):** Propose a payment exceeding your configured per-tx limit.
-  - **Result:** Instant deterministic rejection: `PAYMENT_LIMIT_EXCEEDED`.
-- **Test Case C (Approval Gating):** Propose a payment between the approval threshold and per-tx ceiling (e.g., `0.6 NEAR`).
-  - **Result:** Status changes to `PENDING_APPROVAL`. Payment halts until you manually approve it under **Approvals** (`/approvals`).
+#### Step 6: Negative Testing (Verify Firewall Blocking)
+Test that rogue agent behavior is deterministically intercepted:
+- **Test Case A (Unauthorized Recipient):** Propose payment to `unverified-actor.testnet`.  
+  *Result:* Instant deterministic rejection with `RECIPIENT_NOT_ALLOWED`. Zero funds leave the vault.
+- **Test Case B (Exceeding Per-Transaction Limit):** Propose payment of `2.0 NEAR` (when ceiling is `1.0 NEAR`).  
+  *Result:* Instant deterministic rejection with `PAYMENT_LIMIT_EXCEEDED`.
+- **Test Case C (Human Approval Gating):** Propose payment of `0.7 NEAR` (between threshold `0.5` and ceiling `1.0`).  
+  *Result:* Status switches to `PENDING_APPROVAL`. Payment halts until approved in the [Approvals Dashboard](https://mandate-yemigraffixs-projects.vercel.app/approvals).
 
-#### Step 7: Inspect Cryptographic Audit Trail
-1. Navigate to **Activity** (`/activity`).
-2. Every proposal, policy check, TEE dispatch, and on-chain settlement is recorded with immutable correlation IDs, timestamps, and yoctoNEAR precision.
+#### Step 7: Audit Trail Verification ([/activity](https://mandate-yemigraffixs-projects.vercel.app/activity))
+- View every proposal, policy evaluation, ticket issuance, and on-chain hash recorded with yoctoNEAR precision and immutable correlation IDs.
 
 ---
 
-## Problem & Solution
+### 📸 Application Interface Preview
+
+<p align="center">
+  <img src="shots-dashboard-dark.png" alt="Mandate Live Dashboard" width="90%" />
+</p>
+<p align="center">
+  <em>Mandate Real-Time Governance Dashboard: Agent Status, Active Mandates, and Real-Time Policy Evaluations</em>
+</p>
+
+<p align="center">
+  <img src="shots-landing-dark.png" alt="Mandate Landing Page & Simulator" width="45%" />
+  <img src="shots-modal-dark.png" alt="Mandate Agent Custody Modal" width="45%" />
+</p>
+
+---
+
+## 💡 The Problem & The Solution
 
 ### The Vulnerability of AI Agent Wallets Today
-Modern AI agents can write code, analyze data, and interact with web APIs. However, granting an LLM direct access to private keys or giving it custody of a hot wallet is catastrophic:
-- **Prompt Injection:** An adversarial web page or poisoned data stream can hijack the LLM prompt and instruct the agent to transfer all wallet assets to an attacker.
-- **Model Hallucination:** Stochastic model drift can result in unintended contract calls or excessive transaction values.
-- **Approval Fatigue:** Requiring a human user to review and approve every single micro-transaction negates the speed and utility of autonomous agents.
+Autonomous AI agents can analyze markets, interact with web APIs, and write code. However, giving an LLM direct access to private keys or custodial wallets creates severe systemic vulnerabilities:
+- **Prompt Injection & Hijacking:** Malicious web inputs or adversarial data can poison the agent prompt and trick the model into sweeping its wallet balance to an attacker.
+- **Model Drift & Hallucination:** Stochastic LLM behavior can generate malformed contract calls or unintended spending spikes.
+- **Approval Fatigue:** Forcing human operators to click "Approve" for hundreds of micro-transactions destroys agent autonomy.
 
 ### The Mandate Solution
-Mandate establishes a deterministic execution firewall between AI agents and on-chain settlement:
-1. **Keyless Planning:** Agents propose intent; they never see, hold, or store private keys.
-2. **Deterministic Enforcement:** All policy rules are evaluated on the server with exact integer arithmetic (`yoctoNEAR`). AI models cannot alter or bypass policy logic.
-3. **OutLayer TEE Isolation:** Signing keys are held exclusively inside Intel SGX hardware enclaves managed by OutLayer. Keys cannot be extracted even by host administrators.
-4. **Boundary Execution Tickets:** Execution requires a tamper-proof HMAC-SHA256 authorization ticket binding every financial parameter, single-use monotonic nonce, and short expiration window.
+Mandate introduces a **deterministic firewall layer** between AI agent intent and blockchain settlement:
+1. **Zero Private Key Custody:** Agents propose payment intent; they never hold, read, or export private keys.
+2. **Exact yoctoNEAR Integer Arithmetic:** All constraints are calculated using exact `BigInt` integers (`1 NEAR = 10^24 yoctoNEAR`). Floating-point rounding errors and precision exploits are mathematically impossible.
+3. **OutLayer Intel SGX TEE Custody:** Signing keys exist strictly inside hardware-isolated secure enclaves. Neither host operators, compromised databases, nor cloud providers can extract enclave keys.
+4. **Boundary Execution Tickets:** Financial transactions require an HMAC-SHA256 authorization ticket binding all payment parameters, a monotonic single-use nonce, and an explicit expiration timestamp.
 
 ---
 
-## System Architecture
+## 🏛️ System Architecture
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -148,7 +175,7 @@ Mandate establishes a deterministic execution firewall between AI agents and on-
 
 ---
 
-## Core Technical Features
+## 🔬 Core Technical Features
 
 ### 1. Deterministic Policy Engine
 Spending limits and allowlists are evaluated using strict `yoctoNEAR` integer arithmetic (`1 NEAR = 10^24 yoctoNEAR`). Floating-point approximations are completely eliminated from financial pathways to prevent rounding exploits and precision leakage.
@@ -162,20 +189,20 @@ Every transfer requires an HMAC-SHA256 signed `BoundaryExecutionTicket` containi
 - Exact Recipient and yoctoNEAR Amount.
 - Target Network (`testnet`).
 - Single-use Monotonic Nonce & Expiration Timestamp.
-- Parameter tampering or ticket re-use triggers immediate rejection.
+- Any parameter tampering or ticket replay triggers immediate cryptographic rejection.
 
-### 4. Concurrency & Tenant Isolation
+### 4. Concurrency & Multi-Tenant Isolation
 - **PostgreSQL 18.6:** Multi-process concurrency control backed by transactional advisory locks (`pg_try_advisory_xact_lock`).
 - **Cryptographic Tenant Isolation:** Every data entity is strictly scoped to the authenticated user's account ID. Cross-tenant access is rejected with `403 Forbidden`.
 
 ### 5. Distributed Resilience & Worker Architecture
 - Asynchronous task processing powered by dedicated background execution workers.
 - Automatic recovery from RPC failovers and idempotency keys on every transaction.
-- Comprehensive health, liveness, and readiness endpoints (`/api/health`).
+- Comprehensive health, liveness, and readiness endpoints ([`/api/health/ready`](https://mandate-yemigraffixs-projects.vercel.app/api/health/ready)).
 
 ---
 
-## Technology Stack
+## 💻 Technology Stack
 
 | Layer | Technologies |
 | :--- | :--- |
@@ -184,11 +211,11 @@ Every transfer requires an HMAC-SHA256 signed `BoundaryExecutionTicket` containi
 | **Database & ORM** | PostgreSQL 18.6, Prisma ORM, Transactional Advisory Locks |
 | **Blockchain** | NEAR Protocol, `near-api-js`, `@near-wallet-selector` (MyNearWallet, Meteor, Here, Sender, Bitte) |
 | **TEE Enclave** | OutLayer Managed Cloud TEE (Intel SGX), OutLayer SDK |
-| **Deployment** | Railway (PostgreSQL & Background Workers), Vercel (Next.js Edge & Serverless) |
+| **Deployment** | Railway (PostgreSQL 18 & Background Workers), Vercel (Next.js Edge & Serverless) |
 
 ---
 
-## Quickstart & Local Setup
+## 🛠️ Quickstart & Local Setup
 
 ### Prerequisites
 - Node.js `v20.x` or higher
@@ -241,29 +268,29 @@ Every transfer requires an HMAC-SHA256 signed `BoundaryExecutionTicket` containi
 
 ---
 
-## Production Deployment
+## 🌐 Production Deployment Architecture
 
-Mandate is built to run seamlessly across Railway and Vercel:
+Mandate is deployed across **Railway** and **Vercel** for optimal reliability:
 
-### 1. Railway (PostgreSQL Database & Background Worker)
-1. In Railway, click **New Project** $\to$ **Deploy from GitHub repo** $\to$ select `OpeyemiMoses/Mandate`.
-2. Add a **PostgreSQL** service in Railway.
-3. Railway automatically detects [`railway.json`](railway.json) and [`Procfile`](Procfile) to run the background worker process.
-4. Bind the `DATABASE_URL` environment variable.
+```text
+┌──────────────────────────────────────┐       ┌──────────────────────────────────────┐
+│         VERCEL EDGE & SERVERLESS     │       │           RAILWAY CLOUD              │
+│  - Next.js 14 App Router UI          │──────>│  - Managed PostgreSQL 18.6 Database  │
+│  - RESTful API Endpoints             │       │  - Asynchronous Background Workers   │
+│  - https://mandate.vercel.app        │       │  - Autonomous Job Execution Loop     │
+└──────────────────────────────────────┘       └──────────────────────────────────────┘
+```
 
-### 2. Vercel (Next.js Application & API Routes)
-1. In Vercel, click **Add New...** $\to$ **Project** $\to$ import `OpeyemiMoses/Mandate`.
-2. Configure environment variables in Vercel project settings:
-   - `DATABASE_URL` (from Railway PostgreSQL)
-   - `OUTLAYER_API_KEY`
-   - `OUTLAYER_EXECUTOR_ACCOUNT_ID`
-   - `HMAC_TICKET_SECRET`
-   - `NEAR_NETWORK="testnet"`
-3. Deploy. Vercel builds all application routes and provisions your HTTPS endpoint.
+1. **Railway ([Dashboard](https://railway.com/project/f060e7a8-6f75-4962-9d2d-b6337907785f)):**
+   - Managed **PostgreSQL 18.6** instance with multi-table schema migrations applied.
+   - Long-running background worker daemon (`scripts/worker-process.ts`) polling the job queue.
+2. **Vercel ([Dashboard](https://vercel.com/yemigraffixs-projects/mandate)):**
+   - High-performance Next.js 14 serverless deployment with global edge CDN caching.
+   - Live public deployment accessible at [https://mandate-yemigraffixs-projects.vercel.app](https://mandate-yemigraffixs-projects.vercel.app).
 
 ---
 
-## Repository Structure
+## 📁 Repository Structure
 
 ```text
 ├── docs/                      # Architectural & threat model documentation
@@ -272,7 +299,9 @@ Mandate is built to run seamlessly across Railway and Vercel:
 ├── prisma/                    # Database schemas and versioned migrations
 │   ├── schema.postgresql.prisma
 │   └── migrations/
-├── public/                    # Static assets, branding, and icons
+├── public/                    # Static assets, branding, and logo SVGs
+│   ├── mandate-logo.svg       # Official Mandate vector logo
+│   └── favicon.ico
 ├── scripts/                   # Database migration and worker scripts
 │   ├── migrate-sqlite-to-postgres.ts
 │   ├── start-postgres.ts
@@ -305,7 +334,7 @@ Mandate is built to run seamlessly across Railway and Vercel:
 
 ---
 
-## Community & Security
+## 👥 Community & Security
 
 - **Code of Conduct:** Please review our [Code of Conduct](CODE_OF_CONDUCT.md).
 - **Contributing:** Guidelines for issues and pull requests are detailed in [CONTRIBUTING.md](CONTRIBUTING.md).
