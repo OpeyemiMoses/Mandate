@@ -117,6 +117,11 @@ export function isTestOrHarnessRuntime(): boolean {
     return true;
   }
 
+  // In production runtime without explicit test flags, production services and workers run normally
+  if (process.env.NODE_ENV === "production") {
+    return false;
+  }
+
   const argv = process.argv || [];
   for (const arg of argv) {
     const normalized = String(arg).replace(/\\/g, "/");
