@@ -204,10 +204,10 @@ export function RealWorldCheckoutScene() {
       {/* =====================================================================
           FREE-FLOATING 3D IMMERSIVE STAGE (NO CONTAINER CARD)
       ====================================================================== */}
-      <div className="relative max-w-5xl mx-auto py-4 sm:py-8 [perspective:1800px]">
+      <div className="relative max-w-5xl mx-auto py-4 sm:py-8 [perspective:1800px] overflow-hidden sm:overflow-visible">
         {/* Ambient 3D Floor Glow */}
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full blur-[120px] opacity-20 transition-colors duration-700"
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[520px] h-[320px] sm:h-[520px] rounded-full blur-[90px] sm:blur-[120px] opacity-20 transition-colors duration-700"
           style={{ background: accentColor }}
         />
 

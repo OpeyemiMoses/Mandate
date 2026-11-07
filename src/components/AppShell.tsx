@@ -135,10 +135,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0B0B0B] text-slate-900 dark:text-[#E5E7EB] flex flex-col">
       {/* Top Navbar */}
-      <header className="h-16 border-b border-slate-200 dark:border-[#1A1A1E] bg-white/90 dark:bg-[#0B0B0B]/90 backdrop-blur-md sticky top-0 z-30 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="hover:opacity-90 transition-opacity">
-            <MandateLogo size="md" />
+      <header className="h-16 border-b border-slate-200 dark:border-[#1A1A1E] bg-white/90 dark:bg-[#0B0B0B]/90 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between">
+        <div className="flex items-center gap-3 sm:gap-6">
+          <Link href="/" className="hover:opacity-90 transition-opacity flex items-center">
+            <MandateLogo size="sm" className="sm:hidden" />
+            <MandateLogo size="md" className="hidden sm:inline-flex" />
           </Link>
           <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-[#141417] border border-slate-200 dark:border-[#232329] text-slate-600 dark:text-[#A1A1AA]">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -146,7 +147,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/"
             className="hidden md:inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-900 dark:text-[#A1A1AA] dark:hover:text-white transition-colors px-2.5 py-1.5"

@@ -382,9 +382,9 @@ export function StackedVirtualCards({
   }, [activeIndex, frozen, onSelectIndex, total]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       {/* 3D Stacked Cards Container */}
-      <div className="relative w-full max-w-[430px] pt-10 pb-4 px-2 sm:px-0">
+      <div className="relative w-full max-w-[340px] sm:max-w-[430px] mx-auto pt-8 sm:pt-10 pb-4 px-1 sm:px-0">
         {cards.map((card, idx) => {
           // Calculate relative position in the stack: 0 = front, 1 = middle, 2 = back
           const offset = (idx - activeIndex + total) % total;
@@ -393,8 +393,8 @@ export function StackedVirtualCards({
             offset === 0
               ? "translate3d(0px, 0px, 0px) scale(1) rotateZ(0deg)"
               : offset === 1
-              ? "translate3d(18px, -22px, -40px) scale(0.94) rotateZ(3deg)"
-              : "translate3d(34px, -42px, -80px) scale(0.88) rotateZ(6deg)";
+              ? "translate3d(10px, -16px, -40px) scale(0.95) rotateZ(2.5deg)"
+              : "translate3d(20px, -30px, -80px) scale(0.90) rotateZ(5deg)";
 
           const zIndex = offset === 0 ? 30 : offset === 1 ? 20 : 10;
           const opacity = offset === 0 ? 1 : offset === 1 ? 0.82 : 0.6;

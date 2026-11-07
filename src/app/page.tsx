@@ -148,9 +148,10 @@ export default function LandingPage() {
 
         {/* Top Navbar Fixed */}
         <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-[#0B0B0B]/85 backdrop-blur-md border-b border-slate-200 dark:border-white/[0.06] transition-all">
-          <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <Link href="/" className="hover:opacity-90 transition-opacity">
-              <MandateLogo size="md" />
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+            <Link href="/" className="hover:opacity-90 transition-opacity flex items-center">
+              <MandateLogo size="sm" className="sm:hidden" />
+              <MandateLogo size="md" className="hidden sm:inline-flex" />
             </Link>
 
             <nav className="hidden md:flex items-center gap-9 text-xs font-medium text-slate-600 dark:text-[#A1A1AA]">
@@ -165,11 +166,11 @@ export default function LandingPage() {
               </Link>
             </nav>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <ThemeToggle />
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] transition-all shadow-[0_0_20px_rgba(255,59,48,0.4)] btn-pop"
+                className="inline-flex items-center justify-center px-3.5 py-2 sm:px-4 sm:py-2 rounded-lg text-xs font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] transition-all shadow-[0_0_20px_rgba(255,59,48,0.4)] btn-pop whitespace-nowrap"
               >
                 Get Started
               </Link>
@@ -180,11 +181,11 @@ export default function LandingPage() {
         {/* Main Hero Content */}
         <section
           id="top"
-          className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-16 md:pt-36 md:pb-20 animate-rise"
+          className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-14 sm:pb-16 md:pt-36 md:pb-20 animate-rise"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-6 space-y-6">
-              <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-slate-900 dark:text-white leading-[1.12] animate-rise">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="lg:col-span-6 space-y-5 sm:space-y-6 text-center sm:text-left">
+              <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-slate-900 dark:text-white leading-[1.14] sm:leading-[1.12] animate-rise">
                 Autonomous
                 <br />
                 spending for a
@@ -192,13 +193,11 @@ export default function LandingPage() {
                 <span className="text-[#FF3B30]">smarter tomorrow.</span>
               </h1>
 
-              <p className="text-sm sm:text-base text-slate-600 dark:text-[#A1A1AA] max-w-md leading-relaxed animate-rise stagger-1">
-                Mandate gives you control. Your AI agent
-                <br className="hidden sm:inline" /> handles the execution —
-                securely, onchain.
+              <p className="text-sm sm:text-base text-slate-600 dark:text-[#A1A1AA] max-w-md mx-auto sm:mx-0 leading-relaxed animate-rise stagger-1">
+                Mandate gives you control. Your AI agent handles the execution — securely, onchain.
               </p>
 
-              <div className="pt-1">
+              <div className="pt-1 flex justify-center sm:justify-start">
                 <Link
                   href="/dashboard"
                   className="inline-flex items-center justify-center px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold text-white bg-[#FF3B30] hover:bg-[#E63228] transition-all shadow-[0_6px_28px_rgba(255,59,48,0.45)] btn-pop animate-pop stagger-2"
@@ -208,9 +207,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-6 flex justify-center lg:justify-end">
+            <div className="lg:col-span-6 flex justify-center lg:justify-end overflow-hidden sm:overflow-visible py-2">
               <div
-                className="relative w-[300px] sm:w-[340px] h-[330px] sm:h-[360px] flex items-center justify-center animate-pop hover-pop"
+                className="relative w-[280px] sm:w-[340px] h-[310px] sm:h-[360px] flex items-center justify-center animate-pop hover-pop"
                 style={{ perspective: "1100px" }}
               >
                 <div
