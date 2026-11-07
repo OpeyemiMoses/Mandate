@@ -46,6 +46,26 @@ interface NearWalletSelectorContextValue {
 
 const NearWalletSelectorContext = createContext<NearWalletSelectorContextValue | null>(null);
 
+function hexToUint8Array(hex: string): Uint8Array {
+  const clean = hex.startsWith("0x") ? hex.slice(2) : hex;
+  const len = Math.floor(clean.length / 2);
+  const u8 = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    u8[i] = parseInt(clean.substring(i * 2, i * 2 + 2), 16);
+  }
+  return u8;
+}
+
+function bytesToBase64(bytes: Uint8Array | number[]): string {
+  const arr = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  let binary = "";
+  const len = arr.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(arr[i]);
+  }
+  return btoa(binary);
+}
+
 export function NearWalletSelectorProvider({
   children,
 }: {
@@ -271,7 +291,7 @@ export function NearWalletSelectorProvider({
         throw new Error(`The connected wallet (${walletName || "Wallet"}) does not support message signing (NEP-413).`);
       }
 
-      const nonceBytes = Buffer.from(params.nonce, "hex");
+      const nonceBytes = hexToUint8Array(params.nonce);
       const signed = await (wallet as any).signMessage({
         message: params.message,
         recipient: params.recipient,
@@ -284,16 +304,20 @@ export function NearWalletSelectorProvider({
 
       let sigStr = "";
       if (typeof signed.signature === "string") {
-        sigStr = signed.signature;
-      } else if (Buffer.isBuffer(signed.signature) || signed.signature instanceof Uint8Array) {
-        sigStr = Buffer.from(signed.signature).toString("base64");
+        sigStr = signed.signature.trim();
+      } else if (signed.signature instanceof Uint8Array || Array.isArray(signed.signature)) {
+        sigStr = bytesToBase64(signed.signature);
       } else if (signed.signature && typeof signed.signature === "object") {
-        sigStr = Buffer.from(Object.values(signed.signature) as number[]).toString("base64");
+        if ("data" in signed.signature && Array.isArray((signed.signature as any).data)) {
+          sigStr = bytesToBase64((signed.signature as any).data);
+        } else {
+          sigStr = bytesToBase64(Object.values(signed.signature) as number[]);
+        }
       }
 
       let pubKeyStr = "";
       if (typeof signed.publicKey === "string") {
-        pubKeyStr = signed.publicKey;
+        pubKeyStr = signed.publicKey.trim();
       } else if (signed.publicKey && typeof (signed.publicKey as any).toString === "function") {
         pubKeyStr = (signed.publicKey as any).toString();
       } else if (signed.publicKey) {
@@ -301,7 +325,7 @@ export function NearWalletSelectorProvider({
       }
 
       return {
-        accountId: signed.accountId || accountId || "",
+        accountId: (signed.accountId || accountId || "").trim(),
         publicKey: pubKeyStr,
         signature: sigStr,
       };

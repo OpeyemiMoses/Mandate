@@ -6,6 +6,7 @@ import { NearWalletSelectorProvider } from "@/context/NearWalletSelectorContext"
 import { NearWalletSelectorSync } from "@/components/NearWalletSelectorSync";
 import { RainbowKitProviders } from "@/components/RainbowKitProviders";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { BufferPolyfill } from "@/components/BufferPolyfill";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-[#0B0B0B] text-[#E5E7EB] antialiased overflow-x-clip max-w-full w-full`}
       >
+        <BufferPolyfill />
         <ThemeProvider>
           <MandateProvider>
             <NearWalletSelectorProvider>

@@ -292,6 +292,27 @@ export class WalletAuthService {
     let base64Signature = signature.trim();
     if (/^[0-9a-fA-F]{128}$/.test(base64Signature)) {
       base64Signature = Buffer.from(base64Signature, "hex").toString("base64");
+    } else if (
+      !base64Signature.includes("=") &&
+      !base64Signature.includes("+") &&
+      !base64Signature.includes("/") &&
+      base64Signature.length >= 85 &&
+      base64Signature.length <= 92
+    ) {
+      try {
+        const { utils } = await import("near-api-js");
+        const decoded = utils.serialize.base_decode(base64Signature);
+        if (decoded.length === 64) {
+          base64Signature = Buffer.from(decoded).toString("base64");
+        }
+      } catch (e) {
+        console.warn("Base58 signature decoding failed:", e);
+      }
+    } else if (base64Signature.includes("-") || base64Signature.includes("_")) {
+      base64Signature = base64Signature.replace(/-/g, "+").replace(/_/g, "/");
+      while (base64Signature.length % 4 !== 0) {
+        base64Signature += "=";
+      }
     }
 
     const nonceBuffer = Buffer.from(cleanNonce, "hex");

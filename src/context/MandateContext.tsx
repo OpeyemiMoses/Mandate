@@ -255,33 +255,65 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   }, []);
 
-  const getHeaders = useCallback(() => {
+  const getHeaders = useCallback((overrideAccount?: string) => {
     const h: Record<string, string> = {
       "Content-Type": "application/json",
     };
-    if (accountId) {
-      h["x-near-account"] = accountId;
+    const active = overrideAccount || accountId;
+    if (active) {
+      h["x-near-account"] = active;
     }
     return h;
   }, [accountId]);
 
   // Synchronize data from backend REST APIs
-  const refreshData = useCallback(async () => {
-    if (!accountId) {
-      setIsLoading(false);
-      setPersonalWallet(null);
-      setAgentWallet(null);
-      setAgentWallets([]);
-      setMandates([]);
-      setTasks([]);
-      setApprovals([]);
-      setActivities([]);
-      return;
+  const refreshData = useCallback(async (targetAccountId?: string) => {
+    let effectiveAccount = (targetAccountId || accountId || "").trim();
+
+    // If no local account in state, check if there is an active HTTP-only cookie session
+    if (!effectiveAccount) {
+      try {
+        const checkRes = await fetch("/api/auth", {
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+        if (checkRes.ok) {
+          const authData = await checkRes.json();
+          if (authData?.user?.nearAccountId) {
+            effectiveAccount = authData.user.nearAccountId;
+            setAccountId(authData.user.nearAccountId);
+            setSessionToken("cookie-session");
+            if (authData.user) {
+              setUserProfile({
+                displayName: authData.user.displayName || "",
+                email: authData.user.email || "",
+                bio: authData.user.bio || "",
+                role: authData.user.role || "MEMBER",
+              });
+            }
+            if (authData.onchain?.balanceNear) {
+              setUserNearBalance(authData.onchain.balanceNear);
+            }
+          }
+        }
+      } catch {}
+
+      if (!effectiveAccount) {
+        setIsLoading(false);
+        setPersonalWallet(null);
+        setAgentWallet(null);
+        setAgentWallets([]);
+        setMandates([]);
+        setTasks([]);
+        setApprovals([]);
+        setActivities([]);
+        return;
+      }
     }
 
     try {
       setIsLoading(true);
-      const headers = getHeaders();
+      const headers = getHeaders(effectiveAccount);
 
       // 1. Fetch Auth & Connected User details via secure HTTP-only cookie
       const authRes = await fetch("/api/auth", { headers, credentials: "include" });
@@ -331,7 +363,7 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Query live NEAR testnet RPC directly to ensure real balance reading
-      if (accountId && (accountId.endsWith(".testnet") || accountId.length === 64 || accountId.startsWith("0x"))) {
+      if (effectiveAccount && (effectiveAccount.endsWith(".testnet") || effectiveAccount.length === 64 || effectiveAccount.startsWith("0x"))) {
         try {
           const rpcRes = await fetch("https://test.rpc.fastnear.com", {
             method: "POST",
@@ -343,7 +375,7 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
               params: {
                 request_type: "view_account",
                 finality: "final",
-                account_id: accountId.trim().toLowerCase(),
+                account_id: effectiveAccount.trim().toLowerCase(),
               },
             }),
           });
@@ -696,10 +728,13 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
         if (storedKeyStr) {
           const { KeyPair } = await import("near-api-js");
           const keyPair = KeyPair.fromString(storedKeyStr as any);
-          const sigObj = keyPair.sign(Buffer.from(message, "utf8"));
+          const sigObj = keyPair.sign(new TextEncoder().encode(message));
+          const hexSig = Array.from(sigObj.signature)
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
           proof = {
             publicKey: keyPair.getPublicKey().toString(),
-            signature: Buffer.from(sigObj.signature).toString("hex"),
+            signature: hexSig,
             message,
             nonce,
           };
@@ -759,9 +794,10 @@ export function MandateProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(LOCAL_STORAGE_ACCOUNT_KEY, data.user.nearAccountId);
         // Sensitive bearer tokens are strictly omitted from client localStorage
         localStorage.removeItem("mandate_session_token");
+        localStorage.removeItem("mandate_explicitly_disconnected");
       } catch {}
 
-      await refreshData();
+      await refreshData(data.user.nearAccountId);
       return { ok: true, onchain: data.onchain };
     } catch (err: any) {
       return { ok: false, error: err.message };

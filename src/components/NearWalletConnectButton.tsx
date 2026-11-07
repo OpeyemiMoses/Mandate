@@ -24,12 +24,14 @@ export function NearWalletConnectButton() {
     walletName,
     openWalletModal,
     signOut,
+    signAuthChallenge,
   } = useNearWalletSelector();
 
   const {
     accountId: mandateAccountId,
     userProfile,
     userNearBalance,
+    connectWallet,
     disconnectWallet,
     setIsWalletModalOpen,
   } = useMandate();
@@ -38,9 +40,49 @@ export function NearWalletConnectButton() {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const activeAccount = nearAccountId || mandateAccountId;
+
+  // Handle explicit user-initiated signing of authentication proof
+  const handleSignInWithWallet = async () => {
+    if (!activeAccount) return;
+    setIsAuthenticating(true);
+    setAuthError(null);
+    try {
+      const chRes = await fetch(`/api/auth?action=challenge&accountId=${encodeURIComponent(activeAccount)}`);
+      const chData = await chRes.json();
+      if (!chRes.ok || !chData.success || !chData.challenge) {
+        throw new Error(chData?.error || "Failed to generate authentication challenge.");
+      }
+
+      const signed = await signAuthChallenge({
+        message: chData.challenge.message,
+        recipient: "mandate.app",
+        nonce: chData.challenge.nonce,
+      });
+
+      const connRes = await connectWallet(activeAccount, walletName || "NEAR Wallet", {
+        publicKey: signed.publicKey,
+        signature: signed.signature,
+        message: chData.challenge.message,
+        nonce: chData.challenge.nonce,
+      });
+
+      if (!connRes.ok) {
+        throw new Error(connRes.error || "Cryptographic wallet verification failed.");
+      }
+
+      setDropdownOpen(false);
+    } catch (err: any) {
+      console.warn("Manual wallet authentication error:", err);
+      setAuthError(err?.message || "Wallet signature rejected or failed.");
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -138,14 +180,24 @@ export function NearWalletConnectButton() {
               </p>
               <button
                 type="button"
-                onClick={() => {
-                  setDropdownOpen(false);
-                  setIsWalletModalOpen(true);
-                }}
-                className="w-full py-1.5 px-3 rounded-lg bg-[#FF3B30] hover:bg-[#E63228] text-white text-xs font-semibold transition-all shadow-md shadow-red-500/20"
+                disabled={isAuthenticating}
+                onClick={handleSignInWithWallet}
+                className="w-full py-2 px-3 rounded-lg bg-[#FF3B30] hover:bg-[#E63228] disabled:opacity-50 text-white text-xs font-semibold transition-all shadow-md shadow-red-500/20 flex items-center justify-center gap-2"
               >
-                Sign In With Wallet
+                {isAuthenticating ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+                    <span>Signing Request...</span>
+                  </>
+                ) : (
+                  <span>Sign In With Wallet</span>
+                )}
               </button>
+              {authError && (
+                <div className="text-[11px] text-red-400 bg-red-500/10 border border-red-500/20 p-2 rounded-lg break-words leading-tight">
+                  {authError}
+                </div>
+              )}
             </div>
           )}
 
