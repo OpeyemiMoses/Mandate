@@ -55,6 +55,7 @@ model User {
   reconciliationRuns     ReconciliationRun[]      @relation("UserReconciliationRuns")
   incidents              Incident[]               @relation("UserIncidents")
   executionDiscrepancies ExecutionDiscrepancy[]   @relation("UserDiscrepancies")
+  intentOperations       IntentOperation[]
   recoveryPlans          RecoveryPlan[]           @relation("UserRecoveryPlans")
   capabilityProfiles     AgentCapabilityProfile[]
   objectiveCheckpoints   ObjectiveCheckpoint[]
@@ -203,6 +204,7 @@ model Mandate {
   objectives       Objective[]
   coordinationRuns CoordinationRun[]
   executionRecords ExecutionRecord[]
+  intentOperations IntentOperation[]
 }
 
 // Tasks proposed by AI Agent
@@ -596,6 +598,7 @@ model Objective {
   coordinationRuns CoordinationRun[]
   artifacts        SharedObjectiveArtifact[]
   handoffs         AgentHandoff[]
+  intentOperations IntentOperation[]
 
   @@index([userId, status])
   @@index([category])
@@ -2122,4 +2125,78 @@ model RateLimitBucket {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@index([resetAt])
+}
+
+// =============================================================================
+// MILESTONE 15.3b: PERSISTENT NEAR INTENTS EXECUTION LIFECYCLE
+// =============================================================================
+
+model IntentOperation {
+  id               String     @id @default(cuid())
+  idempotencyKey   String     @unique
+  userId           String
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mandateId        String
+  mandate          Mandate    @relation(fields: [mandateId], references: [id], onDelete: Cascade)
+  objectiveId      String?
+  objective        Objective? @relation(fields: [objectiveId], references: [id], onDelete: SetNull)
+  executionId      String?
+  provider         String     @default("tidepool")
+  network          String     @default("testnet")
+  depositMode      String     @default("ORIGIN_CHAIN")
+  destinationChain String     @default("near")
+
+  // Asset & Amount specifications (Atomic integer string units)
+  sourceAsset               String // e.g. "nep141:wnear.tidepool-sandbox.testnet"
+  sourceAmount              String // Atomic integer units (e.g. yoctoNEAR)
+  destinationAsset          String // e.g. "nep141:usdc.tidepool-sandbox.testnet"
+  expectedDestinationAmount String // Quoted amountOut
+  minDestinationAmount      String // Minimum amountOut accounting for slippage
+  slippageTolerance         Int    @default(100) // Basis points (e.g. 100 = 1%)
+
+  // Beneficiary and Refund addresses
+  finalBeneficiary String // Intended recipient on destination chain/NEAR
+  refundRecipient  String // Must equal mandate.wallet.nearAccountId
+
+  // Provider Quote & Ephemeral Deposit details
+  providerQuoteId       String? // correlationId from provider
+  providerPublicKeyId   String? // Trusted provider key ID used for cryptographic verification
+  providerSignature     String? // ed25519 signature from provider
+  verifiedQuoteEvidence String? // Canonical signed quote payload and verification proof
+  depositAddress        String? // Quote-derived single-use deposit address
+  depositMemo           String? // Optional memo
+  quoteExpiresAt        DateTime? @db.Timestamptz(3) // Deadline from quote
+
+  // Reservation tracking
+  reservationId       String? // Explicit budget reservation tracking identifier
+  reservedAmountYocto String  @default("0")
+
+  // Two-Phase On-Chain Transactions
+  wrapTxHash         String? // Transaction hash of near_deposit
+  wrapStatus         String? // PENDING, SUCCESS, FAILED
+  depositTxHash      String? // Transaction hash of ft_transfer
+  depositStatus      String? // PENDING, SUCCESS, FAILED
+  destinationTxHash  String? // Destination chain settlement tx or explorer ref
+  settlementEvidence String? // On-chain destination settlement receipts and verification details
+  refundTxHash       String? // On-chain refund tx back to custody wallet
+  refundEvidence     String? // On-chain refund receipt proof
+
+  // Lifecycle & Recovery
+  status         String  @default("PROPOSED")
+  recoveryStatus String? // PENDING_RECOVERY, RECOVERED, MANUAL_INTERVENTION_REQUIRED
+  recoveryState  String? // Granular recovery substate
+  errorMessage   String?
+  metadata       String? // Serialized JSON metadata / execution context
+
+  createdAt           DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime  @updatedAt @db.Timestamptz(3)
+  completedAt         DateTime? @db.Timestamptz(3)
+  reconciledAt        DateTime? @db.Timestamptz(3)
+  recoveryAttemptedAt DateTime? @db.Timestamptz(3)
+
+  @@index([userId, status])
+  @@index([mandateId])
+  @@index([depositAddress])
+  @@index([idempotencyKey])
+  @@index([providerQuoteId])
 }

@@ -6,6 +6,7 @@
 
 import { prisma } from "@/lib/db";
 import { ControlAuditService } from "@/lib/operations/controlAuditService";
+import { isTestOrHarnessRuntime } from "@/lib/security/databaseTargetGuard";
 
 export type CircuitState = "CLOSED" | "OPEN" | "HALF_OPEN";
 
@@ -38,6 +39,13 @@ const memoryCache = new Map<string, CachedCircuit>();
 
 export class ProviderResilienceService {
   /**
+   * Clears the in-memory cache for deterministic testing and isolation.
+   */
+  public static clearMemoryCache(): void {
+    memoryCache.clear();
+  }
+
+  /**
    * Initializes or fetches circuit state from DB with in-memory caching.
    */
   public static async getCircuitState(providerId: string): Promise<CachedCircuit> {
@@ -50,20 +58,43 @@ export class ProviderResilienceService {
       return cached;
     }
 
-    // Load from DB or create default
-    let dbRecord = await prisma.providerCircuitBreakerState.findUnique({
-      where: { providerId },
-    });
+    // In test harness runtime without disposable DB, allow deterministic in-memory circuit tracking.
+    // In production runtime, fail closed if DB is unreachable and no cache exists.
+    const isTest = isTestOrHarnessRuntime();
+    let dbRecord: any = null;
+    try {
+      dbRecord = await prisma.providerCircuitBreakerState.findUnique({
+        where: { providerId },
+      });
 
-    if (!dbRecord) {
-      dbRecord = await prisma.providerCircuitBreakerState.create({
-        data: {
-          providerId,
+      if (!dbRecord) {
+        dbRecord = await prisma.providerCircuitBreakerState.create({
+          data: {
+            providerId,
+            state: "CLOSED",
+            failureThreshold: DEFAULT_CIRCUIT_CONFIG.failureThreshold,
+            cooldownMs: DEFAULT_CIRCUIT_CONFIG.cooldownMs,
+          },
+        });
+      }
+    } catch (dbErr: any) {
+      if (isTest) {
+        dbRecord = {
           state: "CLOSED",
           failureThreshold: DEFAULT_CIRCUIT_CONFIG.failureThreshold,
           cooldownMs: DEFAULT_CIRCUIT_CONFIG.cooldownMs,
-        },
-      });
+          failureCount: 0,
+          successCount: 0,
+          lastFailureTime: null,
+          lastSuccessTime: null,
+          nextProbeTime: null,
+          lastErrorMessage: null,
+        };
+      } else {
+        throw new Error(
+          `DATABASE_UNAVAILABLE_FAIL_CLOSED: Provider circuit breaker cannot verify safety because database is unavailable: ${dbErr?.message || dbErr}`
+        );
+      }
     }
 
     let state = dbRecord.state as CircuitState;
@@ -154,16 +185,18 @@ export class ProviderResilienceService {
     memoryCache.set(providerId, circuit);
 
     // Asynchronously sync to DB
-    prisma.providerCircuitBreakerState.update({
-      where: { providerId },
-      data: {
-        state: "CLOSED",
-        failureCount: 0,
-        successCount: circuit.successCount,
-        lastSuccessTime: new Date(circuit.lastSuccessTime),
-        nextProbeTime: null,
-      },
-    }).catch((e) => console.warn(`Failed to sync circuit state to DB:`, e));
+    try {
+      prisma.providerCircuitBreakerState.update({
+        where: { providerId },
+        data: {
+          state: "CLOSED",
+          failureCount: 0,
+          successCount: circuit.successCount,
+          lastSuccessTime: new Date(circuit.lastSuccessTime),
+          nextProbeTime: null,
+        },
+      }).catch((e) => console.warn(`Failed to sync circuit state to DB:`, e));
+    } catch {}
 
     if (wasHalfOpen) {
       ControlAuditService.recordAction({
@@ -197,16 +230,18 @@ export class ProviderResilienceService {
     memoryCache.set(providerId, circuit);
 
     // Asynchronously sync to DB
-    prisma.providerCircuitBreakerState.update({
-      where: { providerId },
-      data: {
-        state: circuit.state,
-        failureCount: circuit.failureCount,
-        lastFailureTime: new Date(circuit.lastFailureTime),
-        lastErrorMessage: errorMessage,
-        nextProbeTime: circuit.nextProbeTime ? new Date(circuit.nextProbeTime) : null,
-      },
-    }).catch((e) => console.warn(`Failed to sync circuit state to DB:`, e));
+    try {
+      prisma.providerCircuitBreakerState.update({
+        where: { providerId },
+        data: {
+          state: circuit.state,
+          failureCount: circuit.failureCount,
+          lastFailureTime: new Date(circuit.lastFailureTime),
+          lastErrorMessage: errorMessage,
+          nextProbeTime: circuit.nextProbeTime ? new Date(circuit.nextProbeTime) : null,
+        },
+      }).catch((e) => console.warn(`Failed to sync circuit state to DB:`, e));
+    } catch {}
 
     if (shouldTrip) {
       ControlAuditService.recordAction({

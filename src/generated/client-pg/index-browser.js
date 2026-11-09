@@ -1452,6 +1452,54 @@ exports.Prisma.RateLimitBucketScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.IntentOperationScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  userId: 'userId',
+  mandateId: 'mandateId',
+  objectiveId: 'objectiveId',
+  executionId: 'executionId',
+  provider: 'provider',
+  network: 'network',
+  depositMode: 'depositMode',
+  destinationChain: 'destinationChain',
+  sourceAsset: 'sourceAsset',
+  sourceAmount: 'sourceAmount',
+  destinationAsset: 'destinationAsset',
+  expectedDestinationAmount: 'expectedDestinationAmount',
+  minDestinationAmount: 'minDestinationAmount',
+  slippageTolerance: 'slippageTolerance',
+  finalBeneficiary: 'finalBeneficiary',
+  refundRecipient: 'refundRecipient',
+  providerQuoteId: 'providerQuoteId',
+  providerPublicKeyId: 'providerPublicKeyId',
+  providerSignature: 'providerSignature',
+  verifiedQuoteEvidence: 'verifiedQuoteEvidence',
+  depositAddress: 'depositAddress',
+  depositMemo: 'depositMemo',
+  quoteExpiresAt: 'quoteExpiresAt',
+  reservationId: 'reservationId',
+  reservedAmountYocto: 'reservedAmountYocto',
+  wrapTxHash: 'wrapTxHash',
+  wrapStatus: 'wrapStatus',
+  depositTxHash: 'depositTxHash',
+  depositStatus: 'depositStatus',
+  destinationTxHash: 'destinationTxHash',
+  settlementEvidence: 'settlementEvidence',
+  refundTxHash: 'refundTxHash',
+  refundEvidence: 'refundEvidence',
+  status: 'status',
+  recoveryStatus: 'recoveryStatus',
+  recoveryState: 'recoveryState',
+  errorMessage: 'errorMessage',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  completedAt: 'completedAt',
+  reconciledAt: 'reconciledAt',
+  recoveryAttemptedAt: 'recoveryAttemptedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1542,7 +1590,8 @@ exports.Prisma.ModelName = {
   ResilienceDrillRun: 'ResilienceDrillRun',
   DispatchIntent: 'DispatchIntent',
   AuthChallenge: 'AuthChallenge',
-  RateLimitBucket: 'RateLimitBucket'
+  RateLimitBucket: 'RateLimitBucket',
+  IntentOperation: 'IntentOperation'
 };
 
 /**

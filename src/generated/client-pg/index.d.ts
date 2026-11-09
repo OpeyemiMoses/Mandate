@@ -383,6 +383,11 @@ export type AuthChallenge = $Result.DefaultSelection<Prisma.$AuthChallengePayloa
  * 
  */
 export type RateLimitBucket = $Result.DefaultSelection<Prisma.$RateLimitBucketPayload>
+/**
+ * Model IntentOperation
+ * 
+ */
+export type IntentOperation = $Result.DefaultSelection<Prisma.$IntentOperationPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1241,6 +1246,16 @@ export class PrismaClient<
     * ```
     */
   get rateLimitBucket(): Prisma.RateLimitBucketDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.intentOperation`: Exposes CRUD operations for the **IntentOperation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntentOperations
+    * const intentOperations = await prisma.intentOperation.findMany()
+    * ```
+    */
+  get intentOperation(): Prisma.IntentOperationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1755,7 +1770,8 @@ export namespace Prisma {
     ResilienceDrillRun: 'ResilienceDrillRun',
     DispatchIntent: 'DispatchIntent',
     AuthChallenge: 'AuthChallenge',
-    RateLimitBucket: 'RateLimitBucket'
+    RateLimitBucket: 'RateLimitBucket',
+    IntentOperation: 'IntentOperation'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1774,7 +1790,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "agent" | "wallet" | "fundingRecord" | "withdrawalRecord" | "mandate" | "task" | "researchSession" | "approvalRequest" | "transactionRecord" | "auditLog" | "agentExecution" | "executionEvent" | "integrationConnection" | "integrationOperationPermission" | "integrationOperationExecution" | "oAuthSession" | "agentToolAccess" | "toolInvocation" | "objective" | "objectivePlan" | "objectivePlanStep" | "objectiveTaskEvent" | "objectiveTaskResult" | "objectiveSuccessCriteria" | "objectiveEvent" | "objectivePlanApproval" | "objectiveCheckpoint" | "capabilityDiscovery" | "capabilityMatch" | "coordinationRun" | "coordinationTask" | "agentCapabilityProfile" | "agentAssignment" | "agentHandoff" | "sharedObjectiveArtifact" | "taskLease" | "coordinationEvent" | "governancePolicy" | "policyVersion" | "policyRule" | "policyEvaluation" | "policyViolation" | "policyException" | "policyReview" | "executionRecord" | "backgroundJob" | "backgroundWorker" | "jobAttempt" | "jobEvent" | "deadLetterRecord" | "operationalAlert" | "workerCapacitySnapshot" | "telemetrySnapshot" | "reconciliationRun" | "reconciliationFinding" | "reconciliationEvidence" | "executionDiscrepancy" | "incident" | "incidentTimelineEvent" | "incidentAssignment" | "recoveryPlan" | "recoveryApproval" | "recoveryAttempt" | "recoveryVerification" | "operationalControlState" | "operationalAuditRecord" | "databaseBackupRecord" | "databaseRestoreRecord" | "providerCircuitBreakerState" | "resilienceDrillRun" | "dispatchIntent" | "authChallenge" | "rateLimitBucket"
+      modelProps: "user" | "agent" | "wallet" | "fundingRecord" | "withdrawalRecord" | "mandate" | "task" | "researchSession" | "approvalRequest" | "transactionRecord" | "auditLog" | "agentExecution" | "executionEvent" | "integrationConnection" | "integrationOperationPermission" | "integrationOperationExecution" | "oAuthSession" | "agentToolAccess" | "toolInvocation" | "objective" | "objectivePlan" | "objectivePlanStep" | "objectiveTaskEvent" | "objectiveTaskResult" | "objectiveSuccessCriteria" | "objectiveEvent" | "objectivePlanApproval" | "objectiveCheckpoint" | "capabilityDiscovery" | "capabilityMatch" | "coordinationRun" | "coordinationTask" | "agentCapabilityProfile" | "agentAssignment" | "agentHandoff" | "sharedObjectiveArtifact" | "taskLease" | "coordinationEvent" | "governancePolicy" | "policyVersion" | "policyRule" | "policyEvaluation" | "policyViolation" | "policyException" | "policyReview" | "executionRecord" | "backgroundJob" | "backgroundWorker" | "jobAttempt" | "jobEvent" | "deadLetterRecord" | "operationalAlert" | "workerCapacitySnapshot" | "telemetrySnapshot" | "reconciliationRun" | "reconciliationFinding" | "reconciliationEvidence" | "executionDiscrepancy" | "incident" | "incidentTimelineEvent" | "incidentAssignment" | "recoveryPlan" | "recoveryApproval" | "recoveryAttempt" | "recoveryVerification" | "operationalControlState" | "operationalAuditRecord" | "databaseBackupRecord" | "databaseRestoreRecord" | "providerCircuitBreakerState" | "resilienceDrillRun" | "dispatchIntent" | "authChallenge" | "rateLimitBucket" | "intentOperation"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -7254,6 +7270,80 @@ export namespace Prisma {
           }
         }
       }
+      IntentOperation: {
+        payload: Prisma.$IntentOperationPayload<ExtArgs>
+        fields: Prisma.IntentOperationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntentOperationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntentOperationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>
+          }
+          findFirst: {
+            args: Prisma.IntentOperationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntentOperationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>
+          }
+          findMany: {
+            args: Prisma.IntentOperationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>[]
+          }
+          create: {
+            args: Prisma.IntentOperationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>
+          }
+          createMany: {
+            args: Prisma.IntentOperationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntentOperationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>[]
+          }
+          delete: {
+            args: Prisma.IntentOperationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>
+          }
+          update: {
+            args: Prisma.IntentOperationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>
+          }
+          deleteMany: {
+            args: Prisma.IntentOperationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntentOperationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IntentOperationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>[]
+          }
+          upsert: {
+            args: Prisma.IntentOperationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntentOperationPayload>
+          }
+          aggregate: {
+            args: Prisma.IntentOperationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntentOperation>
+          }
+          groupBy: {
+            args: Prisma.IntentOperationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntentOperationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntentOperationCountArgs<ExtArgs>
+            result: $Utils.Optional<IntentOperationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -7424,6 +7514,7 @@ export namespace Prisma {
     dispatchIntent?: DispatchIntentOmit
     authChallenge?: AuthChallengeOmit
     rateLimitBucket?: RateLimitBucketOmit
+    intentOperation?: IntentOperationOmit
   }
 
   /* Types for Logging */
@@ -7532,6 +7623,7 @@ export namespace Prisma {
     reconciliationRuns: number
     incidents: number
     executionDiscrepancies: number
+    intentOperations: number
     recoveryPlans: number
     capabilityProfiles: number
     objectiveCheckpoints: number
@@ -7566,6 +7658,7 @@ export namespace Prisma {
     reconciliationRuns?: boolean | UserCountOutputTypeCountReconciliationRunsArgs
     incidents?: boolean | UserCountOutputTypeCountIncidentsArgs
     executionDiscrepancies?: boolean | UserCountOutputTypeCountExecutionDiscrepanciesArgs
+    intentOperations?: boolean | UserCountOutputTypeCountIntentOperationsArgs
     recoveryPlans?: boolean | UserCountOutputTypeCountRecoveryPlansArgs
     capabilityProfiles?: boolean | UserCountOutputTypeCountCapabilityProfilesArgs
     objectiveCheckpoints?: boolean | UserCountOutputTypeCountObjectiveCheckpointsArgs
@@ -7781,6 +7874,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountIntentOperationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntentOperationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountRecoveryPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RecoveryPlanWhereInput
   }
@@ -7974,6 +8074,7 @@ export namespace Prisma {
     objectives: number
     coordinationRuns: number
     executionRecords: number
+    intentOperations: number
   }
 
   export type MandateCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7985,6 +8086,7 @@ export namespace Prisma {
     objectives?: boolean | MandateCountOutputTypeCountObjectivesArgs
     coordinationRuns?: boolean | MandateCountOutputTypeCountCoordinationRunsArgs
     executionRecords?: boolean | MandateCountOutputTypeCountExecutionRecordsArgs
+    intentOperations?: boolean | MandateCountOutputTypeCountIntentOperationsArgs
   }
 
   // Custom InputTypes
@@ -8052,6 +8154,13 @@ export namespace Prisma {
    */
   export type MandateCountOutputTypeCountExecutionRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExecutionRecordWhereInput
+  }
+
+  /**
+   * MandateCountOutputType without action
+   */
+  export type MandateCountOutputTypeCountIntentOperationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntentOperationWhereInput
   }
 
 
@@ -8198,6 +8307,7 @@ export namespace Prisma {
     coordinationRuns: number
     artifacts: number
     handoffs: number
+    intentOperations: number
   }
 
   export type ObjectiveCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8210,6 +8320,7 @@ export namespace Prisma {
     coordinationRuns?: boolean | ObjectiveCountOutputTypeCountCoordinationRunsArgs
     artifacts?: boolean | ObjectiveCountOutputTypeCountArtifactsArgs
     handoffs?: boolean | ObjectiveCountOutputTypeCountHandoffsArgs
+    intentOperations?: boolean | ObjectiveCountOutputTypeCountIntentOperationsArgs
   }
 
   // Custom InputTypes
@@ -8284,6 +8395,13 @@ export namespace Prisma {
    */
   export type ObjectiveCountOutputTypeCountHandoffsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentHandoffWhereInput
+  }
+
+  /**
+   * ObjectiveCountOutputType without action
+   */
+  export type ObjectiveCountOutputTypeCountIntentOperationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntentOperationWhereInput
   }
 
 
@@ -9229,6 +9347,7 @@ export namespace Prisma {
     reconciliationRuns?: boolean | User$reconciliationRunsArgs<ExtArgs>
     incidents?: boolean | User$incidentsArgs<ExtArgs>
     executionDiscrepancies?: boolean | User$executionDiscrepanciesArgs<ExtArgs>
+    intentOperations?: boolean | User$intentOperationsArgs<ExtArgs>
     recoveryPlans?: boolean | User$recoveryPlansArgs<ExtArgs>
     capabilityProfiles?: boolean | User$capabilityProfilesArgs<ExtArgs>
     objectiveCheckpoints?: boolean | User$objectiveCheckpointsArgs<ExtArgs>
@@ -9310,6 +9429,7 @@ export namespace Prisma {
     reconciliationRuns?: boolean | User$reconciliationRunsArgs<ExtArgs>
     incidents?: boolean | User$incidentsArgs<ExtArgs>
     executionDiscrepancies?: boolean | User$executionDiscrepanciesArgs<ExtArgs>
+    intentOperations?: boolean | User$intentOperationsArgs<ExtArgs>
     recoveryPlans?: boolean | User$recoveryPlansArgs<ExtArgs>
     capabilityProfiles?: boolean | User$capabilityProfilesArgs<ExtArgs>
     objectiveCheckpoints?: boolean | User$objectiveCheckpointsArgs<ExtArgs>
@@ -9349,6 +9469,7 @@ export namespace Prisma {
       reconciliationRuns: Prisma.$ReconciliationRunPayload<ExtArgs>[]
       incidents: Prisma.$IncidentPayload<ExtArgs>[]
       executionDiscrepancies: Prisma.$ExecutionDiscrepancyPayload<ExtArgs>[]
+      intentOperations: Prisma.$IntentOperationPayload<ExtArgs>[]
       recoveryPlans: Prisma.$RecoveryPlanPayload<ExtArgs>[]
       capabilityProfiles: Prisma.$AgentCapabilityProfilePayload<ExtArgs>[]
       objectiveCheckpoints: Prisma.$ObjectiveCheckpointPayload<ExtArgs>[]
@@ -9788,6 +9909,7 @@ export namespace Prisma {
     reconciliationRuns<T extends User$reconciliationRunsArgs<ExtArgs> = {}>(args?: Subset<T, User$reconciliationRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReconciliationRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     incidents<T extends User$incidentsArgs<ExtArgs> = {}>(args?: Subset<T, User$incidentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     executionDiscrepancies<T extends User$executionDiscrepanciesArgs<ExtArgs> = {}>(args?: Subset<T, User$executionDiscrepanciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionDiscrepancyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    intentOperations<T extends User$intentOperationsArgs<ExtArgs> = {}>(args?: Subset<T, User$intentOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     recoveryPlans<T extends User$recoveryPlansArgs<ExtArgs> = {}>(args?: Subset<T, User$recoveryPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecoveryPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     capabilityProfiles<T extends User$capabilityProfilesArgs<ExtArgs> = {}>(args?: Subset<T, User$capabilityProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentCapabilityProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     objectiveCheckpoints<T extends User$objectiveCheckpointsArgs<ExtArgs> = {}>(args?: Subset<T, User$objectiveCheckpointsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ObjectiveCheckpointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10889,6 +11011,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExecutionDiscrepancyScalarFieldEnum | ExecutionDiscrepancyScalarFieldEnum[]
+  }
+
+  /**
+   * User.intentOperations
+   */
+  export type User$intentOperationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    where?: IntentOperationWhereInput
+    orderBy?: IntentOperationOrderByWithRelationInput | IntentOperationOrderByWithRelationInput[]
+    cursor?: IntentOperationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntentOperationScalarFieldEnum | IntentOperationScalarFieldEnum[]
   }
 
   /**
@@ -16472,6 +16618,7 @@ export namespace Prisma {
     objectives?: boolean | Mandate$objectivesArgs<ExtArgs>
     coordinationRuns?: boolean | Mandate$coordinationRunsArgs<ExtArgs>
     executionRecords?: boolean | Mandate$executionRecordsArgs<ExtArgs>
+    intentOperations?: boolean | Mandate$intentOperationsArgs<ExtArgs>
     _count?: boolean | MandateCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["mandate"]>
 
@@ -16554,6 +16701,7 @@ export namespace Prisma {
     objectives?: boolean | Mandate$objectivesArgs<ExtArgs>
     coordinationRuns?: boolean | Mandate$coordinationRunsArgs<ExtArgs>
     executionRecords?: boolean | Mandate$executionRecordsArgs<ExtArgs>
+    intentOperations?: boolean | Mandate$intentOperationsArgs<ExtArgs>
     _count?: boolean | MandateCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MandateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16581,6 +16729,7 @@ export namespace Prisma {
       objectives: Prisma.$ObjectivePayload<ExtArgs>[]
       coordinationRuns: Prisma.$CoordinationRunPayload<ExtArgs>[]
       executionRecords: Prisma.$ExecutionRecordPayload<ExtArgs>[]
+      intentOperations: Prisma.$IntentOperationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -17005,6 +17154,7 @@ export namespace Prisma {
     objectives<T extends Mandate$objectivesArgs<ExtArgs> = {}>(args?: Subset<T, Mandate$objectivesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ObjectivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     coordinationRuns<T extends Mandate$coordinationRunsArgs<ExtArgs> = {}>(args?: Subset<T, Mandate$coordinationRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoordinationRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     executionRecords<T extends Mandate$executionRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Mandate$executionRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    intentOperations<T extends Mandate$intentOperationsArgs<ExtArgs> = {}>(args?: Subset<T, Mandate$intentOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17636,6 +17786,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExecutionRecordScalarFieldEnum | ExecutionRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Mandate.intentOperations
+   */
+  export type Mandate$intentOperationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    where?: IntentOperationWhereInput
+    orderBy?: IntentOperationOrderByWithRelationInput | IntentOperationOrderByWithRelationInput[]
+    cursor?: IntentOperationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntentOperationScalarFieldEnum | IntentOperationScalarFieldEnum[]
   }
 
   /**
@@ -34353,6 +34527,7 @@ export namespace Prisma {
     coordinationRuns?: boolean | Objective$coordinationRunsArgs<ExtArgs>
     artifacts?: boolean | Objective$artifactsArgs<ExtArgs>
     handoffs?: boolean | Objective$handoffsArgs<ExtArgs>
+    intentOperations?: boolean | Objective$intentOperationsArgs<ExtArgs>
     _count?: boolean | ObjectiveCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["objective"]>
 
@@ -34463,6 +34638,7 @@ export namespace Prisma {
     coordinationRuns?: boolean | Objective$coordinationRunsArgs<ExtArgs>
     artifacts?: boolean | Objective$artifactsArgs<ExtArgs>
     handoffs?: boolean | Objective$handoffsArgs<ExtArgs>
+    intentOperations?: boolean | Objective$intentOperationsArgs<ExtArgs>
     _count?: boolean | ObjectiveCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ObjectiveIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -34488,6 +34664,7 @@ export namespace Prisma {
       coordinationRuns: Prisma.$CoordinationRunPayload<ExtArgs>[]
       artifacts: Prisma.$SharedObjectiveArtifactPayload<ExtArgs>[]
       handoffs: Prisma.$AgentHandoffPayload<ExtArgs>[]
+      intentOperations: Prisma.$IntentOperationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -34922,6 +35099,7 @@ export namespace Prisma {
     coordinationRuns<T extends Objective$coordinationRunsArgs<ExtArgs> = {}>(args?: Subset<T, Objective$coordinationRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoordinationRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     artifacts<T extends Objective$artifactsArgs<ExtArgs> = {}>(args?: Subset<T, Objective$artifactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SharedObjectiveArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     handoffs<T extends Objective$handoffsArgs<ExtArgs> = {}>(args?: Subset<T, Objective$handoffsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentHandoffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    intentOperations<T extends Objective$intentOperationsArgs<ExtArgs> = {}>(args?: Subset<T, Objective$intentOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -35606,6 +35784,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AgentHandoffScalarFieldEnum | AgentHandoffScalarFieldEnum[]
+  }
+
+  /**
+   * Objective.intentOperations
+   */
+  export type Objective$intentOperationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    where?: IntentOperationWhereInput
+    orderBy?: IntentOperationOrderByWithRelationInput | IntentOperationOrderByWithRelationInput[]
+    cursor?: IntentOperationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntentOperationScalarFieldEnum | IntentOperationScalarFieldEnum[]
   }
 
   /**
@@ -102684,6 +102886,1653 @@ export namespace Prisma {
 
 
   /**
+   * Model IntentOperation
+   */
+
+  export type AggregateIntentOperation = {
+    _count: IntentOperationCountAggregateOutputType | null
+    _avg: IntentOperationAvgAggregateOutputType | null
+    _sum: IntentOperationSumAggregateOutputType | null
+    _min: IntentOperationMinAggregateOutputType | null
+    _max: IntentOperationMaxAggregateOutputType | null
+  }
+
+  export type IntentOperationAvgAggregateOutputType = {
+    slippageTolerance: number | null
+  }
+
+  export type IntentOperationSumAggregateOutputType = {
+    slippageTolerance: number | null
+  }
+
+  export type IntentOperationMinAggregateOutputType = {
+    id: string | null
+    idempotencyKey: string | null
+    userId: string | null
+    mandateId: string | null
+    objectiveId: string | null
+    executionId: string | null
+    provider: string | null
+    network: string | null
+    depositMode: string | null
+    destinationChain: string | null
+    sourceAsset: string | null
+    sourceAmount: string | null
+    destinationAsset: string | null
+    expectedDestinationAmount: string | null
+    minDestinationAmount: string | null
+    slippageTolerance: number | null
+    finalBeneficiary: string | null
+    refundRecipient: string | null
+    providerQuoteId: string | null
+    providerPublicKeyId: string | null
+    providerSignature: string | null
+    verifiedQuoteEvidence: string | null
+    depositAddress: string | null
+    depositMemo: string | null
+    quoteExpiresAt: Date | null
+    reservationId: string | null
+    reservedAmountYocto: string | null
+    wrapTxHash: string | null
+    wrapStatus: string | null
+    depositTxHash: string | null
+    depositStatus: string | null
+    destinationTxHash: string | null
+    settlementEvidence: string | null
+    refundTxHash: string | null
+    refundEvidence: string | null
+    status: string | null
+    recoveryStatus: string | null
+    recoveryState: string | null
+    errorMessage: string | null
+    metadata: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    completedAt: Date | null
+    reconciledAt: Date | null
+    recoveryAttemptedAt: Date | null
+  }
+
+  export type IntentOperationMaxAggregateOutputType = {
+    id: string | null
+    idempotencyKey: string | null
+    userId: string | null
+    mandateId: string | null
+    objectiveId: string | null
+    executionId: string | null
+    provider: string | null
+    network: string | null
+    depositMode: string | null
+    destinationChain: string | null
+    sourceAsset: string | null
+    sourceAmount: string | null
+    destinationAsset: string | null
+    expectedDestinationAmount: string | null
+    minDestinationAmount: string | null
+    slippageTolerance: number | null
+    finalBeneficiary: string | null
+    refundRecipient: string | null
+    providerQuoteId: string | null
+    providerPublicKeyId: string | null
+    providerSignature: string | null
+    verifiedQuoteEvidence: string | null
+    depositAddress: string | null
+    depositMemo: string | null
+    quoteExpiresAt: Date | null
+    reservationId: string | null
+    reservedAmountYocto: string | null
+    wrapTxHash: string | null
+    wrapStatus: string | null
+    depositTxHash: string | null
+    depositStatus: string | null
+    destinationTxHash: string | null
+    settlementEvidence: string | null
+    refundTxHash: string | null
+    refundEvidence: string | null
+    status: string | null
+    recoveryStatus: string | null
+    recoveryState: string | null
+    errorMessage: string | null
+    metadata: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    completedAt: Date | null
+    reconciledAt: Date | null
+    recoveryAttemptedAt: Date | null
+  }
+
+  export type IntentOperationCountAggregateOutputType = {
+    id: number
+    idempotencyKey: number
+    userId: number
+    mandateId: number
+    objectiveId: number
+    executionId: number
+    provider: number
+    network: number
+    depositMode: number
+    destinationChain: number
+    sourceAsset: number
+    sourceAmount: number
+    destinationAsset: number
+    expectedDestinationAmount: number
+    minDestinationAmount: number
+    slippageTolerance: number
+    finalBeneficiary: number
+    refundRecipient: number
+    providerQuoteId: number
+    providerPublicKeyId: number
+    providerSignature: number
+    verifiedQuoteEvidence: number
+    depositAddress: number
+    depositMemo: number
+    quoteExpiresAt: number
+    reservationId: number
+    reservedAmountYocto: number
+    wrapTxHash: number
+    wrapStatus: number
+    depositTxHash: number
+    depositStatus: number
+    destinationTxHash: number
+    settlementEvidence: number
+    refundTxHash: number
+    refundEvidence: number
+    status: number
+    recoveryStatus: number
+    recoveryState: number
+    errorMessage: number
+    metadata: number
+    createdAt: number
+    updatedAt: number
+    completedAt: number
+    reconciledAt: number
+    recoveryAttemptedAt: number
+    _all: number
+  }
+
+
+  export type IntentOperationAvgAggregateInputType = {
+    slippageTolerance?: true
+  }
+
+  export type IntentOperationSumAggregateInputType = {
+    slippageTolerance?: true
+  }
+
+  export type IntentOperationMinAggregateInputType = {
+    id?: true
+    idempotencyKey?: true
+    userId?: true
+    mandateId?: true
+    objectiveId?: true
+    executionId?: true
+    provider?: true
+    network?: true
+    depositMode?: true
+    destinationChain?: true
+    sourceAsset?: true
+    sourceAmount?: true
+    destinationAsset?: true
+    expectedDestinationAmount?: true
+    minDestinationAmount?: true
+    slippageTolerance?: true
+    finalBeneficiary?: true
+    refundRecipient?: true
+    providerQuoteId?: true
+    providerPublicKeyId?: true
+    providerSignature?: true
+    verifiedQuoteEvidence?: true
+    depositAddress?: true
+    depositMemo?: true
+    quoteExpiresAt?: true
+    reservationId?: true
+    reservedAmountYocto?: true
+    wrapTxHash?: true
+    wrapStatus?: true
+    depositTxHash?: true
+    depositStatus?: true
+    destinationTxHash?: true
+    settlementEvidence?: true
+    refundTxHash?: true
+    refundEvidence?: true
+    status?: true
+    recoveryStatus?: true
+    recoveryState?: true
+    errorMessage?: true
+    metadata?: true
+    createdAt?: true
+    updatedAt?: true
+    completedAt?: true
+    reconciledAt?: true
+    recoveryAttemptedAt?: true
+  }
+
+  export type IntentOperationMaxAggregateInputType = {
+    id?: true
+    idempotencyKey?: true
+    userId?: true
+    mandateId?: true
+    objectiveId?: true
+    executionId?: true
+    provider?: true
+    network?: true
+    depositMode?: true
+    destinationChain?: true
+    sourceAsset?: true
+    sourceAmount?: true
+    destinationAsset?: true
+    expectedDestinationAmount?: true
+    minDestinationAmount?: true
+    slippageTolerance?: true
+    finalBeneficiary?: true
+    refundRecipient?: true
+    providerQuoteId?: true
+    providerPublicKeyId?: true
+    providerSignature?: true
+    verifiedQuoteEvidence?: true
+    depositAddress?: true
+    depositMemo?: true
+    quoteExpiresAt?: true
+    reservationId?: true
+    reservedAmountYocto?: true
+    wrapTxHash?: true
+    wrapStatus?: true
+    depositTxHash?: true
+    depositStatus?: true
+    destinationTxHash?: true
+    settlementEvidence?: true
+    refundTxHash?: true
+    refundEvidence?: true
+    status?: true
+    recoveryStatus?: true
+    recoveryState?: true
+    errorMessage?: true
+    metadata?: true
+    createdAt?: true
+    updatedAt?: true
+    completedAt?: true
+    reconciledAt?: true
+    recoveryAttemptedAt?: true
+  }
+
+  export type IntentOperationCountAggregateInputType = {
+    id?: true
+    idempotencyKey?: true
+    userId?: true
+    mandateId?: true
+    objectiveId?: true
+    executionId?: true
+    provider?: true
+    network?: true
+    depositMode?: true
+    destinationChain?: true
+    sourceAsset?: true
+    sourceAmount?: true
+    destinationAsset?: true
+    expectedDestinationAmount?: true
+    minDestinationAmount?: true
+    slippageTolerance?: true
+    finalBeneficiary?: true
+    refundRecipient?: true
+    providerQuoteId?: true
+    providerPublicKeyId?: true
+    providerSignature?: true
+    verifiedQuoteEvidence?: true
+    depositAddress?: true
+    depositMemo?: true
+    quoteExpiresAt?: true
+    reservationId?: true
+    reservedAmountYocto?: true
+    wrapTxHash?: true
+    wrapStatus?: true
+    depositTxHash?: true
+    depositStatus?: true
+    destinationTxHash?: true
+    settlementEvidence?: true
+    refundTxHash?: true
+    refundEvidence?: true
+    status?: true
+    recoveryStatus?: true
+    recoveryState?: true
+    errorMessage?: true
+    metadata?: true
+    createdAt?: true
+    updatedAt?: true
+    completedAt?: true
+    reconciledAt?: true
+    recoveryAttemptedAt?: true
+    _all?: true
+  }
+
+  export type IntentOperationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntentOperation to aggregate.
+     */
+    where?: IntentOperationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntentOperations to fetch.
+     */
+    orderBy?: IntentOperationOrderByWithRelationInput | IntentOperationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntentOperationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntentOperations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntentOperations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntentOperations
+    **/
+    _count?: true | IntentOperationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IntentOperationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IntentOperationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntentOperationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntentOperationMaxAggregateInputType
+  }
+
+  export type GetIntentOperationAggregateType<T extends IntentOperationAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntentOperation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntentOperation[P]>
+      : GetScalarType<T[P], AggregateIntentOperation[P]>
+  }
+
+
+
+
+  export type IntentOperationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntentOperationWhereInput
+    orderBy?: IntentOperationOrderByWithAggregationInput | IntentOperationOrderByWithAggregationInput[]
+    by: IntentOperationScalarFieldEnum[] | IntentOperationScalarFieldEnum
+    having?: IntentOperationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntentOperationCountAggregateInputType | true
+    _avg?: IntentOperationAvgAggregateInputType
+    _sum?: IntentOperationSumAggregateInputType
+    _min?: IntentOperationMinAggregateInputType
+    _max?: IntentOperationMaxAggregateInputType
+  }
+
+  export type IntentOperationGroupByOutputType = {
+    id: string
+    idempotencyKey: string
+    userId: string
+    mandateId: string
+    objectiveId: string | null
+    executionId: string | null
+    provider: string
+    network: string
+    depositMode: string
+    destinationChain: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId: string | null
+    providerPublicKeyId: string | null
+    providerSignature: string | null
+    verifiedQuoteEvidence: string | null
+    depositAddress: string | null
+    depositMemo: string | null
+    quoteExpiresAt: Date | null
+    reservationId: string | null
+    reservedAmountYocto: string
+    wrapTxHash: string | null
+    wrapStatus: string | null
+    depositTxHash: string | null
+    depositStatus: string | null
+    destinationTxHash: string | null
+    settlementEvidence: string | null
+    refundTxHash: string | null
+    refundEvidence: string | null
+    status: string
+    recoveryStatus: string | null
+    recoveryState: string | null
+    errorMessage: string | null
+    metadata: string | null
+    createdAt: Date
+    updatedAt: Date
+    completedAt: Date | null
+    reconciledAt: Date | null
+    recoveryAttemptedAt: Date | null
+    _count: IntentOperationCountAggregateOutputType | null
+    _avg: IntentOperationAvgAggregateOutputType | null
+    _sum: IntentOperationSumAggregateOutputType | null
+    _min: IntentOperationMinAggregateOutputType | null
+    _max: IntentOperationMaxAggregateOutputType | null
+  }
+
+  type GetIntentOperationGroupByPayload<T extends IntentOperationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntentOperationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntentOperationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntentOperationGroupByOutputType[P]>
+            : GetScalarType<T[P], IntentOperationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntentOperationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    idempotencyKey?: boolean
+    userId?: boolean
+    mandateId?: boolean
+    objectiveId?: boolean
+    executionId?: boolean
+    provider?: boolean
+    network?: boolean
+    depositMode?: boolean
+    destinationChain?: boolean
+    sourceAsset?: boolean
+    sourceAmount?: boolean
+    destinationAsset?: boolean
+    expectedDestinationAmount?: boolean
+    minDestinationAmount?: boolean
+    slippageTolerance?: boolean
+    finalBeneficiary?: boolean
+    refundRecipient?: boolean
+    providerQuoteId?: boolean
+    providerPublicKeyId?: boolean
+    providerSignature?: boolean
+    verifiedQuoteEvidence?: boolean
+    depositAddress?: boolean
+    depositMemo?: boolean
+    quoteExpiresAt?: boolean
+    reservationId?: boolean
+    reservedAmountYocto?: boolean
+    wrapTxHash?: boolean
+    wrapStatus?: boolean
+    depositTxHash?: boolean
+    depositStatus?: boolean
+    destinationTxHash?: boolean
+    settlementEvidence?: boolean
+    refundTxHash?: boolean
+    refundEvidence?: boolean
+    status?: boolean
+    recoveryStatus?: boolean
+    recoveryState?: boolean
+    errorMessage?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    completedAt?: boolean
+    reconciledAt?: boolean
+    recoveryAttemptedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    mandate?: boolean | MandateDefaultArgs<ExtArgs>
+    objective?: boolean | IntentOperation$objectiveArgs<ExtArgs>
+  }, ExtArgs["result"]["intentOperation"]>
+
+  export type IntentOperationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    idempotencyKey?: boolean
+    userId?: boolean
+    mandateId?: boolean
+    objectiveId?: boolean
+    executionId?: boolean
+    provider?: boolean
+    network?: boolean
+    depositMode?: boolean
+    destinationChain?: boolean
+    sourceAsset?: boolean
+    sourceAmount?: boolean
+    destinationAsset?: boolean
+    expectedDestinationAmount?: boolean
+    minDestinationAmount?: boolean
+    slippageTolerance?: boolean
+    finalBeneficiary?: boolean
+    refundRecipient?: boolean
+    providerQuoteId?: boolean
+    providerPublicKeyId?: boolean
+    providerSignature?: boolean
+    verifiedQuoteEvidence?: boolean
+    depositAddress?: boolean
+    depositMemo?: boolean
+    quoteExpiresAt?: boolean
+    reservationId?: boolean
+    reservedAmountYocto?: boolean
+    wrapTxHash?: boolean
+    wrapStatus?: boolean
+    depositTxHash?: boolean
+    depositStatus?: boolean
+    destinationTxHash?: boolean
+    settlementEvidence?: boolean
+    refundTxHash?: boolean
+    refundEvidence?: boolean
+    status?: boolean
+    recoveryStatus?: boolean
+    recoveryState?: boolean
+    errorMessage?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    completedAt?: boolean
+    reconciledAt?: boolean
+    recoveryAttemptedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    mandate?: boolean | MandateDefaultArgs<ExtArgs>
+    objective?: boolean | IntentOperation$objectiveArgs<ExtArgs>
+  }, ExtArgs["result"]["intentOperation"]>
+
+  export type IntentOperationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    idempotencyKey?: boolean
+    userId?: boolean
+    mandateId?: boolean
+    objectiveId?: boolean
+    executionId?: boolean
+    provider?: boolean
+    network?: boolean
+    depositMode?: boolean
+    destinationChain?: boolean
+    sourceAsset?: boolean
+    sourceAmount?: boolean
+    destinationAsset?: boolean
+    expectedDestinationAmount?: boolean
+    minDestinationAmount?: boolean
+    slippageTolerance?: boolean
+    finalBeneficiary?: boolean
+    refundRecipient?: boolean
+    providerQuoteId?: boolean
+    providerPublicKeyId?: boolean
+    providerSignature?: boolean
+    verifiedQuoteEvidence?: boolean
+    depositAddress?: boolean
+    depositMemo?: boolean
+    quoteExpiresAt?: boolean
+    reservationId?: boolean
+    reservedAmountYocto?: boolean
+    wrapTxHash?: boolean
+    wrapStatus?: boolean
+    depositTxHash?: boolean
+    depositStatus?: boolean
+    destinationTxHash?: boolean
+    settlementEvidence?: boolean
+    refundTxHash?: boolean
+    refundEvidence?: boolean
+    status?: boolean
+    recoveryStatus?: boolean
+    recoveryState?: boolean
+    errorMessage?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    completedAt?: boolean
+    reconciledAt?: boolean
+    recoveryAttemptedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    mandate?: boolean | MandateDefaultArgs<ExtArgs>
+    objective?: boolean | IntentOperation$objectiveArgs<ExtArgs>
+  }, ExtArgs["result"]["intentOperation"]>
+
+  export type IntentOperationSelectScalar = {
+    id?: boolean
+    idempotencyKey?: boolean
+    userId?: boolean
+    mandateId?: boolean
+    objectiveId?: boolean
+    executionId?: boolean
+    provider?: boolean
+    network?: boolean
+    depositMode?: boolean
+    destinationChain?: boolean
+    sourceAsset?: boolean
+    sourceAmount?: boolean
+    destinationAsset?: boolean
+    expectedDestinationAmount?: boolean
+    minDestinationAmount?: boolean
+    slippageTolerance?: boolean
+    finalBeneficiary?: boolean
+    refundRecipient?: boolean
+    providerQuoteId?: boolean
+    providerPublicKeyId?: boolean
+    providerSignature?: boolean
+    verifiedQuoteEvidence?: boolean
+    depositAddress?: boolean
+    depositMemo?: boolean
+    quoteExpiresAt?: boolean
+    reservationId?: boolean
+    reservedAmountYocto?: boolean
+    wrapTxHash?: boolean
+    wrapStatus?: boolean
+    depositTxHash?: boolean
+    depositStatus?: boolean
+    destinationTxHash?: boolean
+    settlementEvidence?: boolean
+    refundTxHash?: boolean
+    refundEvidence?: boolean
+    status?: boolean
+    recoveryStatus?: boolean
+    recoveryState?: boolean
+    errorMessage?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    completedAt?: boolean
+    reconciledAt?: boolean
+    recoveryAttemptedAt?: boolean
+  }
+
+  export type IntentOperationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "idempotencyKey" | "userId" | "mandateId" | "objectiveId" | "executionId" | "provider" | "network" | "depositMode" | "destinationChain" | "sourceAsset" | "sourceAmount" | "destinationAsset" | "expectedDestinationAmount" | "minDestinationAmount" | "slippageTolerance" | "finalBeneficiary" | "refundRecipient" | "providerQuoteId" | "providerPublicKeyId" | "providerSignature" | "verifiedQuoteEvidence" | "depositAddress" | "depositMemo" | "quoteExpiresAt" | "reservationId" | "reservedAmountYocto" | "wrapTxHash" | "wrapStatus" | "depositTxHash" | "depositStatus" | "destinationTxHash" | "settlementEvidence" | "refundTxHash" | "refundEvidence" | "status" | "recoveryStatus" | "recoveryState" | "errorMessage" | "metadata" | "createdAt" | "updatedAt" | "completedAt" | "reconciledAt" | "recoveryAttemptedAt", ExtArgs["result"]["intentOperation"]>
+  export type IntentOperationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    mandate?: boolean | MandateDefaultArgs<ExtArgs>
+    objective?: boolean | IntentOperation$objectiveArgs<ExtArgs>
+  }
+  export type IntentOperationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    mandate?: boolean | MandateDefaultArgs<ExtArgs>
+    objective?: boolean | IntentOperation$objectiveArgs<ExtArgs>
+  }
+  export type IntentOperationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    mandate?: boolean | MandateDefaultArgs<ExtArgs>
+    objective?: boolean | IntentOperation$objectiveArgs<ExtArgs>
+  }
+
+  export type $IntentOperationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntentOperation"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      mandate: Prisma.$MandatePayload<ExtArgs>
+      objective: Prisma.$ObjectivePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      idempotencyKey: string
+      userId: string
+      mandateId: string
+      objectiveId: string | null
+      executionId: string | null
+      provider: string
+      network: string
+      depositMode: string
+      destinationChain: string
+      sourceAsset: string
+      sourceAmount: string
+      destinationAsset: string
+      expectedDestinationAmount: string
+      minDestinationAmount: string
+      slippageTolerance: number
+      finalBeneficiary: string
+      refundRecipient: string
+      providerQuoteId: string | null
+      providerPublicKeyId: string | null
+      providerSignature: string | null
+      verifiedQuoteEvidence: string | null
+      depositAddress: string | null
+      depositMemo: string | null
+      quoteExpiresAt: Date | null
+      reservationId: string | null
+      reservedAmountYocto: string
+      wrapTxHash: string | null
+      wrapStatus: string | null
+      depositTxHash: string | null
+      depositStatus: string | null
+      destinationTxHash: string | null
+      settlementEvidence: string | null
+      refundTxHash: string | null
+      refundEvidence: string | null
+      status: string
+      recoveryStatus: string | null
+      recoveryState: string | null
+      errorMessage: string | null
+      metadata: string | null
+      createdAt: Date
+      updatedAt: Date
+      completedAt: Date | null
+      reconciledAt: Date | null
+      recoveryAttemptedAt: Date | null
+    }, ExtArgs["result"]["intentOperation"]>
+    composites: {}
+  }
+
+  type IntentOperationGetPayload<S extends boolean | null | undefined | IntentOperationDefaultArgs> = $Result.GetResult<Prisma.$IntentOperationPayload, S>
+
+  type IntentOperationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IntentOperationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IntentOperationCountAggregateInputType | true
+    }
+
+  export interface IntentOperationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntentOperation'], meta: { name: 'IntentOperation' } }
+    /**
+     * Find zero or one IntentOperation that matches the filter.
+     * @param {IntentOperationFindUniqueArgs} args - Arguments to find a IntentOperation
+     * @example
+     * // Get one IntentOperation
+     * const intentOperation = await prisma.intentOperation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntentOperationFindUniqueArgs>(args: SelectSubset<T, IntentOperationFindUniqueArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one IntentOperation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IntentOperationFindUniqueOrThrowArgs} args - Arguments to find a IntentOperation
+     * @example
+     * // Get one IntentOperation
+     * const intentOperation = await prisma.intentOperation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntentOperationFindUniqueOrThrowArgs>(args: SelectSubset<T, IntentOperationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IntentOperation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntentOperationFindFirstArgs} args - Arguments to find a IntentOperation
+     * @example
+     * // Get one IntentOperation
+     * const intentOperation = await prisma.intentOperation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntentOperationFindFirstArgs>(args?: SelectSubset<T, IntentOperationFindFirstArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IntentOperation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntentOperationFindFirstOrThrowArgs} args - Arguments to find a IntentOperation
+     * @example
+     * // Get one IntentOperation
+     * const intentOperation = await prisma.intentOperation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntentOperationFindFirstOrThrowArgs>(args?: SelectSubset<T, IntentOperationFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more IntentOperations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntentOperationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntentOperations
+     * const intentOperations = await prisma.intentOperation.findMany()
+     * 
+     * // Get first 10 IntentOperations
+     * const intentOperations = await prisma.intentOperation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const intentOperationWithIdOnly = await prisma.intentOperation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntentOperationFindManyArgs>(args?: SelectSubset<T, IntentOperationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a IntentOperation.
+     * @param {IntentOperationCreateArgs} args - Arguments to create a IntentOperation.
+     * @example
+     * // Create one IntentOperation
+     * const IntentOperation = await prisma.intentOperation.create({
+     *   data: {
+     *     // ... data to create a IntentOperation
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntentOperationCreateArgs>(args: SelectSubset<T, IntentOperationCreateArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many IntentOperations.
+     * @param {IntentOperationCreateManyArgs} args - Arguments to create many IntentOperations.
+     * @example
+     * // Create many IntentOperations
+     * const intentOperation = await prisma.intentOperation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntentOperationCreateManyArgs>(args?: SelectSubset<T, IntentOperationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntentOperations and returns the data saved in the database.
+     * @param {IntentOperationCreateManyAndReturnArgs} args - Arguments to create many IntentOperations.
+     * @example
+     * // Create many IntentOperations
+     * const intentOperation = await prisma.intentOperation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntentOperations and only return the `id`
+     * const intentOperationWithIdOnly = await prisma.intentOperation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntentOperationCreateManyAndReturnArgs>(args?: SelectSubset<T, IntentOperationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a IntentOperation.
+     * @param {IntentOperationDeleteArgs} args - Arguments to delete one IntentOperation.
+     * @example
+     * // Delete one IntentOperation
+     * const IntentOperation = await prisma.intentOperation.delete({
+     *   where: {
+     *     // ... filter to delete one IntentOperation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntentOperationDeleteArgs>(args: SelectSubset<T, IntentOperationDeleteArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one IntentOperation.
+     * @param {IntentOperationUpdateArgs} args - Arguments to update one IntentOperation.
+     * @example
+     * // Update one IntentOperation
+     * const intentOperation = await prisma.intentOperation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntentOperationUpdateArgs>(args: SelectSubset<T, IntentOperationUpdateArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more IntentOperations.
+     * @param {IntentOperationDeleteManyArgs} args - Arguments to filter IntentOperations to delete.
+     * @example
+     * // Delete a few IntentOperations
+     * const { count } = await prisma.intentOperation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntentOperationDeleteManyArgs>(args?: SelectSubset<T, IntentOperationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntentOperations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntentOperationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntentOperations
+     * const intentOperation = await prisma.intentOperation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntentOperationUpdateManyArgs>(args: SelectSubset<T, IntentOperationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntentOperations and returns the data updated in the database.
+     * @param {IntentOperationUpdateManyAndReturnArgs} args - Arguments to update many IntentOperations.
+     * @example
+     * // Update many IntentOperations
+     * const intentOperation = await prisma.intentOperation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more IntentOperations and only return the `id`
+     * const intentOperationWithIdOnly = await prisma.intentOperation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IntentOperationUpdateManyAndReturnArgs>(args: SelectSubset<T, IntentOperationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one IntentOperation.
+     * @param {IntentOperationUpsertArgs} args - Arguments to update or create a IntentOperation.
+     * @example
+     * // Update or create a IntentOperation
+     * const intentOperation = await prisma.intentOperation.upsert({
+     *   create: {
+     *     // ... data to create a IntentOperation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntentOperation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntentOperationUpsertArgs>(args: SelectSubset<T, IntentOperationUpsertArgs<ExtArgs>>): Prisma__IntentOperationClient<$Result.GetResult<Prisma.$IntentOperationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of IntentOperations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntentOperationCountArgs} args - Arguments to filter IntentOperations to count.
+     * @example
+     * // Count the number of IntentOperations
+     * const count = await prisma.intentOperation.count({
+     *   where: {
+     *     // ... the filter for the IntentOperations we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntentOperationCountArgs>(
+      args?: Subset<T, IntentOperationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntentOperationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntentOperation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntentOperationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntentOperationAggregateArgs>(args: Subset<T, IntentOperationAggregateArgs>): Prisma.PrismaPromise<GetIntentOperationAggregateType<T>>
+
+    /**
+     * Group by IntentOperation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntentOperationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntentOperationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntentOperationGroupByArgs['orderBy'] }
+        : { orderBy?: IntentOperationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntentOperationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntentOperationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntentOperation model
+   */
+  readonly fields: IntentOperationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntentOperation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntentOperationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    mandate<T extends MandateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MandateDefaultArgs<ExtArgs>>): Prisma__MandateClient<$Result.GetResult<Prisma.$MandatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    objective<T extends IntentOperation$objectiveArgs<ExtArgs> = {}>(args?: Subset<T, IntentOperation$objectiveArgs<ExtArgs>>): Prisma__ObjectiveClient<$Result.GetResult<Prisma.$ObjectivePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntentOperation model
+   */
+  interface IntentOperationFieldRefs {
+    readonly id: FieldRef<"IntentOperation", 'String'>
+    readonly idempotencyKey: FieldRef<"IntentOperation", 'String'>
+    readonly userId: FieldRef<"IntentOperation", 'String'>
+    readonly mandateId: FieldRef<"IntentOperation", 'String'>
+    readonly objectiveId: FieldRef<"IntentOperation", 'String'>
+    readonly executionId: FieldRef<"IntentOperation", 'String'>
+    readonly provider: FieldRef<"IntentOperation", 'String'>
+    readonly network: FieldRef<"IntentOperation", 'String'>
+    readonly depositMode: FieldRef<"IntentOperation", 'String'>
+    readonly destinationChain: FieldRef<"IntentOperation", 'String'>
+    readonly sourceAsset: FieldRef<"IntentOperation", 'String'>
+    readonly sourceAmount: FieldRef<"IntentOperation", 'String'>
+    readonly destinationAsset: FieldRef<"IntentOperation", 'String'>
+    readonly expectedDestinationAmount: FieldRef<"IntentOperation", 'String'>
+    readonly minDestinationAmount: FieldRef<"IntentOperation", 'String'>
+    readonly slippageTolerance: FieldRef<"IntentOperation", 'Int'>
+    readonly finalBeneficiary: FieldRef<"IntentOperation", 'String'>
+    readonly refundRecipient: FieldRef<"IntentOperation", 'String'>
+    readonly providerQuoteId: FieldRef<"IntentOperation", 'String'>
+    readonly providerPublicKeyId: FieldRef<"IntentOperation", 'String'>
+    readonly providerSignature: FieldRef<"IntentOperation", 'String'>
+    readonly verifiedQuoteEvidence: FieldRef<"IntentOperation", 'String'>
+    readonly depositAddress: FieldRef<"IntentOperation", 'String'>
+    readonly depositMemo: FieldRef<"IntentOperation", 'String'>
+    readonly quoteExpiresAt: FieldRef<"IntentOperation", 'DateTime'>
+    readonly reservationId: FieldRef<"IntentOperation", 'String'>
+    readonly reservedAmountYocto: FieldRef<"IntentOperation", 'String'>
+    readonly wrapTxHash: FieldRef<"IntentOperation", 'String'>
+    readonly wrapStatus: FieldRef<"IntentOperation", 'String'>
+    readonly depositTxHash: FieldRef<"IntentOperation", 'String'>
+    readonly depositStatus: FieldRef<"IntentOperation", 'String'>
+    readonly destinationTxHash: FieldRef<"IntentOperation", 'String'>
+    readonly settlementEvidence: FieldRef<"IntentOperation", 'String'>
+    readonly refundTxHash: FieldRef<"IntentOperation", 'String'>
+    readonly refundEvidence: FieldRef<"IntentOperation", 'String'>
+    readonly status: FieldRef<"IntentOperation", 'String'>
+    readonly recoveryStatus: FieldRef<"IntentOperation", 'String'>
+    readonly recoveryState: FieldRef<"IntentOperation", 'String'>
+    readonly errorMessage: FieldRef<"IntentOperation", 'String'>
+    readonly metadata: FieldRef<"IntentOperation", 'String'>
+    readonly createdAt: FieldRef<"IntentOperation", 'DateTime'>
+    readonly updatedAt: FieldRef<"IntentOperation", 'DateTime'>
+    readonly completedAt: FieldRef<"IntentOperation", 'DateTime'>
+    readonly reconciledAt: FieldRef<"IntentOperation", 'DateTime'>
+    readonly recoveryAttemptedAt: FieldRef<"IntentOperation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntentOperation findUnique
+   */
+  export type IntentOperationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * Filter, which IntentOperation to fetch.
+     */
+    where: IntentOperationWhereUniqueInput
+  }
+
+  /**
+   * IntentOperation findUniqueOrThrow
+   */
+  export type IntentOperationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * Filter, which IntentOperation to fetch.
+     */
+    where: IntentOperationWhereUniqueInput
+  }
+
+  /**
+   * IntentOperation findFirst
+   */
+  export type IntentOperationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * Filter, which IntentOperation to fetch.
+     */
+    where?: IntentOperationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntentOperations to fetch.
+     */
+    orderBy?: IntentOperationOrderByWithRelationInput | IntentOperationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntentOperations.
+     */
+    cursor?: IntentOperationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntentOperations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntentOperations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntentOperations.
+     */
+    distinct?: IntentOperationScalarFieldEnum | IntentOperationScalarFieldEnum[]
+  }
+
+  /**
+   * IntentOperation findFirstOrThrow
+   */
+  export type IntentOperationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * Filter, which IntentOperation to fetch.
+     */
+    where?: IntentOperationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntentOperations to fetch.
+     */
+    orderBy?: IntentOperationOrderByWithRelationInput | IntentOperationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntentOperations.
+     */
+    cursor?: IntentOperationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntentOperations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntentOperations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntentOperations.
+     */
+    distinct?: IntentOperationScalarFieldEnum | IntentOperationScalarFieldEnum[]
+  }
+
+  /**
+   * IntentOperation findMany
+   */
+  export type IntentOperationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * Filter, which IntentOperations to fetch.
+     */
+    where?: IntentOperationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntentOperations to fetch.
+     */
+    orderBy?: IntentOperationOrderByWithRelationInput | IntentOperationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntentOperations.
+     */
+    cursor?: IntentOperationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntentOperations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntentOperations.
+     */
+    skip?: number
+    distinct?: IntentOperationScalarFieldEnum | IntentOperationScalarFieldEnum[]
+  }
+
+  /**
+   * IntentOperation create
+   */
+  export type IntentOperationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntentOperation.
+     */
+    data: XOR<IntentOperationCreateInput, IntentOperationUncheckedCreateInput>
+  }
+
+  /**
+   * IntentOperation createMany
+   */
+  export type IntentOperationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntentOperations.
+     */
+    data: IntentOperationCreateManyInput | IntentOperationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntentOperation createManyAndReturn
+   */
+  export type IntentOperationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * The data used to create many IntentOperations.
+     */
+    data: IntentOperationCreateManyInput | IntentOperationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntentOperation update
+   */
+  export type IntentOperationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntentOperation.
+     */
+    data: XOR<IntentOperationUpdateInput, IntentOperationUncheckedUpdateInput>
+    /**
+     * Choose, which IntentOperation to update.
+     */
+    where: IntentOperationWhereUniqueInput
+  }
+
+  /**
+   * IntentOperation updateMany
+   */
+  export type IntentOperationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntentOperations.
+     */
+    data: XOR<IntentOperationUpdateManyMutationInput, IntentOperationUncheckedUpdateManyInput>
+    /**
+     * Filter which IntentOperations to update
+     */
+    where?: IntentOperationWhereInput
+    /**
+     * Limit how many IntentOperations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * IntentOperation updateManyAndReturn
+   */
+  export type IntentOperationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * The data used to update IntentOperations.
+     */
+    data: XOR<IntentOperationUpdateManyMutationInput, IntentOperationUncheckedUpdateManyInput>
+    /**
+     * Filter which IntentOperations to update
+     */
+    where?: IntentOperationWhereInput
+    /**
+     * Limit how many IntentOperations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntentOperation upsert
+   */
+  export type IntentOperationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntentOperation to update in case it exists.
+     */
+    where: IntentOperationWhereUniqueInput
+    /**
+     * In case the IntentOperation found by the `where` argument doesn't exist, create a new IntentOperation with this data.
+     */
+    create: XOR<IntentOperationCreateInput, IntentOperationUncheckedCreateInput>
+    /**
+     * In case the IntentOperation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntentOperationUpdateInput, IntentOperationUncheckedUpdateInput>
+  }
+
+  /**
+   * IntentOperation delete
+   */
+  export type IntentOperationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+    /**
+     * Filter which IntentOperation to delete.
+     */
+    where: IntentOperationWhereUniqueInput
+  }
+
+  /**
+   * IntentOperation deleteMany
+   */
+  export type IntentOperationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntentOperations to delete
+     */
+    where?: IntentOperationWhereInput
+    /**
+     * Limit how many IntentOperations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * IntentOperation.objective
+   */
+  export type IntentOperation$objectiveArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Objective
+     */
+    select?: ObjectiveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Objective
+     */
+    omit?: ObjectiveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ObjectiveInclude<ExtArgs> | null
+    where?: ObjectiveWhereInput
+  }
+
+  /**
+   * IntentOperation without action
+   */
+  export type IntentOperationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntentOperation
+     */
+    select?: IntentOperationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntentOperation
+     */
+    omit?: IntentOperationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntentOperationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -104250,6 +106099,57 @@ export namespace Prisma {
   export type RateLimitBucketScalarFieldEnum = (typeof RateLimitBucketScalarFieldEnum)[keyof typeof RateLimitBucketScalarFieldEnum]
 
 
+  export const IntentOperationScalarFieldEnum: {
+    id: 'id',
+    idempotencyKey: 'idempotencyKey',
+    userId: 'userId',
+    mandateId: 'mandateId',
+    objectiveId: 'objectiveId',
+    executionId: 'executionId',
+    provider: 'provider',
+    network: 'network',
+    depositMode: 'depositMode',
+    destinationChain: 'destinationChain',
+    sourceAsset: 'sourceAsset',
+    sourceAmount: 'sourceAmount',
+    destinationAsset: 'destinationAsset',
+    expectedDestinationAmount: 'expectedDestinationAmount',
+    minDestinationAmount: 'minDestinationAmount',
+    slippageTolerance: 'slippageTolerance',
+    finalBeneficiary: 'finalBeneficiary',
+    refundRecipient: 'refundRecipient',
+    providerQuoteId: 'providerQuoteId',
+    providerPublicKeyId: 'providerPublicKeyId',
+    providerSignature: 'providerSignature',
+    verifiedQuoteEvidence: 'verifiedQuoteEvidence',
+    depositAddress: 'depositAddress',
+    depositMemo: 'depositMemo',
+    quoteExpiresAt: 'quoteExpiresAt',
+    reservationId: 'reservationId',
+    reservedAmountYocto: 'reservedAmountYocto',
+    wrapTxHash: 'wrapTxHash',
+    wrapStatus: 'wrapStatus',
+    depositTxHash: 'depositTxHash',
+    depositStatus: 'depositStatus',
+    destinationTxHash: 'destinationTxHash',
+    settlementEvidence: 'settlementEvidence',
+    refundTxHash: 'refundTxHash',
+    refundEvidence: 'refundEvidence',
+    status: 'status',
+    recoveryStatus: 'recoveryStatus',
+    recoveryState: 'recoveryState',
+    errorMessage: 'errorMessage',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    completedAt: 'completedAt',
+    reconciledAt: 'reconciledAt',
+    recoveryAttemptedAt: 'recoveryAttemptedAt'
+  };
+
+  export type IntentOperationScalarFieldEnum = (typeof IntentOperationScalarFieldEnum)[keyof typeof IntentOperationScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -104389,6 +106289,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunListRelationFilter
     incidents?: IncidentListRelationFilter
     executionDiscrepancies?: ExecutionDiscrepancyListRelationFilter
+    intentOperations?: IntentOperationListRelationFilter
     recoveryPlans?: RecoveryPlanListRelationFilter
     capabilityProfiles?: AgentCapabilityProfileListRelationFilter
     objectiveCheckpoints?: ObjectiveCheckpointListRelationFilter
@@ -104435,6 +106336,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunOrderByRelationAggregateInput
     incidents?: IncidentOrderByRelationAggregateInput
     executionDiscrepancies?: ExecutionDiscrepancyOrderByRelationAggregateInput
+    intentOperations?: IntentOperationOrderByRelationAggregateInput
     recoveryPlans?: RecoveryPlanOrderByRelationAggregateInput
     capabilityProfiles?: AgentCapabilityProfileOrderByRelationAggregateInput
     objectiveCheckpoints?: ObjectiveCheckpointOrderByRelationAggregateInput
@@ -104484,6 +106386,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunListRelationFilter
     incidents?: IncidentListRelationFilter
     executionDiscrepancies?: ExecutionDiscrepancyListRelationFilter
+    intentOperations?: IntentOperationListRelationFilter
     recoveryPlans?: RecoveryPlanListRelationFilter
     capabilityProfiles?: AgentCapabilityProfileListRelationFilter
     objectiveCheckpoints?: ObjectiveCheckpointListRelationFilter
@@ -105007,6 +106910,7 @@ export namespace Prisma {
     objectives?: ObjectiveListRelationFilter
     coordinationRuns?: CoordinationRunListRelationFilter
     executionRecords?: ExecutionRecordListRelationFilter
+    intentOperations?: IntentOperationListRelationFilter
   }
 
   export type MandateOrderByWithRelationInput = {
@@ -105038,6 +106942,7 @@ export namespace Prisma {
     objectives?: ObjectiveOrderByRelationAggregateInput
     coordinationRuns?: CoordinationRunOrderByRelationAggregateInput
     executionRecords?: ExecutionRecordOrderByRelationAggregateInput
+    intentOperations?: IntentOperationOrderByRelationAggregateInput
   }
 
   export type MandateWhereUniqueInput = Prisma.AtLeast<{
@@ -105072,6 +106977,7 @@ export namespace Prisma {
     objectives?: ObjectiveListRelationFilter
     coordinationRuns?: CoordinationRunListRelationFilter
     executionRecords?: ExecutionRecordListRelationFilter
+    intentOperations?: IntentOperationListRelationFilter
   }, "id">
 
   export type MandateOrderByWithAggregationInput = {
@@ -106614,6 +108520,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunListRelationFilter
     artifacts?: SharedObjectiveArtifactListRelationFilter
     handoffs?: AgentHandoffListRelationFilter
+    intentOperations?: IntentOperationListRelationFilter
   }
 
   export type ObjectiveOrderByWithRelationInput = {
@@ -106655,6 +108562,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunOrderByRelationAggregateInput
     artifacts?: SharedObjectiveArtifactOrderByRelationAggregateInput
     handoffs?: AgentHandoffOrderByRelationAggregateInput
+    intentOperations?: IntentOperationOrderByRelationAggregateInput
   }
 
   export type ObjectiveWhereUniqueInput = Prisma.AtLeast<{
@@ -106699,6 +108607,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunListRelationFilter
     artifacts?: SharedObjectiveArtifactListRelationFilter
     handoffs?: AgentHandoffListRelationFilter
+    intentOperations?: IntentOperationListRelationFilter
   }, "id">
 
   export type ObjectiveOrderByWithAggregationInput = {
@@ -112702,6 +114611,269 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"RateLimitBucket"> | Date | string
   }
 
+  export type IntentOperationWhereInput = {
+    AND?: IntentOperationWhereInput | IntentOperationWhereInput[]
+    OR?: IntentOperationWhereInput[]
+    NOT?: IntentOperationWhereInput | IntentOperationWhereInput[]
+    id?: StringFilter<"IntentOperation"> | string
+    idempotencyKey?: StringFilter<"IntentOperation"> | string
+    userId?: StringFilter<"IntentOperation"> | string
+    mandateId?: StringFilter<"IntentOperation"> | string
+    objectiveId?: StringNullableFilter<"IntentOperation"> | string | null
+    executionId?: StringNullableFilter<"IntentOperation"> | string | null
+    provider?: StringFilter<"IntentOperation"> | string
+    network?: StringFilter<"IntentOperation"> | string
+    depositMode?: StringFilter<"IntentOperation"> | string
+    destinationChain?: StringFilter<"IntentOperation"> | string
+    sourceAsset?: StringFilter<"IntentOperation"> | string
+    sourceAmount?: StringFilter<"IntentOperation"> | string
+    destinationAsset?: StringFilter<"IntentOperation"> | string
+    expectedDestinationAmount?: StringFilter<"IntentOperation"> | string
+    minDestinationAmount?: StringFilter<"IntentOperation"> | string
+    slippageTolerance?: IntFilter<"IntentOperation"> | number
+    finalBeneficiary?: StringFilter<"IntentOperation"> | string
+    refundRecipient?: StringFilter<"IntentOperation"> | string
+    providerQuoteId?: StringNullableFilter<"IntentOperation"> | string | null
+    providerPublicKeyId?: StringNullableFilter<"IntentOperation"> | string | null
+    providerSignature?: StringNullableFilter<"IntentOperation"> | string | null
+    verifiedQuoteEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    depositAddress?: StringNullableFilter<"IntentOperation"> | string | null
+    depositMemo?: StringNullableFilter<"IntentOperation"> | string | null
+    quoteExpiresAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    reservationId?: StringNullableFilter<"IntentOperation"> | string | null
+    reservedAmountYocto?: StringFilter<"IntentOperation"> | string
+    wrapTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    wrapStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    depositTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    depositStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    destinationTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    settlementEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    refundTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    refundEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    status?: StringFilter<"IntentOperation"> | string
+    recoveryStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    recoveryState?: StringNullableFilter<"IntentOperation"> | string | null
+    errorMessage?: StringNullableFilter<"IntentOperation"> | string | null
+    metadata?: StringNullableFilter<"IntentOperation"> | string | null
+    createdAt?: DateTimeFilter<"IntentOperation"> | Date | string
+    updatedAt?: DateTimeFilter<"IntentOperation"> | Date | string
+    completedAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    reconciledAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    recoveryAttemptedAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    mandate?: XOR<MandateScalarRelationFilter, MandateWhereInput>
+    objective?: XOR<ObjectiveNullableScalarRelationFilter, ObjectiveWhereInput> | null
+  }
+
+  export type IntentOperationOrderByWithRelationInput = {
+    id?: SortOrder
+    idempotencyKey?: SortOrder
+    userId?: SortOrder
+    mandateId?: SortOrder
+    objectiveId?: SortOrderInput | SortOrder
+    executionId?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    network?: SortOrder
+    depositMode?: SortOrder
+    destinationChain?: SortOrder
+    sourceAsset?: SortOrder
+    sourceAmount?: SortOrder
+    destinationAsset?: SortOrder
+    expectedDestinationAmount?: SortOrder
+    minDestinationAmount?: SortOrder
+    slippageTolerance?: SortOrder
+    finalBeneficiary?: SortOrder
+    refundRecipient?: SortOrder
+    providerQuoteId?: SortOrderInput | SortOrder
+    providerPublicKeyId?: SortOrderInput | SortOrder
+    providerSignature?: SortOrderInput | SortOrder
+    verifiedQuoteEvidence?: SortOrderInput | SortOrder
+    depositAddress?: SortOrderInput | SortOrder
+    depositMemo?: SortOrderInput | SortOrder
+    quoteExpiresAt?: SortOrderInput | SortOrder
+    reservationId?: SortOrderInput | SortOrder
+    reservedAmountYocto?: SortOrder
+    wrapTxHash?: SortOrderInput | SortOrder
+    wrapStatus?: SortOrderInput | SortOrder
+    depositTxHash?: SortOrderInput | SortOrder
+    depositStatus?: SortOrderInput | SortOrder
+    destinationTxHash?: SortOrderInput | SortOrder
+    settlementEvidence?: SortOrderInput | SortOrder
+    refundTxHash?: SortOrderInput | SortOrder
+    refundEvidence?: SortOrderInput | SortOrder
+    status?: SortOrder
+    recoveryStatus?: SortOrderInput | SortOrder
+    recoveryState?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    reconciledAt?: SortOrderInput | SortOrder
+    recoveryAttemptedAt?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    mandate?: MandateOrderByWithRelationInput
+    objective?: ObjectiveOrderByWithRelationInput
+  }
+
+  export type IntentOperationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    idempotencyKey?: string
+    AND?: IntentOperationWhereInput | IntentOperationWhereInput[]
+    OR?: IntentOperationWhereInput[]
+    NOT?: IntentOperationWhereInput | IntentOperationWhereInput[]
+    userId?: StringFilter<"IntentOperation"> | string
+    mandateId?: StringFilter<"IntentOperation"> | string
+    objectiveId?: StringNullableFilter<"IntentOperation"> | string | null
+    executionId?: StringNullableFilter<"IntentOperation"> | string | null
+    provider?: StringFilter<"IntentOperation"> | string
+    network?: StringFilter<"IntentOperation"> | string
+    depositMode?: StringFilter<"IntentOperation"> | string
+    destinationChain?: StringFilter<"IntentOperation"> | string
+    sourceAsset?: StringFilter<"IntentOperation"> | string
+    sourceAmount?: StringFilter<"IntentOperation"> | string
+    destinationAsset?: StringFilter<"IntentOperation"> | string
+    expectedDestinationAmount?: StringFilter<"IntentOperation"> | string
+    minDestinationAmount?: StringFilter<"IntentOperation"> | string
+    slippageTolerance?: IntFilter<"IntentOperation"> | number
+    finalBeneficiary?: StringFilter<"IntentOperation"> | string
+    refundRecipient?: StringFilter<"IntentOperation"> | string
+    providerQuoteId?: StringNullableFilter<"IntentOperation"> | string | null
+    providerPublicKeyId?: StringNullableFilter<"IntentOperation"> | string | null
+    providerSignature?: StringNullableFilter<"IntentOperation"> | string | null
+    verifiedQuoteEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    depositAddress?: StringNullableFilter<"IntentOperation"> | string | null
+    depositMemo?: StringNullableFilter<"IntentOperation"> | string | null
+    quoteExpiresAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    reservationId?: StringNullableFilter<"IntentOperation"> | string | null
+    reservedAmountYocto?: StringFilter<"IntentOperation"> | string
+    wrapTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    wrapStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    depositTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    depositStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    destinationTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    settlementEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    refundTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    refundEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    status?: StringFilter<"IntentOperation"> | string
+    recoveryStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    recoveryState?: StringNullableFilter<"IntentOperation"> | string | null
+    errorMessage?: StringNullableFilter<"IntentOperation"> | string | null
+    metadata?: StringNullableFilter<"IntentOperation"> | string | null
+    createdAt?: DateTimeFilter<"IntentOperation"> | Date | string
+    updatedAt?: DateTimeFilter<"IntentOperation"> | Date | string
+    completedAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    reconciledAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    recoveryAttemptedAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    mandate?: XOR<MandateScalarRelationFilter, MandateWhereInput>
+    objective?: XOR<ObjectiveNullableScalarRelationFilter, ObjectiveWhereInput> | null
+  }, "id" | "idempotencyKey">
+
+  export type IntentOperationOrderByWithAggregationInput = {
+    id?: SortOrder
+    idempotencyKey?: SortOrder
+    userId?: SortOrder
+    mandateId?: SortOrder
+    objectiveId?: SortOrderInput | SortOrder
+    executionId?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    network?: SortOrder
+    depositMode?: SortOrder
+    destinationChain?: SortOrder
+    sourceAsset?: SortOrder
+    sourceAmount?: SortOrder
+    destinationAsset?: SortOrder
+    expectedDestinationAmount?: SortOrder
+    minDestinationAmount?: SortOrder
+    slippageTolerance?: SortOrder
+    finalBeneficiary?: SortOrder
+    refundRecipient?: SortOrder
+    providerQuoteId?: SortOrderInput | SortOrder
+    providerPublicKeyId?: SortOrderInput | SortOrder
+    providerSignature?: SortOrderInput | SortOrder
+    verifiedQuoteEvidence?: SortOrderInput | SortOrder
+    depositAddress?: SortOrderInput | SortOrder
+    depositMemo?: SortOrderInput | SortOrder
+    quoteExpiresAt?: SortOrderInput | SortOrder
+    reservationId?: SortOrderInput | SortOrder
+    reservedAmountYocto?: SortOrder
+    wrapTxHash?: SortOrderInput | SortOrder
+    wrapStatus?: SortOrderInput | SortOrder
+    depositTxHash?: SortOrderInput | SortOrder
+    depositStatus?: SortOrderInput | SortOrder
+    destinationTxHash?: SortOrderInput | SortOrder
+    settlementEvidence?: SortOrderInput | SortOrder
+    refundTxHash?: SortOrderInput | SortOrder
+    refundEvidence?: SortOrderInput | SortOrder
+    status?: SortOrder
+    recoveryStatus?: SortOrderInput | SortOrder
+    recoveryState?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    reconciledAt?: SortOrderInput | SortOrder
+    recoveryAttemptedAt?: SortOrderInput | SortOrder
+    _count?: IntentOperationCountOrderByAggregateInput
+    _avg?: IntentOperationAvgOrderByAggregateInput
+    _max?: IntentOperationMaxOrderByAggregateInput
+    _min?: IntentOperationMinOrderByAggregateInput
+    _sum?: IntentOperationSumOrderByAggregateInput
+  }
+
+  export type IntentOperationScalarWhereWithAggregatesInput = {
+    AND?: IntentOperationScalarWhereWithAggregatesInput | IntentOperationScalarWhereWithAggregatesInput[]
+    OR?: IntentOperationScalarWhereWithAggregatesInput[]
+    NOT?: IntentOperationScalarWhereWithAggregatesInput | IntentOperationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntentOperation"> | string
+    idempotencyKey?: StringWithAggregatesFilter<"IntentOperation"> | string
+    userId?: StringWithAggregatesFilter<"IntentOperation"> | string
+    mandateId?: StringWithAggregatesFilter<"IntentOperation"> | string
+    objectiveId?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    executionId?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    provider?: StringWithAggregatesFilter<"IntentOperation"> | string
+    network?: StringWithAggregatesFilter<"IntentOperation"> | string
+    depositMode?: StringWithAggregatesFilter<"IntentOperation"> | string
+    destinationChain?: StringWithAggregatesFilter<"IntentOperation"> | string
+    sourceAsset?: StringWithAggregatesFilter<"IntentOperation"> | string
+    sourceAmount?: StringWithAggregatesFilter<"IntentOperation"> | string
+    destinationAsset?: StringWithAggregatesFilter<"IntentOperation"> | string
+    expectedDestinationAmount?: StringWithAggregatesFilter<"IntentOperation"> | string
+    minDestinationAmount?: StringWithAggregatesFilter<"IntentOperation"> | string
+    slippageTolerance?: IntWithAggregatesFilter<"IntentOperation"> | number
+    finalBeneficiary?: StringWithAggregatesFilter<"IntentOperation"> | string
+    refundRecipient?: StringWithAggregatesFilter<"IntentOperation"> | string
+    providerQuoteId?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    providerPublicKeyId?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    providerSignature?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    verifiedQuoteEvidence?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    depositAddress?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    depositMemo?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    quoteExpiresAt?: DateTimeNullableWithAggregatesFilter<"IntentOperation"> | Date | string | null
+    reservationId?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    reservedAmountYocto?: StringWithAggregatesFilter<"IntentOperation"> | string
+    wrapTxHash?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    wrapStatus?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    depositTxHash?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    depositStatus?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    destinationTxHash?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    settlementEvidence?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    refundTxHash?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    refundEvidence?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    status?: StringWithAggregatesFilter<"IntentOperation"> | string
+    recoveryStatus?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    recoveryState?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    errorMessage?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    metadata?: StringNullableWithAggregatesFilter<"IntentOperation"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"IntentOperation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"IntentOperation"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"IntentOperation"> | Date | string | null
+    reconciledAt?: DateTimeNullableWithAggregatesFilter<"IntentOperation"> | Date | string | null
+    recoveryAttemptedAt?: DateTimeNullableWithAggregatesFilter<"IntentOperation"> | Date | string | null
+  }
+
   export type UserCreateInput = {
     id?: string
     nearAccountId: string
@@ -112743,6 +114915,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -112789,6 +114962,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -112835,6 +115009,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -112881,6 +115056,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -113480,6 +115656,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateInput = {
@@ -113508,6 +115685,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUpdateInput = {
@@ -113536,6 +115714,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateInput = {
@@ -113564,6 +115743,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateCreateManyInput = {
@@ -115309,6 +117489,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateInput = {
@@ -115348,6 +117529,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUpdateInput = {
@@ -115387,6 +117569,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateInput = {
@@ -115426,6 +117609,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveCreateManyInput = {
@@ -122370,6 +124554,339 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IntentOperationCreateInput = {
+    id?: string
+    idempotencyKey: string
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutIntentOperationsInput
+    mandate: MandateCreateNestedOneWithoutIntentOperationsInput
+    objective?: ObjectiveCreateNestedOneWithoutIntentOperationsInput
+  }
+
+  export type IntentOperationUncheckedCreateInput = {
+    id?: string
+    idempotencyKey: string
+    userId: string
+    mandateId: string
+    objectiveId?: string | null
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+  }
+
+  export type IntentOperationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutIntentOperationsNestedInput
+    mandate?: MandateUpdateOneRequiredWithoutIntentOperationsNestedInput
+    objective?: ObjectiveUpdateOneWithoutIntentOperationsNestedInput
+  }
+
+  export type IntentOperationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    mandateId?: StringFieldUpdateOperationsInput | string
+    objectiveId?: NullableStringFieldUpdateOperationsInput | string | null
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntentOperationCreateManyInput = {
+    id?: string
+    idempotencyKey: string
+    userId: string
+    mandateId: string
+    objectiveId?: string | null
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+  }
+
+  export type IntentOperationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntentOperationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    mandateId?: StringFieldUpdateOperationsInput | string
+    objectiveId?: NullableStringFieldUpdateOperationsInput | string | null
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -122584,6 +125101,12 @@ export namespace Prisma {
     none?: ExecutionDiscrepancyWhereInput
   }
 
+  export type IntentOperationListRelationFilter = {
+    every?: IntentOperationWhereInput
+    some?: IntentOperationWhereInput
+    none?: IntentOperationWhereInput
+  }
+
   export type RecoveryPlanListRelationFilter = {
     every?: RecoveryPlanWhereInput
     some?: RecoveryPlanWhereInput
@@ -122716,6 +125239,10 @@ export namespace Prisma {
   }
 
   export type ExecutionDiscrepancyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IntentOperationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -127974,6 +130501,158 @@ export namespace Prisma {
     tokens?: SortOrder
   }
 
+  export type IntentOperationCountOrderByAggregateInput = {
+    id?: SortOrder
+    idempotencyKey?: SortOrder
+    userId?: SortOrder
+    mandateId?: SortOrder
+    objectiveId?: SortOrder
+    executionId?: SortOrder
+    provider?: SortOrder
+    network?: SortOrder
+    depositMode?: SortOrder
+    destinationChain?: SortOrder
+    sourceAsset?: SortOrder
+    sourceAmount?: SortOrder
+    destinationAsset?: SortOrder
+    expectedDestinationAmount?: SortOrder
+    minDestinationAmount?: SortOrder
+    slippageTolerance?: SortOrder
+    finalBeneficiary?: SortOrder
+    refundRecipient?: SortOrder
+    providerQuoteId?: SortOrder
+    providerPublicKeyId?: SortOrder
+    providerSignature?: SortOrder
+    verifiedQuoteEvidence?: SortOrder
+    depositAddress?: SortOrder
+    depositMemo?: SortOrder
+    quoteExpiresAt?: SortOrder
+    reservationId?: SortOrder
+    reservedAmountYocto?: SortOrder
+    wrapTxHash?: SortOrder
+    wrapStatus?: SortOrder
+    depositTxHash?: SortOrder
+    depositStatus?: SortOrder
+    destinationTxHash?: SortOrder
+    settlementEvidence?: SortOrder
+    refundTxHash?: SortOrder
+    refundEvidence?: SortOrder
+    status?: SortOrder
+    recoveryStatus?: SortOrder
+    recoveryState?: SortOrder
+    errorMessage?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrder
+    reconciledAt?: SortOrder
+    recoveryAttemptedAt?: SortOrder
+  }
+
+  export type IntentOperationAvgOrderByAggregateInput = {
+    slippageTolerance?: SortOrder
+  }
+
+  export type IntentOperationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    idempotencyKey?: SortOrder
+    userId?: SortOrder
+    mandateId?: SortOrder
+    objectiveId?: SortOrder
+    executionId?: SortOrder
+    provider?: SortOrder
+    network?: SortOrder
+    depositMode?: SortOrder
+    destinationChain?: SortOrder
+    sourceAsset?: SortOrder
+    sourceAmount?: SortOrder
+    destinationAsset?: SortOrder
+    expectedDestinationAmount?: SortOrder
+    minDestinationAmount?: SortOrder
+    slippageTolerance?: SortOrder
+    finalBeneficiary?: SortOrder
+    refundRecipient?: SortOrder
+    providerQuoteId?: SortOrder
+    providerPublicKeyId?: SortOrder
+    providerSignature?: SortOrder
+    verifiedQuoteEvidence?: SortOrder
+    depositAddress?: SortOrder
+    depositMemo?: SortOrder
+    quoteExpiresAt?: SortOrder
+    reservationId?: SortOrder
+    reservedAmountYocto?: SortOrder
+    wrapTxHash?: SortOrder
+    wrapStatus?: SortOrder
+    depositTxHash?: SortOrder
+    depositStatus?: SortOrder
+    destinationTxHash?: SortOrder
+    settlementEvidence?: SortOrder
+    refundTxHash?: SortOrder
+    refundEvidence?: SortOrder
+    status?: SortOrder
+    recoveryStatus?: SortOrder
+    recoveryState?: SortOrder
+    errorMessage?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrder
+    reconciledAt?: SortOrder
+    recoveryAttemptedAt?: SortOrder
+  }
+
+  export type IntentOperationMinOrderByAggregateInput = {
+    id?: SortOrder
+    idempotencyKey?: SortOrder
+    userId?: SortOrder
+    mandateId?: SortOrder
+    objectiveId?: SortOrder
+    executionId?: SortOrder
+    provider?: SortOrder
+    network?: SortOrder
+    depositMode?: SortOrder
+    destinationChain?: SortOrder
+    sourceAsset?: SortOrder
+    sourceAmount?: SortOrder
+    destinationAsset?: SortOrder
+    expectedDestinationAmount?: SortOrder
+    minDestinationAmount?: SortOrder
+    slippageTolerance?: SortOrder
+    finalBeneficiary?: SortOrder
+    refundRecipient?: SortOrder
+    providerQuoteId?: SortOrder
+    providerPublicKeyId?: SortOrder
+    providerSignature?: SortOrder
+    verifiedQuoteEvidence?: SortOrder
+    depositAddress?: SortOrder
+    depositMemo?: SortOrder
+    quoteExpiresAt?: SortOrder
+    reservationId?: SortOrder
+    reservedAmountYocto?: SortOrder
+    wrapTxHash?: SortOrder
+    wrapStatus?: SortOrder
+    depositTxHash?: SortOrder
+    depositStatus?: SortOrder
+    destinationTxHash?: SortOrder
+    settlementEvidence?: SortOrder
+    refundTxHash?: SortOrder
+    refundEvidence?: SortOrder
+    status?: SortOrder
+    recoveryStatus?: SortOrder
+    recoveryState?: SortOrder
+    errorMessage?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrder
+    reconciledAt?: SortOrder
+    recoveryAttemptedAt?: SortOrder
+  }
+
+  export type IntentOperationSumOrderByAggregateInput = {
+    slippageTolerance?: SortOrder
+  }
+
   export type AgentCreateNestedManyWithoutUserInput = {
     create?: XOR<AgentCreateWithoutUserInput, AgentUncheckedCreateWithoutUserInput> | AgentCreateWithoutUserInput[] | AgentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AgentCreateOrConnectWithoutUserInput | AgentCreateOrConnectWithoutUserInput[]
@@ -128168,6 +130847,13 @@ export namespace Prisma {
     connectOrCreate?: ExecutionDiscrepancyCreateOrConnectWithoutTenantInput | ExecutionDiscrepancyCreateOrConnectWithoutTenantInput[]
     createMany?: ExecutionDiscrepancyCreateManyTenantInputEnvelope
     connect?: ExecutionDiscrepancyWhereUniqueInput | ExecutionDiscrepancyWhereUniqueInput[]
+  }
+
+  export type IntentOperationCreateNestedManyWithoutUserInput = {
+    create?: XOR<IntentOperationCreateWithoutUserInput, IntentOperationUncheckedCreateWithoutUserInput> | IntentOperationCreateWithoutUserInput[] | IntentOperationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutUserInput | IntentOperationCreateOrConnectWithoutUserInput[]
+    createMany?: IntentOperationCreateManyUserInputEnvelope
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
   }
 
   export type RecoveryPlanCreateNestedManyWithoutTenantInput = {
@@ -128385,6 +131071,13 @@ export namespace Prisma {
     connectOrCreate?: ExecutionDiscrepancyCreateOrConnectWithoutTenantInput | ExecutionDiscrepancyCreateOrConnectWithoutTenantInput[]
     createMany?: ExecutionDiscrepancyCreateManyTenantInputEnvelope
     connect?: ExecutionDiscrepancyWhereUniqueInput | ExecutionDiscrepancyWhereUniqueInput[]
+  }
+
+  export type IntentOperationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<IntentOperationCreateWithoutUserInput, IntentOperationUncheckedCreateWithoutUserInput> | IntentOperationCreateWithoutUserInput[] | IntentOperationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutUserInput | IntentOperationCreateOrConnectWithoutUserInput[]
+    createMany?: IntentOperationCreateManyUserInputEnvelope
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
   }
 
   export type RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput = {
@@ -128814,6 +131507,20 @@ export namespace Prisma {
     update?: ExecutionDiscrepancyUpdateWithWhereUniqueWithoutTenantInput | ExecutionDiscrepancyUpdateWithWhereUniqueWithoutTenantInput[]
     updateMany?: ExecutionDiscrepancyUpdateManyWithWhereWithoutTenantInput | ExecutionDiscrepancyUpdateManyWithWhereWithoutTenantInput[]
     deleteMany?: ExecutionDiscrepancyScalarWhereInput | ExecutionDiscrepancyScalarWhereInput[]
+  }
+
+  export type IntentOperationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<IntentOperationCreateWithoutUserInput, IntentOperationUncheckedCreateWithoutUserInput> | IntentOperationCreateWithoutUserInput[] | IntentOperationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutUserInput | IntentOperationCreateOrConnectWithoutUserInput[]
+    upsert?: IntentOperationUpsertWithWhereUniqueWithoutUserInput | IntentOperationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: IntentOperationCreateManyUserInputEnvelope
+    set?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    disconnect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    delete?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    update?: IntentOperationUpdateWithWhereUniqueWithoutUserInput | IntentOperationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: IntentOperationUpdateManyWithWhereWithoutUserInput | IntentOperationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
   }
 
   export type RecoveryPlanUpdateManyWithoutTenantNestedInput = {
@@ -129248,6 +131955,20 @@ export namespace Prisma {
     update?: ExecutionDiscrepancyUpdateWithWhereUniqueWithoutTenantInput | ExecutionDiscrepancyUpdateWithWhereUniqueWithoutTenantInput[]
     updateMany?: ExecutionDiscrepancyUpdateManyWithWhereWithoutTenantInput | ExecutionDiscrepancyUpdateManyWithWhereWithoutTenantInput[]
     deleteMany?: ExecutionDiscrepancyScalarWhereInput | ExecutionDiscrepancyScalarWhereInput[]
+  }
+
+  export type IntentOperationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<IntentOperationCreateWithoutUserInput, IntentOperationUncheckedCreateWithoutUserInput> | IntentOperationCreateWithoutUserInput[] | IntentOperationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutUserInput | IntentOperationCreateOrConnectWithoutUserInput[]
+    upsert?: IntentOperationUpsertWithWhereUniqueWithoutUserInput | IntentOperationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: IntentOperationCreateManyUserInputEnvelope
+    set?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    disconnect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    delete?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    update?: IntentOperationUpdateWithWhereUniqueWithoutUserInput | IntentOperationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: IntentOperationUpdateManyWithWhereWithoutUserInput | IntentOperationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
   }
 
   export type RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput = {
@@ -130080,6 +132801,13 @@ export namespace Prisma {
     connect?: ExecutionRecordWhereUniqueInput | ExecutionRecordWhereUniqueInput[]
   }
 
+  export type IntentOperationCreateNestedManyWithoutMandateInput = {
+    create?: XOR<IntentOperationCreateWithoutMandateInput, IntentOperationUncheckedCreateWithoutMandateInput> | IntentOperationCreateWithoutMandateInput[] | IntentOperationUncheckedCreateWithoutMandateInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutMandateInput | IntentOperationCreateOrConnectWithoutMandateInput[]
+    createMany?: IntentOperationCreateManyMandateInputEnvelope
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutMandateInput = {
     create?: XOR<TaskCreateWithoutMandateInput, TaskUncheckedCreateWithoutMandateInput> | TaskCreateWithoutMandateInput[] | TaskUncheckedCreateWithoutMandateInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutMandateInput | TaskCreateOrConnectWithoutMandateInput[]
@@ -130134,6 +132862,13 @@ export namespace Prisma {
     connectOrCreate?: ExecutionRecordCreateOrConnectWithoutMandateInput | ExecutionRecordCreateOrConnectWithoutMandateInput[]
     createMany?: ExecutionRecordCreateManyMandateInputEnvelope
     connect?: ExecutionRecordWhereUniqueInput | ExecutionRecordWhereUniqueInput[]
+  }
+
+  export type IntentOperationUncheckedCreateNestedManyWithoutMandateInput = {
+    create?: XOR<IntentOperationCreateWithoutMandateInput, IntentOperationUncheckedCreateWithoutMandateInput> | IntentOperationCreateWithoutMandateInput[] | IntentOperationUncheckedCreateWithoutMandateInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutMandateInput | IntentOperationCreateOrConnectWithoutMandateInput[]
+    createMany?: IntentOperationCreateManyMandateInputEnvelope
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutMandatesNestedInput = {
@@ -130272,6 +133007,20 @@ export namespace Prisma {
     deleteMany?: ExecutionRecordScalarWhereInput | ExecutionRecordScalarWhereInput[]
   }
 
+  export type IntentOperationUpdateManyWithoutMandateNestedInput = {
+    create?: XOR<IntentOperationCreateWithoutMandateInput, IntentOperationUncheckedCreateWithoutMandateInput> | IntentOperationCreateWithoutMandateInput[] | IntentOperationUncheckedCreateWithoutMandateInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutMandateInput | IntentOperationCreateOrConnectWithoutMandateInput[]
+    upsert?: IntentOperationUpsertWithWhereUniqueWithoutMandateInput | IntentOperationUpsertWithWhereUniqueWithoutMandateInput[]
+    createMany?: IntentOperationCreateManyMandateInputEnvelope
+    set?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    disconnect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    delete?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    update?: IntentOperationUpdateWithWhereUniqueWithoutMandateInput | IntentOperationUpdateWithWhereUniqueWithoutMandateInput[]
+    updateMany?: IntentOperationUpdateManyWithWhereWithoutMandateInput | IntentOperationUpdateManyWithWhereWithoutMandateInput[]
+    deleteMany?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutMandateNestedInput = {
     create?: XOR<TaskCreateWithoutMandateInput, TaskUncheckedCreateWithoutMandateInput> | TaskCreateWithoutMandateInput[] | TaskUncheckedCreateWithoutMandateInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutMandateInput | TaskCreateOrConnectWithoutMandateInput[]
@@ -130382,6 +133131,20 @@ export namespace Prisma {
     update?: ExecutionRecordUpdateWithWhereUniqueWithoutMandateInput | ExecutionRecordUpdateWithWhereUniqueWithoutMandateInput[]
     updateMany?: ExecutionRecordUpdateManyWithWhereWithoutMandateInput | ExecutionRecordUpdateManyWithWhereWithoutMandateInput[]
     deleteMany?: ExecutionRecordScalarWhereInput | ExecutionRecordScalarWhereInput[]
+  }
+
+  export type IntentOperationUncheckedUpdateManyWithoutMandateNestedInput = {
+    create?: XOR<IntentOperationCreateWithoutMandateInput, IntentOperationUncheckedCreateWithoutMandateInput> | IntentOperationCreateWithoutMandateInput[] | IntentOperationUncheckedCreateWithoutMandateInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutMandateInput | IntentOperationCreateOrConnectWithoutMandateInput[]
+    upsert?: IntentOperationUpsertWithWhereUniqueWithoutMandateInput | IntentOperationUpsertWithWhereUniqueWithoutMandateInput[]
+    createMany?: IntentOperationCreateManyMandateInputEnvelope
+    set?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    disconnect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    delete?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    update?: IntentOperationUpdateWithWhereUniqueWithoutMandateInput | IntentOperationUpdateWithWhereUniqueWithoutMandateInput[]
+    updateMany?: IntentOperationUpdateManyWithWhereWithoutMandateInput | IntentOperationUpdateManyWithWhereWithoutMandateInput[]
+    deleteMany?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
   }
 
   export type AgentCreateNestedOneWithoutTasksInput = {
@@ -131265,6 +134028,13 @@ export namespace Prisma {
     connect?: AgentHandoffWhereUniqueInput | AgentHandoffWhereUniqueInput[]
   }
 
+  export type IntentOperationCreateNestedManyWithoutObjectiveInput = {
+    create?: XOR<IntentOperationCreateWithoutObjectiveInput, IntentOperationUncheckedCreateWithoutObjectiveInput> | IntentOperationCreateWithoutObjectiveInput[] | IntentOperationUncheckedCreateWithoutObjectiveInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutObjectiveInput | IntentOperationCreateOrConnectWithoutObjectiveInput[]
+    createMany?: IntentOperationCreateManyObjectiveInputEnvelope
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+  }
+
   export type ObjectivePlanUncheckedCreateNestedManyWithoutObjectiveInput = {
     create?: XOR<ObjectivePlanCreateWithoutObjectiveInput, ObjectivePlanUncheckedCreateWithoutObjectiveInput> | ObjectivePlanCreateWithoutObjectiveInput[] | ObjectivePlanUncheckedCreateWithoutObjectiveInput[]
     connectOrCreate?: ObjectivePlanCreateOrConnectWithoutObjectiveInput | ObjectivePlanCreateOrConnectWithoutObjectiveInput[]
@@ -131326,6 +134096,13 @@ export namespace Prisma {
     connectOrCreate?: AgentHandoffCreateOrConnectWithoutObjectiveInput | AgentHandoffCreateOrConnectWithoutObjectiveInput[]
     createMany?: AgentHandoffCreateManyObjectiveInputEnvelope
     connect?: AgentHandoffWhereUniqueInput | AgentHandoffWhereUniqueInput[]
+  }
+
+  export type IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput = {
+    create?: XOR<IntentOperationCreateWithoutObjectiveInput, IntentOperationUncheckedCreateWithoutObjectiveInput> | IntentOperationCreateWithoutObjectiveInput[] | IntentOperationUncheckedCreateWithoutObjectiveInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutObjectiveInput | IntentOperationCreateOrConnectWithoutObjectiveInput[]
+    createMany?: IntentOperationCreateManyObjectiveInputEnvelope
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutObjectivesNestedInput = {
@@ -131472,6 +134249,20 @@ export namespace Prisma {
     deleteMany?: AgentHandoffScalarWhereInput | AgentHandoffScalarWhereInput[]
   }
 
+  export type IntentOperationUpdateManyWithoutObjectiveNestedInput = {
+    create?: XOR<IntentOperationCreateWithoutObjectiveInput, IntentOperationUncheckedCreateWithoutObjectiveInput> | IntentOperationCreateWithoutObjectiveInput[] | IntentOperationUncheckedCreateWithoutObjectiveInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutObjectiveInput | IntentOperationCreateOrConnectWithoutObjectiveInput[]
+    upsert?: IntentOperationUpsertWithWhereUniqueWithoutObjectiveInput | IntentOperationUpsertWithWhereUniqueWithoutObjectiveInput[]
+    createMany?: IntentOperationCreateManyObjectiveInputEnvelope
+    set?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    disconnect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    delete?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    update?: IntentOperationUpdateWithWhereUniqueWithoutObjectiveInput | IntentOperationUpdateWithWhereUniqueWithoutObjectiveInput[]
+    updateMany?: IntentOperationUpdateManyWithWhereWithoutObjectiveInput | IntentOperationUpdateManyWithWhereWithoutObjectiveInput[]
+    deleteMany?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
+  }
+
   export type ObjectivePlanUncheckedUpdateManyWithoutObjectiveNestedInput = {
     create?: XOR<ObjectivePlanCreateWithoutObjectiveInput, ObjectivePlanUncheckedCreateWithoutObjectiveInput> | ObjectivePlanCreateWithoutObjectiveInput[] | ObjectivePlanUncheckedCreateWithoutObjectiveInput[]
     connectOrCreate?: ObjectivePlanCreateOrConnectWithoutObjectiveInput | ObjectivePlanCreateOrConnectWithoutObjectiveInput[]
@@ -131596,6 +134387,20 @@ export namespace Prisma {
     update?: AgentHandoffUpdateWithWhereUniqueWithoutObjectiveInput | AgentHandoffUpdateWithWhereUniqueWithoutObjectiveInput[]
     updateMany?: AgentHandoffUpdateManyWithWhereWithoutObjectiveInput | AgentHandoffUpdateManyWithWhereWithoutObjectiveInput[]
     deleteMany?: AgentHandoffScalarWhereInput | AgentHandoffScalarWhereInput[]
+  }
+
+  export type IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput = {
+    create?: XOR<IntentOperationCreateWithoutObjectiveInput, IntentOperationUncheckedCreateWithoutObjectiveInput> | IntentOperationCreateWithoutObjectiveInput[] | IntentOperationUncheckedCreateWithoutObjectiveInput[]
+    connectOrCreate?: IntentOperationCreateOrConnectWithoutObjectiveInput | IntentOperationCreateOrConnectWithoutObjectiveInput[]
+    upsert?: IntentOperationUpsertWithWhereUniqueWithoutObjectiveInput | IntentOperationUpsertWithWhereUniqueWithoutObjectiveInput[]
+    createMany?: IntentOperationCreateManyObjectiveInputEnvelope
+    set?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    disconnect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    delete?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    connect?: IntentOperationWhereUniqueInput | IntentOperationWhereUniqueInput[]
+    update?: IntentOperationUpdateWithWhereUniqueWithoutObjectiveInput | IntentOperationUpdateWithWhereUniqueWithoutObjectiveInput[]
+    updateMany?: IntentOperationUpdateManyWithWhereWithoutObjectiveInput | IntentOperationUpdateManyWithWhereWithoutObjectiveInput[]
+    deleteMany?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
   }
 
   export type ObjectiveCreateNestedOneWithoutPlansInput = {
@@ -134558,6 +137363,50 @@ export namespace Prisma {
     update?: XOR<XOR<DatabaseBackupRecordUpdateToOneWithWhereWithoutRestoresInput, DatabaseBackupRecordUpdateWithoutRestoresInput>, DatabaseBackupRecordUncheckedUpdateWithoutRestoresInput>
   }
 
+  export type UserCreateNestedOneWithoutIntentOperationsInput = {
+    create?: XOR<UserCreateWithoutIntentOperationsInput, UserUncheckedCreateWithoutIntentOperationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIntentOperationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type MandateCreateNestedOneWithoutIntentOperationsInput = {
+    create?: XOR<MandateCreateWithoutIntentOperationsInput, MandateUncheckedCreateWithoutIntentOperationsInput>
+    connectOrCreate?: MandateCreateOrConnectWithoutIntentOperationsInput
+    connect?: MandateWhereUniqueInput
+  }
+
+  export type ObjectiveCreateNestedOneWithoutIntentOperationsInput = {
+    create?: XOR<ObjectiveCreateWithoutIntentOperationsInput, ObjectiveUncheckedCreateWithoutIntentOperationsInput>
+    connectOrCreate?: ObjectiveCreateOrConnectWithoutIntentOperationsInput
+    connect?: ObjectiveWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutIntentOperationsNestedInput = {
+    create?: XOR<UserCreateWithoutIntentOperationsInput, UserUncheckedCreateWithoutIntentOperationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIntentOperationsInput
+    upsert?: UserUpsertWithoutIntentOperationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIntentOperationsInput, UserUpdateWithoutIntentOperationsInput>, UserUncheckedUpdateWithoutIntentOperationsInput>
+  }
+
+  export type MandateUpdateOneRequiredWithoutIntentOperationsNestedInput = {
+    create?: XOR<MandateCreateWithoutIntentOperationsInput, MandateUncheckedCreateWithoutIntentOperationsInput>
+    connectOrCreate?: MandateCreateOrConnectWithoutIntentOperationsInput
+    upsert?: MandateUpsertWithoutIntentOperationsInput
+    connect?: MandateWhereUniqueInput
+    update?: XOR<XOR<MandateUpdateToOneWithWhereWithoutIntentOperationsInput, MandateUpdateWithoutIntentOperationsInput>, MandateUncheckedUpdateWithoutIntentOperationsInput>
+  }
+
+  export type ObjectiveUpdateOneWithoutIntentOperationsNestedInput = {
+    create?: XOR<ObjectiveCreateWithoutIntentOperationsInput, ObjectiveUncheckedCreateWithoutIntentOperationsInput>
+    connectOrCreate?: ObjectiveCreateOrConnectWithoutIntentOperationsInput
+    upsert?: ObjectiveUpsertWithoutIntentOperationsInput
+    disconnect?: ObjectiveWhereInput | boolean
+    delete?: ObjectiveWhereInput | boolean
+    connect?: ObjectiveWhereUniqueInput
+    update?: XOR<XOR<ObjectiveUpdateToOneWithWhereWithoutIntentOperationsInput, ObjectiveUpdateWithoutIntentOperationsInput>, ObjectiveUncheckedUpdateWithoutIntentOperationsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -134868,6 +137717,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutUserInput = {
@@ -134895,6 +137745,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutUserInput = {
@@ -135307,6 +138158,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutUserInput = {
@@ -135345,6 +138197,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutUserInput = {
@@ -136206,6 +139059,110 @@ export namespace Prisma {
 
   export type ExecutionDiscrepancyCreateManyTenantInputEnvelope = {
     data: ExecutionDiscrepancyCreateManyTenantInput | ExecutionDiscrepancyCreateManyTenantInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IntentOperationCreateWithoutUserInput = {
+    id?: string
+    idempotencyKey: string
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+    mandate: MandateCreateNestedOneWithoutIntentOperationsInput
+    objective?: ObjectiveCreateNestedOneWithoutIntentOperationsInput
+  }
+
+  export type IntentOperationUncheckedCreateWithoutUserInput = {
+    id?: string
+    idempotencyKey: string
+    mandateId: string
+    objectiveId?: string | null
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+  }
+
+  export type IntentOperationCreateOrConnectWithoutUserInput = {
+    where: IntentOperationWhereUniqueInput
+    create: XOR<IntentOperationCreateWithoutUserInput, IntentOperationUncheckedCreateWithoutUserInput>
+  }
+
+  export type IntentOperationCreateManyUserInputEnvelope = {
+    data: IntentOperationCreateManyUserInput | IntentOperationCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -137447,6 +140404,73 @@ export namespace Prisma {
     metadata?: StringFilter<"ExecutionDiscrepancy"> | string
   }
 
+  export type IntentOperationUpsertWithWhereUniqueWithoutUserInput = {
+    where: IntentOperationWhereUniqueInput
+    update: XOR<IntentOperationUpdateWithoutUserInput, IntentOperationUncheckedUpdateWithoutUserInput>
+    create: XOR<IntentOperationCreateWithoutUserInput, IntentOperationUncheckedCreateWithoutUserInput>
+  }
+
+  export type IntentOperationUpdateWithWhereUniqueWithoutUserInput = {
+    where: IntentOperationWhereUniqueInput
+    data: XOR<IntentOperationUpdateWithoutUserInput, IntentOperationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type IntentOperationUpdateManyWithWhereWithoutUserInput = {
+    where: IntentOperationScalarWhereInput
+    data: XOR<IntentOperationUpdateManyMutationInput, IntentOperationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type IntentOperationScalarWhereInput = {
+    AND?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
+    OR?: IntentOperationScalarWhereInput[]
+    NOT?: IntentOperationScalarWhereInput | IntentOperationScalarWhereInput[]
+    id?: StringFilter<"IntentOperation"> | string
+    idempotencyKey?: StringFilter<"IntentOperation"> | string
+    userId?: StringFilter<"IntentOperation"> | string
+    mandateId?: StringFilter<"IntentOperation"> | string
+    objectiveId?: StringNullableFilter<"IntentOperation"> | string | null
+    executionId?: StringNullableFilter<"IntentOperation"> | string | null
+    provider?: StringFilter<"IntentOperation"> | string
+    network?: StringFilter<"IntentOperation"> | string
+    depositMode?: StringFilter<"IntentOperation"> | string
+    destinationChain?: StringFilter<"IntentOperation"> | string
+    sourceAsset?: StringFilter<"IntentOperation"> | string
+    sourceAmount?: StringFilter<"IntentOperation"> | string
+    destinationAsset?: StringFilter<"IntentOperation"> | string
+    expectedDestinationAmount?: StringFilter<"IntentOperation"> | string
+    minDestinationAmount?: StringFilter<"IntentOperation"> | string
+    slippageTolerance?: IntFilter<"IntentOperation"> | number
+    finalBeneficiary?: StringFilter<"IntentOperation"> | string
+    refundRecipient?: StringFilter<"IntentOperation"> | string
+    providerQuoteId?: StringNullableFilter<"IntentOperation"> | string | null
+    providerPublicKeyId?: StringNullableFilter<"IntentOperation"> | string | null
+    providerSignature?: StringNullableFilter<"IntentOperation"> | string | null
+    verifiedQuoteEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    depositAddress?: StringNullableFilter<"IntentOperation"> | string | null
+    depositMemo?: StringNullableFilter<"IntentOperation"> | string | null
+    quoteExpiresAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    reservationId?: StringNullableFilter<"IntentOperation"> | string | null
+    reservedAmountYocto?: StringFilter<"IntentOperation"> | string
+    wrapTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    wrapStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    depositTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    depositStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    destinationTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    settlementEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    refundTxHash?: StringNullableFilter<"IntentOperation"> | string | null
+    refundEvidence?: StringNullableFilter<"IntentOperation"> | string | null
+    status?: StringFilter<"IntentOperation"> | string
+    recoveryStatus?: StringNullableFilter<"IntentOperation"> | string | null
+    recoveryState?: StringNullableFilter<"IntentOperation"> | string | null
+    errorMessage?: StringNullableFilter<"IntentOperation"> | string | null
+    metadata?: StringNullableFilter<"IntentOperation"> | string | null
+    createdAt?: DateTimeFilter<"IntentOperation"> | Date | string
+    updatedAt?: DateTimeFilter<"IntentOperation"> | Date | string
+    completedAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    reconciledAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+    recoveryAttemptedAt?: DateTimeNullableFilter<"IntentOperation"> | Date | string | null
+  }
+
   export type RecoveryPlanUpsertWithWhereUniqueWithoutTenantInput = {
     where: RecoveryPlanWhereUniqueInput
     update: XOR<RecoveryPlanUpdateWithoutTenantInput, RecoveryPlanUncheckedUpdateWithoutTenantInput>
@@ -137608,6 +140632,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -137653,6 +140678,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -137780,6 +140806,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutAgentInput = {
@@ -137807,6 +140834,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutAgentInput = {
@@ -138378,6 +141406,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -138423,6 +141452,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -138896,6 +141926,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutWalletInput = {
@@ -138923,6 +141954,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutWalletInput = {
@@ -139164,6 +142196,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -139209,6 +142242,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -139321,6 +142355,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -139366,6 +142401,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -139468,6 +142504,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -139513,6 +142550,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -139625,6 +142663,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -139670,6 +142709,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -139772,6 +142812,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -139817,6 +142858,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -140249,6 +143291,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutMandateInput = {
@@ -140287,6 +143330,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutMandateInput = {
@@ -140449,6 +143493,110 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IntentOperationCreateWithoutMandateInput = {
+    id?: string
+    idempotencyKey: string
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutIntentOperationsInput
+    objective?: ObjectiveCreateNestedOneWithoutIntentOperationsInput
+  }
+
+  export type IntentOperationUncheckedCreateWithoutMandateInput = {
+    id?: string
+    idempotencyKey: string
+    userId: string
+    objectiveId?: string | null
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+  }
+
+  export type IntentOperationCreateOrConnectWithoutMandateInput = {
+    where: IntentOperationWhereUniqueInput
+    create: XOR<IntentOperationCreateWithoutMandateInput, IntentOperationUncheckedCreateWithoutMandateInput>
+  }
+
+  export type IntentOperationCreateManyMandateInputEnvelope = {
+    data: IntentOperationCreateManyMandateInput | IntentOperationCreateManyMandateInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutMandatesInput = {
     update: XOR<UserUpdateWithoutMandatesInput, UserUncheckedUpdateWithoutMandatesInput>
     create: XOR<UserCreateWithoutMandatesInput, UserUncheckedCreateWithoutMandatesInput>
@@ -140500,6 +143648,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -140545,6 +143694,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -140832,6 +143982,22 @@ export namespace Prisma {
     data: XOR<ExecutionRecordUpdateManyMutationInput, ExecutionRecordUncheckedUpdateManyWithoutMandateInput>
   }
 
+  export type IntentOperationUpsertWithWhereUniqueWithoutMandateInput = {
+    where: IntentOperationWhereUniqueInput
+    update: XOR<IntentOperationUpdateWithoutMandateInput, IntentOperationUncheckedUpdateWithoutMandateInput>
+    create: XOR<IntentOperationCreateWithoutMandateInput, IntentOperationUncheckedCreateWithoutMandateInput>
+  }
+
+  export type IntentOperationUpdateWithWhereUniqueWithoutMandateInput = {
+    where: IntentOperationWhereUniqueInput
+    data: XOR<IntentOperationUpdateWithoutMandateInput, IntentOperationUncheckedUpdateWithoutMandateInput>
+  }
+
+  export type IntentOperationUpdateManyWithWhereWithoutMandateInput = {
+    where: IntentOperationScalarWhereInput
+    data: XOR<IntentOperationUpdateManyMutationInput, IntentOperationUncheckedUpdateManyWithoutMandateInput>
+  }
+
   export type AgentCreateWithoutTasksInput = {
     id?: string
     name: string
@@ -140920,6 +144086,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutTasksInput = {
@@ -140947,6 +144114,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutTasksInput = {
@@ -141389,6 +144557,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutTasksInput = {
@@ -141416,6 +144585,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type ApprovalRequestUpsertWithoutTaskInput = {
@@ -141858,6 +145028,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutApprovalsInput = {
@@ -141885,6 +145056,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutApprovalsInput = {
@@ -141932,6 +145104,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -141977,6 +145150,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -142082,6 +145256,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutApprovalsInput = {
@@ -142109,6 +145284,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type UserUpsertWithoutApprovalsInput = {
@@ -142162,6 +145338,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -142207,6 +145384,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -142343,6 +145521,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutTransactionsInput = {
@@ -142370,6 +145549,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutTransactionsInput = {
@@ -142531,6 +145711,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutTransactionsInput = {
@@ -142558,6 +145739,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateCreateWithoutAuditLogsInput = {
@@ -142585,6 +145767,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutAuditLogsInput = {
@@ -142612,6 +145795,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutAuditLogsInput = {
@@ -142712,6 +145896,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -142757,6 +145942,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -142803,6 +145989,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutAuditLogsInput = {
@@ -142830,6 +146017,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type TaskUpsertWithoutAuditLogsInput = {
@@ -142942,6 +146130,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -142987,6 +146176,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -143095,6 +146285,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -143140,6 +146331,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -143175,6 +146367,7 @@ export namespace Prisma {
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutExecutionsInput = {
@@ -143202,6 +146395,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutExecutionsInput = {
@@ -143468,6 +146662,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -143513,6 +146708,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -143554,6 +146750,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutExecutionsInput = {
@@ -143581,6 +146778,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type TaskUpsertWithoutExecutionInput = {
@@ -143767,6 +146965,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -143812,6 +147011,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -143932,6 +147132,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -143977,6 +147178,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -144022,6 +147224,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -144067,6 +147270,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -144250,6 +147454,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -144295,6 +147500,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -144646,6 +147852,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -144691,6 +147898,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -144752,6 +147960,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -144797,6 +148006,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -145037,6 +148247,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -145082,6 +148293,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -145265,6 +148477,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -145310,6 +148523,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -145414,6 +148628,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -145459,6 +148674,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -145494,6 +148710,7 @@ export namespace Prisma {
     executions?: AgentExecutionCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutObjectivesInput = {
@@ -145521,6 +148738,7 @@ export namespace Prisma {
     executions?: AgentExecutionUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutObjectivesInput = {
@@ -146018,6 +149236,110 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IntentOperationCreateWithoutObjectiveInput = {
+    id?: string
+    idempotencyKey: string
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutIntentOperationsInput
+    mandate: MandateCreateNestedOneWithoutIntentOperationsInput
+  }
+
+  export type IntentOperationUncheckedCreateWithoutObjectiveInput = {
+    id?: string
+    idempotencyKey: string
+    userId: string
+    mandateId: string
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+  }
+
+  export type IntentOperationCreateOrConnectWithoutObjectiveInput = {
+    where: IntentOperationWhereUniqueInput
+    create: XOR<IntentOperationCreateWithoutObjectiveInput, IntentOperationUncheckedCreateWithoutObjectiveInput>
+  }
+
+  export type IntentOperationCreateManyObjectiveInputEnvelope = {
+    data: IntentOperationCreateManyObjectiveInput | IntentOperationCreateManyObjectiveInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutObjectivesInput = {
     update: XOR<UserUpdateWithoutObjectivesInput, UserUncheckedUpdateWithoutObjectivesInput>
     create: XOR<UserCreateWithoutObjectivesInput, UserUncheckedCreateWithoutObjectivesInput>
@@ -146069,6 +149391,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -146114,6 +149437,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -146155,6 +149479,7 @@ export namespace Prisma {
     executions?: AgentExecutionUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutObjectivesInput = {
@@ -146182,6 +149507,7 @@ export namespace Prisma {
     executions?: AgentExecutionUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type ObjectivePlanUpsertWithWhereUniqueWithoutObjectiveInput = {
@@ -146426,6 +149752,22 @@ export namespace Prisma {
     data: XOR<AgentHandoffUpdateManyMutationInput, AgentHandoffUncheckedUpdateManyWithoutObjectiveInput>
   }
 
+  export type IntentOperationUpsertWithWhereUniqueWithoutObjectiveInput = {
+    where: IntentOperationWhereUniqueInput
+    update: XOR<IntentOperationUpdateWithoutObjectiveInput, IntentOperationUncheckedUpdateWithoutObjectiveInput>
+    create: XOR<IntentOperationCreateWithoutObjectiveInput, IntentOperationUncheckedCreateWithoutObjectiveInput>
+  }
+
+  export type IntentOperationUpdateWithWhereUniqueWithoutObjectiveInput = {
+    where: IntentOperationWhereUniqueInput
+    data: XOR<IntentOperationUpdateWithoutObjectiveInput, IntentOperationUncheckedUpdateWithoutObjectiveInput>
+  }
+
+  export type IntentOperationUpdateManyWithWhereWithoutObjectiveInput = {
+    where: IntentOperationScalarWhereInput
+    data: XOR<IntentOperationUpdateManyMutationInput, IntentOperationUncheckedUpdateManyWithoutObjectiveInput>
+  }
+
   export type ObjectiveCreateWithoutPlansInput = {
     id?: string
     title: string
@@ -146462,6 +149804,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutPlansInput = {
@@ -146500,6 +149843,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutPlansInput = {
@@ -146738,6 +150082,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutPlansInput = {
@@ -146776,6 +150121,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectivePlanStepUpsertWithWhereUniqueWithoutPlanInput = {
@@ -146862,6 +150208,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutStepsInput = {
@@ -146900,6 +150247,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutStepsInput = {
@@ -147089,6 +150437,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutStepsInput = {
@@ -147127,6 +150476,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectivePlanUpsertWithoutStepsInput = {
@@ -147649,6 +150999,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutCriteriaInput = {
@@ -147687,6 +151038,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutCriteriaInput = {
@@ -147741,6 +151093,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutCriteriaInput = {
@@ -147779,6 +151132,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveCreateWithoutEventsInput = {
@@ -147817,6 +151171,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutEventsInput = {
@@ -147855,6 +151210,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutEventsInput = {
@@ -147909,6 +151265,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutEventsInput = {
@@ -147947,6 +151304,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectivePlanCreateWithoutApprovalsInput = {
@@ -148030,6 +151388,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -148075,6 +151434,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -148183,6 +151543,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -148228,6 +151589,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -148269,6 +151631,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutCheckpointsInput = {
@@ -148307,6 +151670,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutCheckpointsInput = {
@@ -148355,6 +151719,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
   }
@@ -148400,6 +151765,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
   }
@@ -148456,6 +151822,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutCheckpointsInput = {
@@ -148494,6 +151861,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type UserUpsertWithoutObjectiveCheckpointsInput = {
@@ -148548,6 +151916,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
   }
@@ -148593,6 +151962,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -148637,6 +152007,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -148682,6 +152053,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -148728,6 +152100,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutDiscoveriesInput = {
@@ -148766,6 +152139,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutDiscoveriesInput = {
@@ -148866,6 +152240,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -148911,6 +152286,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -148963,6 +152339,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutDiscoveriesInput = {
@@ -149001,6 +152378,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type CapabilityMatchUpsertWithWhereUniqueWithoutDiscoveryInput = {
@@ -149167,6 +152545,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -149212,6 +152591,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -149258,6 +152638,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutCoordinationRunsInput = {
@@ -149296,6 +152677,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutCoordinationRunsInput = {
@@ -149369,6 +152751,7 @@ export namespace Prisma {
     executions?: AgentExecutionCreateNestedManyWithoutMandateInput
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutCoordinationRunsInput = {
@@ -149396,6 +152779,7 @@ export namespace Prisma {
     executions?: AgentExecutionUncheckedCreateNestedManyWithoutMandateInput
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutCoordinationRunsInput = {
@@ -149764,6 +153148,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -149809,6 +153194,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -149861,6 +153247,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutCoordinationRunsInput = {
@@ -149899,6 +153286,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectivePlanUpsertWithoutCoordinationRunsInput = {
@@ -149984,6 +153372,7 @@ export namespace Prisma {
     executions?: AgentExecutionUpdateManyWithoutMandateNestedInput
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutCoordinationRunsInput = {
@@ -150011,6 +153400,7 @@ export namespace Prisma {
     executions?: AgentExecutionUncheckedUpdateManyWithoutMandateNestedInput
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type CoordinationTaskUpsertWithWhereUniqueWithoutRunInput = {
@@ -150778,6 +154168,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
   }
@@ -150823,6 +154214,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
   }
@@ -150953,6 +154345,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
   }
@@ -150998,6 +154391,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -151495,6 +154889,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryCreateNestedManyWithoutObjectiveInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutHandoffsInput = {
@@ -151533,6 +154928,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUncheckedCreateNestedManyWithoutObjectiveInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutHandoffsInput = {
@@ -151918,6 +155314,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUpdateManyWithoutObjectiveNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutHandoffsInput = {
@@ -151956,6 +155353,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUncheckedUpdateManyWithoutObjectiveNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type AgentUpsertWithoutHandoffsSentInput = {
@@ -152343,6 +155741,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryCreateNestedManyWithoutObjectiveInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveUncheckedCreateWithoutArtifactsInput = {
@@ -152381,6 +155780,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUncheckedCreateNestedManyWithoutObjectiveInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
     handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutObjectiveInput
   }
 
   export type ObjectiveCreateOrConnectWithoutArtifactsInput = {
@@ -152561,6 +155961,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUpdateManyWithoutObjectiveNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutArtifactsInput = {
@@ -152599,6 +156000,7 @@ export namespace Prisma {
     discoveries?: CapabilityDiscoveryUncheckedUpdateManyWithoutObjectiveNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type AgentUpsertWithoutArtifactsProducedInput = {
@@ -153246,6 +156648,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -153291,6 +156694,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -153588,6 +156992,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -153633,6 +157038,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -153843,6 +157249,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -153888,6 +157295,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -154006,6 +157414,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -154051,6 +157460,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -154264,6 +157674,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -154309,6 +157720,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -154421,6 +157833,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -154466,6 +157879,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -154568,6 +157982,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -154613,6 +158028,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -154760,6 +158176,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -154805,6 +158222,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -154999,6 +158417,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -155044,6 +158463,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -155162,6 +158582,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -155207,6 +158628,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -155303,6 +158725,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -155348,6 +158771,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -155466,6 +158890,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -155511,6 +158936,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -155556,6 +158982,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -155601,6 +159028,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -155636,6 +159064,7 @@ export namespace Prisma {
     executions?: AgentExecutionCreateNestedManyWithoutMandateInput
     objectives?: ObjectiveCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutMandateInput
   }
 
   export type MandateUncheckedCreateWithoutExecutionRecordsInput = {
@@ -155663,6 +159092,7 @@ export namespace Prisma {
     executions?: AgentExecutionUncheckedCreateNestedManyWithoutMandateInput
     objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
     coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutMandateInput
   }
 
   export type MandateCreateOrConnectWithoutExecutionRecordsInput = {
@@ -155837,6 +159267,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -155882,6 +159313,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -155923,6 +159355,7 @@ export namespace Prisma {
     executions?: AgentExecutionUpdateManyWithoutMandateNestedInput
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutExecutionRecordsInput = {
@@ -155950,6 +159383,7 @@ export namespace Prisma {
     executions?: AgentExecutionUncheckedUpdateManyWithoutMandateNestedInput
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type AgentUpsertWithoutExecutionRecordsInput = {
@@ -156120,6 +159554,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -156165,6 +159600,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -156531,6 +159967,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -156576,6 +160013,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -157657,6 +161095,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -157702,6 +161141,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -157842,6 +161282,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -157887,6 +161328,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -157932,6 +161374,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -157977,6 +161420,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -158038,6 +161482,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -158083,6 +161528,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -158128,6 +161574,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -158173,6 +161620,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -158308,6 +161756,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -158353,6 +161802,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -158764,6 +162214,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertCreateNestedManyWithoutTenantInput
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -158809,6 +162260,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUncheckedCreateNestedManyWithoutTenantInput
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -158933,6 +162385,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUpdateManyWithoutTenantNestedInput
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -158978,6 +162431,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUncheckedUpdateManyWithoutTenantNestedInput
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -159092,6 +162546,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertCreateNestedManyWithoutTenantInput
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
@@ -159137,6 +162592,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUncheckedCreateNestedManyWithoutTenantInput
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
@@ -159358,6 +162814,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUpdateManyWithoutTenantNestedInput
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
@@ -159403,6 +162860,7 @@ export namespace Prisma {
     operationalAlerts?: OperationalAlertUncheckedUpdateManyWithoutTenantNestedInput
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
@@ -159869,6 +163327,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
     incidents?: IncidentCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationCreateNestedManyWithoutUserInput
     capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
   }
@@ -159914,6 +163373,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    intentOperations?: IntentOperationUncheckedCreateNestedManyWithoutUserInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
   }
@@ -160154,6 +163614,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutUserNestedInput
     capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
   }
@@ -160199,6 +163660,7 @@ export namespace Prisma {
     reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
     executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutUserNestedInput
     capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
     objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -160876,6 +164338,506 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type UserCreateWithoutIntentOperationsInput = {
+    id?: string
+    nearAccountId: string
+    displayName?: string | null
+    email?: string | null
+    bio?: string | null
+    role?: string
+    twoFactorEnabled?: boolean
+    emailAlerts?: boolean
+    authChallenge?: string | null
+    sessionToken?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agents?: AgentCreateNestedManyWithoutUserInput
+    mandates?: MandateCreateNestedManyWithoutUserInput
+    approvals?: ApprovalRequestCreateNestedManyWithoutApproverInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    fundingRequests?: FundingRecordCreateNestedManyWithoutUserInput
+    withdrawals?: WithdrawalRecordCreateNestedManyWithoutUserInput
+    executions?: AgentExecutionCreateNestedManyWithoutUserInput
+    executionEvents?: ExecutionEventCreateNestedManyWithoutUserInput
+    integrationConnections?: IntegrationConnectionCreateNestedManyWithoutUserInput
+    toolInvocations?: ToolInvocationCreateNestedManyWithoutUserInput
+    objectives?: ObjectiveCreateNestedManyWithoutUserInput
+    planApprovals?: ObjectivePlanApprovalCreateNestedManyWithoutUserInput
+    discoveries?: CapabilityDiscoveryCreateNestedManyWithoutUserInput
+    oauthSessions?: OAuthSessionCreateNestedManyWithoutUserInput
+    coordinationRuns?: CoordinationRunCreateNestedManyWithoutUserInput
+    governancePolicies?: GovernancePolicyCreateNestedManyWithoutUserInput
+    policyVersionsCreated?: PolicyVersionCreateNestedManyWithoutCreatedByUserInput
+    policyEvaluations?: PolicyEvaluationCreateNestedManyWithoutUserInput
+    policyViolations?: PolicyViolationCreateNestedManyWithoutUserInput
+    policyExceptions?: PolicyExceptionCreateNestedManyWithoutUserInput
+    policyReviews?: PolicyReviewCreateNestedManyWithoutReviewedByUserInput
+    executionRecords?: ExecutionRecordCreateNestedManyWithoutUserInput
+    backgroundJobs?: BackgroundJobCreateNestedManyWithoutTenantInput
+    deadLetterRecords?: DeadLetterRecordCreateNestedManyWithoutTenantInput
+    operationalAlerts?: OperationalAlertCreateNestedManyWithoutTenantInput
+    reconciliationRuns?: ReconciliationRunCreateNestedManyWithoutTenantInput
+    incidents?: IncidentCreateNestedManyWithoutTenantInput
+    executionDiscrepancies?: ExecutionDiscrepancyCreateNestedManyWithoutTenantInput
+    recoveryPlans?: RecoveryPlanCreateNestedManyWithoutTenantInput
+    capabilityProfiles?: AgentCapabilityProfileCreateNestedManyWithoutUserInput
+    objectiveCheckpoints?: ObjectiveCheckpointCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutIntentOperationsInput = {
+    id?: string
+    nearAccountId: string
+    displayName?: string | null
+    email?: string | null
+    bio?: string | null
+    role?: string
+    twoFactorEnabled?: boolean
+    emailAlerts?: boolean
+    authChallenge?: string | null
+    sessionToken?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agents?: AgentUncheckedCreateNestedManyWithoutUserInput
+    mandates?: MandateUncheckedCreateNestedManyWithoutUserInput
+    approvals?: ApprovalRequestUncheckedCreateNestedManyWithoutApproverInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    fundingRequests?: FundingRecordUncheckedCreateNestedManyWithoutUserInput
+    withdrawals?: WithdrawalRecordUncheckedCreateNestedManyWithoutUserInput
+    executions?: AgentExecutionUncheckedCreateNestedManyWithoutUserInput
+    executionEvents?: ExecutionEventUncheckedCreateNestedManyWithoutUserInput
+    integrationConnections?: IntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    toolInvocations?: ToolInvocationUncheckedCreateNestedManyWithoutUserInput
+    objectives?: ObjectiveUncheckedCreateNestedManyWithoutUserInput
+    planApprovals?: ObjectivePlanApprovalUncheckedCreateNestedManyWithoutUserInput
+    discoveries?: CapabilityDiscoveryUncheckedCreateNestedManyWithoutUserInput
+    oauthSessions?: OAuthSessionUncheckedCreateNestedManyWithoutUserInput
+    coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutUserInput
+    governancePolicies?: GovernancePolicyUncheckedCreateNestedManyWithoutUserInput
+    policyVersionsCreated?: PolicyVersionUncheckedCreateNestedManyWithoutCreatedByUserInput
+    policyEvaluations?: PolicyEvaluationUncheckedCreateNestedManyWithoutUserInput
+    policyViolations?: PolicyViolationUncheckedCreateNestedManyWithoutUserInput
+    policyExceptions?: PolicyExceptionUncheckedCreateNestedManyWithoutUserInput
+    policyReviews?: PolicyReviewUncheckedCreateNestedManyWithoutReviewedByUserInput
+    executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutUserInput
+    backgroundJobs?: BackgroundJobUncheckedCreateNestedManyWithoutTenantInput
+    deadLetterRecords?: DeadLetterRecordUncheckedCreateNestedManyWithoutTenantInput
+    operationalAlerts?: OperationalAlertUncheckedCreateNestedManyWithoutTenantInput
+    reconciliationRuns?: ReconciliationRunUncheckedCreateNestedManyWithoutTenantInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutTenantInput
+    executionDiscrepancies?: ExecutionDiscrepancyUncheckedCreateNestedManyWithoutTenantInput
+    recoveryPlans?: RecoveryPlanUncheckedCreateNestedManyWithoutTenantInput
+    capabilityProfiles?: AgentCapabilityProfileUncheckedCreateNestedManyWithoutUserInput
+    objectiveCheckpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutIntentOperationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutIntentOperationsInput, UserUncheckedCreateWithoutIntentOperationsInput>
+  }
+
+  export type MandateCreateWithoutIntentOperationsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: string
+    totalBudgetYocto: string
+    spentYocto?: string
+    reservedYocto?: string
+    perTxLimitYocto: string
+    approvalThresholdYocto: string
+    allowedRecipientsJson: string
+    expiresAt: Date | string
+    policyVersion?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutMandatesInput
+    agent: AgentCreateNestedOneWithoutMandatesInput
+    wallet: WalletCreateNestedOneWithoutMandatesInput
+    tasks?: TaskCreateNestedManyWithoutMandateInput
+    approvals?: ApprovalRequestCreateNestedManyWithoutMandateInput
+    auditLogs?: AuditLogCreateNestedManyWithoutMandateInput
+    transactions?: TransactionRecordCreateNestedManyWithoutMandateInput
+    executions?: AgentExecutionCreateNestedManyWithoutMandateInput
+    objectives?: ObjectiveCreateNestedManyWithoutMandateInput
+    coordinationRuns?: CoordinationRunCreateNestedManyWithoutMandateInput
+    executionRecords?: ExecutionRecordCreateNestedManyWithoutMandateInput
+  }
+
+  export type MandateUncheckedCreateWithoutIntentOperationsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: string
+    totalBudgetYocto: string
+    spentYocto?: string
+    reservedYocto?: string
+    perTxLimitYocto: string
+    approvalThresholdYocto: string
+    allowedRecipientsJson: string
+    expiresAt: Date | string
+    policyVersion?: number
+    userId: string
+    agentId: string
+    walletId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tasks?: TaskUncheckedCreateNestedManyWithoutMandateInput
+    approvals?: ApprovalRequestUncheckedCreateNestedManyWithoutMandateInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutMandateInput
+    transactions?: TransactionRecordUncheckedCreateNestedManyWithoutMandateInput
+    executions?: AgentExecutionUncheckedCreateNestedManyWithoutMandateInput
+    objectives?: ObjectiveUncheckedCreateNestedManyWithoutMandateInput
+    coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutMandateInput
+    executionRecords?: ExecutionRecordUncheckedCreateNestedManyWithoutMandateInput
+  }
+
+  export type MandateCreateOrConnectWithoutIntentOperationsInput = {
+    where: MandateWhereUniqueInput
+    create: XOR<MandateCreateWithoutIntentOperationsInput, MandateUncheckedCreateWithoutIntentOperationsInput>
+  }
+
+  export type ObjectiveCreateWithoutIntentOperationsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    originalPrompt: string
+    structuredGoalJson?: string | null
+    category?: string
+    status?: string
+    priority?: string
+    version?: number
+    planningStatus?: string
+    executionStatus?: string
+    completionEvidenceJson?: string
+    failureReason?: string | null
+    deadlineAt?: Date | string | null
+    assignedAgentsJson?: string
+    constraintsJson?: string
+    metadataJson?: string
+    progressPercent?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastEvaluatedAt?: Date | string | null
+    lastCheckpointAt?: Date | string | null
+    currentCheckpointNumber?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutObjectivesInput
+    mandate?: MandateCreateNestedOneWithoutObjectivesInput
+    plans?: ObjectivePlanCreateNestedManyWithoutObjectiveInput
+    steps?: ObjectivePlanStepCreateNestedManyWithoutObjectiveInput
+    criteria?: ObjectiveSuccessCriteriaCreateNestedManyWithoutObjectiveInput
+    events?: ObjectiveEventCreateNestedManyWithoutObjectiveInput
+    checkpoints?: ObjectiveCheckpointCreateNestedManyWithoutObjectiveInput
+    discoveries?: CapabilityDiscoveryCreateNestedManyWithoutObjectiveInput
+    coordinationRuns?: CoordinationRunCreateNestedManyWithoutObjectiveInput
+    artifacts?: SharedObjectiveArtifactCreateNestedManyWithoutObjectiveInput
+    handoffs?: AgentHandoffCreateNestedManyWithoutObjectiveInput
+  }
+
+  export type ObjectiveUncheckedCreateWithoutIntentOperationsInput = {
+    id?: string
+    userId: string
+    title: string
+    description?: string | null
+    originalPrompt: string
+    structuredGoalJson?: string | null
+    category?: string
+    status?: string
+    priority?: string
+    version?: number
+    mandateId?: string | null
+    planningStatus?: string
+    executionStatus?: string
+    completionEvidenceJson?: string
+    failureReason?: string | null
+    deadlineAt?: Date | string | null
+    assignedAgentsJson?: string
+    constraintsJson?: string
+    metadataJson?: string
+    progressPercent?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastEvaluatedAt?: Date | string | null
+    lastCheckpointAt?: Date | string | null
+    currentCheckpointNumber?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    plans?: ObjectivePlanUncheckedCreateNestedManyWithoutObjectiveInput
+    steps?: ObjectivePlanStepUncheckedCreateNestedManyWithoutObjectiveInput
+    criteria?: ObjectiveSuccessCriteriaUncheckedCreateNestedManyWithoutObjectiveInput
+    events?: ObjectiveEventUncheckedCreateNestedManyWithoutObjectiveInput
+    checkpoints?: ObjectiveCheckpointUncheckedCreateNestedManyWithoutObjectiveInput
+    discoveries?: CapabilityDiscoveryUncheckedCreateNestedManyWithoutObjectiveInput
+    coordinationRuns?: CoordinationRunUncheckedCreateNestedManyWithoutObjectiveInput
+    artifacts?: SharedObjectiveArtifactUncheckedCreateNestedManyWithoutObjectiveInput
+    handoffs?: AgentHandoffUncheckedCreateNestedManyWithoutObjectiveInput
+  }
+
+  export type ObjectiveCreateOrConnectWithoutIntentOperationsInput = {
+    where: ObjectiveWhereUniqueInput
+    create: XOR<ObjectiveCreateWithoutIntentOperationsInput, ObjectiveUncheckedCreateWithoutIntentOperationsInput>
+  }
+
+  export type UserUpsertWithoutIntentOperationsInput = {
+    update: XOR<UserUpdateWithoutIntentOperationsInput, UserUncheckedUpdateWithoutIntentOperationsInput>
+    create: XOR<UserCreateWithoutIntentOperationsInput, UserUncheckedCreateWithoutIntentOperationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutIntentOperationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutIntentOperationsInput, UserUncheckedUpdateWithoutIntentOperationsInput>
+  }
+
+  export type UserUpdateWithoutIntentOperationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nearAccountId?: StringFieldUpdateOperationsInput | string
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAlerts?: BoolFieldUpdateOperationsInput | boolean
+    authChallenge?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionToken?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agents?: AgentUpdateManyWithoutUserNestedInput
+    mandates?: MandateUpdateManyWithoutUserNestedInput
+    approvals?: ApprovalRequestUpdateManyWithoutApproverNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    fundingRequests?: FundingRecordUpdateManyWithoutUserNestedInput
+    withdrawals?: WithdrawalRecordUpdateManyWithoutUserNestedInput
+    executions?: AgentExecutionUpdateManyWithoutUserNestedInput
+    executionEvents?: ExecutionEventUpdateManyWithoutUserNestedInput
+    integrationConnections?: IntegrationConnectionUpdateManyWithoutUserNestedInput
+    toolInvocations?: ToolInvocationUpdateManyWithoutUserNestedInput
+    objectives?: ObjectiveUpdateManyWithoutUserNestedInput
+    planApprovals?: ObjectivePlanApprovalUpdateManyWithoutUserNestedInput
+    discoveries?: CapabilityDiscoveryUpdateManyWithoutUserNestedInput
+    oauthSessions?: OAuthSessionUpdateManyWithoutUserNestedInput
+    coordinationRuns?: CoordinationRunUpdateManyWithoutUserNestedInput
+    governancePolicies?: GovernancePolicyUpdateManyWithoutUserNestedInput
+    policyVersionsCreated?: PolicyVersionUpdateManyWithoutCreatedByUserNestedInput
+    policyEvaluations?: PolicyEvaluationUpdateManyWithoutUserNestedInput
+    policyViolations?: PolicyViolationUpdateManyWithoutUserNestedInput
+    policyExceptions?: PolicyExceptionUpdateManyWithoutUserNestedInput
+    policyReviews?: PolicyReviewUpdateManyWithoutReviewedByUserNestedInput
+    executionRecords?: ExecutionRecordUpdateManyWithoutUserNestedInput
+    backgroundJobs?: BackgroundJobUpdateManyWithoutTenantNestedInput
+    deadLetterRecords?: DeadLetterRecordUpdateManyWithoutTenantNestedInput
+    operationalAlerts?: OperationalAlertUpdateManyWithoutTenantNestedInput
+    reconciliationRuns?: ReconciliationRunUpdateManyWithoutTenantNestedInput
+    incidents?: IncidentUpdateManyWithoutTenantNestedInput
+    executionDiscrepancies?: ExecutionDiscrepancyUpdateManyWithoutTenantNestedInput
+    recoveryPlans?: RecoveryPlanUpdateManyWithoutTenantNestedInput
+    capabilityProfiles?: AgentCapabilityProfileUpdateManyWithoutUserNestedInput
+    objectiveCheckpoints?: ObjectiveCheckpointUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutIntentOperationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nearAccountId?: StringFieldUpdateOperationsInput | string
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAlerts?: BoolFieldUpdateOperationsInput | boolean
+    authChallenge?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionToken?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agents?: AgentUncheckedUpdateManyWithoutUserNestedInput
+    mandates?: MandateUncheckedUpdateManyWithoutUserNestedInput
+    approvals?: ApprovalRequestUncheckedUpdateManyWithoutApproverNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    fundingRequests?: FundingRecordUncheckedUpdateManyWithoutUserNestedInput
+    withdrawals?: WithdrawalRecordUncheckedUpdateManyWithoutUserNestedInput
+    executions?: AgentExecutionUncheckedUpdateManyWithoutUserNestedInput
+    executionEvents?: ExecutionEventUncheckedUpdateManyWithoutUserNestedInput
+    integrationConnections?: IntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    toolInvocations?: ToolInvocationUncheckedUpdateManyWithoutUserNestedInput
+    objectives?: ObjectiveUncheckedUpdateManyWithoutUserNestedInput
+    planApprovals?: ObjectivePlanApprovalUncheckedUpdateManyWithoutUserNestedInput
+    discoveries?: CapabilityDiscoveryUncheckedUpdateManyWithoutUserNestedInput
+    oauthSessions?: OAuthSessionUncheckedUpdateManyWithoutUserNestedInput
+    coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutUserNestedInput
+    governancePolicies?: GovernancePolicyUncheckedUpdateManyWithoutUserNestedInput
+    policyVersionsCreated?: PolicyVersionUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    policyEvaluations?: PolicyEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    policyViolations?: PolicyViolationUncheckedUpdateManyWithoutUserNestedInput
+    policyExceptions?: PolicyExceptionUncheckedUpdateManyWithoutUserNestedInput
+    policyReviews?: PolicyReviewUncheckedUpdateManyWithoutReviewedByUserNestedInput
+    executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutUserNestedInput
+    backgroundJobs?: BackgroundJobUncheckedUpdateManyWithoutTenantNestedInput
+    deadLetterRecords?: DeadLetterRecordUncheckedUpdateManyWithoutTenantNestedInput
+    operationalAlerts?: OperationalAlertUncheckedUpdateManyWithoutTenantNestedInput
+    reconciliationRuns?: ReconciliationRunUncheckedUpdateManyWithoutTenantNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutTenantNestedInput
+    executionDiscrepancies?: ExecutionDiscrepancyUncheckedUpdateManyWithoutTenantNestedInput
+    recoveryPlans?: RecoveryPlanUncheckedUpdateManyWithoutTenantNestedInput
+    capabilityProfiles?: AgentCapabilityProfileUncheckedUpdateManyWithoutUserNestedInput
+    objectiveCheckpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MandateUpsertWithoutIntentOperationsInput = {
+    update: XOR<MandateUpdateWithoutIntentOperationsInput, MandateUncheckedUpdateWithoutIntentOperationsInput>
+    create: XOR<MandateCreateWithoutIntentOperationsInput, MandateUncheckedCreateWithoutIntentOperationsInput>
+    where?: MandateWhereInput
+  }
+
+  export type MandateUpdateToOneWithWhereWithoutIntentOperationsInput = {
+    where?: MandateWhereInput
+    data: XOR<MandateUpdateWithoutIntentOperationsInput, MandateUncheckedUpdateWithoutIntentOperationsInput>
+  }
+
+  export type MandateUpdateWithoutIntentOperationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    totalBudgetYocto?: StringFieldUpdateOperationsInput | string
+    spentYocto?: StringFieldUpdateOperationsInput | string
+    reservedYocto?: StringFieldUpdateOperationsInput | string
+    perTxLimitYocto?: StringFieldUpdateOperationsInput | string
+    approvalThresholdYocto?: StringFieldUpdateOperationsInput | string
+    allowedRecipientsJson?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    policyVersion?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMandatesNestedInput
+    agent?: AgentUpdateOneRequiredWithoutMandatesNestedInput
+    wallet?: WalletUpdateOneRequiredWithoutMandatesNestedInput
+    tasks?: TaskUpdateManyWithoutMandateNestedInput
+    approvals?: ApprovalRequestUpdateManyWithoutMandateNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutMandateNestedInput
+    transactions?: TransactionRecordUpdateManyWithoutMandateNestedInput
+    executions?: AgentExecutionUpdateManyWithoutMandateNestedInput
+    objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
+    coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
+    executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+  }
+
+  export type MandateUncheckedUpdateWithoutIntentOperationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    totalBudgetYocto?: StringFieldUpdateOperationsInput | string
+    spentYocto?: StringFieldUpdateOperationsInput | string
+    reservedYocto?: StringFieldUpdateOperationsInput | string
+    perTxLimitYocto?: StringFieldUpdateOperationsInput | string
+    approvalThresholdYocto?: StringFieldUpdateOperationsInput | string
+    allowedRecipientsJson?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    policyVersion?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    walletId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUncheckedUpdateManyWithoutMandateNestedInput
+    approvals?: ApprovalRequestUncheckedUpdateManyWithoutMandateNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutMandateNestedInput
+    transactions?: TransactionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    executions?: AgentExecutionUncheckedUpdateManyWithoutMandateNestedInput
+    objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
+    coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
+    executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+  }
+
+  export type ObjectiveUpsertWithoutIntentOperationsInput = {
+    update: XOR<ObjectiveUpdateWithoutIntentOperationsInput, ObjectiveUncheckedUpdateWithoutIntentOperationsInput>
+    create: XOR<ObjectiveCreateWithoutIntentOperationsInput, ObjectiveUncheckedCreateWithoutIntentOperationsInput>
+    where?: ObjectiveWhereInput
+  }
+
+  export type ObjectiveUpdateToOneWithWhereWithoutIntentOperationsInput = {
+    where?: ObjectiveWhereInput
+    data: XOR<ObjectiveUpdateWithoutIntentOperationsInput, ObjectiveUncheckedUpdateWithoutIntentOperationsInput>
+  }
+
+  export type ObjectiveUpdateWithoutIntentOperationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    originalPrompt?: StringFieldUpdateOperationsInput | string
+    structuredGoalJson?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    planningStatus?: StringFieldUpdateOperationsInput | string
+    executionStatus?: StringFieldUpdateOperationsInput | string
+    completionEvidenceJson?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    deadlineAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAgentsJson?: StringFieldUpdateOperationsInput | string
+    constraintsJson?: StringFieldUpdateOperationsInput | string
+    metadataJson?: StringFieldUpdateOperationsInput | string
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastEvaluatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentCheckpointNumber?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutObjectivesNestedInput
+    mandate?: MandateUpdateOneWithoutObjectivesNestedInput
+    plans?: ObjectivePlanUpdateManyWithoutObjectiveNestedInput
+    steps?: ObjectivePlanStepUpdateManyWithoutObjectiveNestedInput
+    criteria?: ObjectiveSuccessCriteriaUpdateManyWithoutObjectiveNestedInput
+    events?: ObjectiveEventUpdateManyWithoutObjectiveNestedInput
+    checkpoints?: ObjectiveCheckpointUpdateManyWithoutObjectiveNestedInput
+    discoveries?: CapabilityDiscoveryUpdateManyWithoutObjectiveNestedInput
+    coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
+    artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
+    handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+  }
+
+  export type ObjectiveUncheckedUpdateWithoutIntentOperationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    originalPrompt?: StringFieldUpdateOperationsInput | string
+    structuredGoalJson?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    mandateId?: NullableStringFieldUpdateOperationsInput | string | null
+    planningStatus?: StringFieldUpdateOperationsInput | string
+    executionStatus?: StringFieldUpdateOperationsInput | string
+    completionEvidenceJson?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    deadlineAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAgentsJson?: StringFieldUpdateOperationsInput | string
+    constraintsJson?: StringFieldUpdateOperationsInput | string
+    metadataJson?: StringFieldUpdateOperationsInput | string
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastEvaluatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentCheckpointNumber?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plans?: ObjectivePlanUncheckedUpdateManyWithoutObjectiveNestedInput
+    steps?: ObjectivePlanStepUncheckedUpdateManyWithoutObjectiveNestedInput
+    criteria?: ObjectiveSuccessCriteriaUncheckedUpdateManyWithoutObjectiveNestedInput
+    events?: ObjectiveEventUncheckedUpdateManyWithoutObjectiveNestedInput
+    checkpoints?: ObjectiveCheckpointUncheckedUpdateManyWithoutObjectiveNestedInput
+    discoveries?: CapabilityDiscoveryUncheckedUpdateManyWithoutObjectiveNestedInput
+    coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
+    artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
+    handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+  }
+
   export type AgentCreateManyUserInput = {
     id?: string
     name: string
@@ -161396,6 +165358,53 @@ export namespace Prisma {
     metadata?: string
   }
 
+  export type IntentOperationCreateManyUserInput = {
+    id?: string
+    idempotencyKey: string
+    mandateId: string
+    objectiveId?: string | null
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+  }
+
   export type RecoveryPlanCreateManyTenantInput = {
     id?: string
     incidentId?: string | null
@@ -161557,6 +165566,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutUserInput = {
@@ -161584,6 +165594,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateManyWithoutUserInput = {
@@ -162062,6 +166073,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutUserInput = {
@@ -162100,6 +166112,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateManyWithoutUserInput = {
@@ -163131,6 +167144,147 @@ export namespace Prisma {
     metadata?: StringFieldUpdateOperationsInput | string
   }
 
+  export type IntentOperationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mandate?: MandateUpdateOneRequiredWithoutIntentOperationsNestedInput
+    objective?: ObjectiveUpdateOneWithoutIntentOperationsNestedInput
+  }
+
+  export type IntentOperationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    mandateId?: StringFieldUpdateOperationsInput | string
+    objectiveId?: NullableStringFieldUpdateOperationsInput | string | null
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntentOperationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    mandateId?: StringFieldUpdateOperationsInput | string
+    objectiveId?: NullableStringFieldUpdateOperationsInput | string | null
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type RecoveryPlanUpdateWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
     targetEntityType?: StringFieldUpdateOperationsInput | string
@@ -163565,6 +167719,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutAgentInput = {
@@ -163592,6 +167747,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateManyWithoutAgentInput = {
@@ -164302,6 +168458,7 @@ export namespace Prisma {
     objectives?: ObjectiveUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateWithoutWalletInput = {
@@ -164329,6 +168486,7 @@ export namespace Prisma {
     objectives?: ObjectiveUncheckedUpdateManyWithoutMandateNestedInput
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutMandateNestedInput
     executionRecords?: ExecutionRecordUncheckedUpdateManyWithoutMandateNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutMandateNestedInput
   }
 
   export type MandateUncheckedUpdateManyWithoutWalletInput = {
@@ -164617,6 +168775,53 @@ export namespace Prisma {
     updatedAt?: Date | string
     confirmedAt?: Date | string | null
     reconciledAt?: Date | string | null
+  }
+
+  export type IntentOperationCreateManyMandateInput = {
+    id?: string
+    idempotencyKey: string
+    userId: string
+    objectiveId?: string | null
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
   }
 
   export type TaskUpdateWithoutMandateInput = {
@@ -164980,6 +169185,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateWithoutMandateInput = {
@@ -165018,6 +169224,7 @@ export namespace Prisma {
     coordinationRuns?: CoordinationRunUncheckedUpdateManyWithoutObjectiveNestedInput
     artifacts?: SharedObjectiveArtifactUncheckedUpdateManyWithoutObjectiveNestedInput
     handoffs?: AgentHandoffUncheckedUpdateManyWithoutObjectiveNestedInput
+    intentOperations?: IntentOperationUncheckedUpdateManyWithoutObjectiveNestedInput
   }
 
   export type ObjectiveUncheckedUpdateManyWithoutMandateInput = {
@@ -165236,6 +169443,147 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntentOperationUpdateWithoutMandateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutIntentOperationsNestedInput
+    objective?: ObjectiveUpdateOneWithoutIntentOperationsNestedInput
+  }
+
+  export type IntentOperationUncheckedUpdateWithoutMandateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    objectiveId?: NullableStringFieldUpdateOperationsInput | string | null
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntentOperationUncheckedUpdateManyWithoutMandateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    objectiveId?: NullableStringFieldUpdateOperationsInput | string | null
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AuditLogCreateManyTaskInput = {
@@ -165974,6 +170322,53 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type IntentOperationCreateManyObjectiveInput = {
+    id?: string
+    idempotencyKey: string
+    userId: string
+    mandateId: string
+    executionId?: string | null
+    provider?: string
+    network?: string
+    depositMode?: string
+    destinationChain?: string
+    sourceAsset: string
+    sourceAmount: string
+    destinationAsset: string
+    expectedDestinationAmount: string
+    minDestinationAmount: string
+    slippageTolerance?: number
+    finalBeneficiary: string
+    refundRecipient: string
+    providerQuoteId?: string | null
+    providerPublicKeyId?: string | null
+    providerSignature?: string | null
+    verifiedQuoteEvidence?: string | null
+    depositAddress?: string | null
+    depositMemo?: string | null
+    quoteExpiresAt?: Date | string | null
+    reservationId?: string | null
+    reservedAmountYocto?: string
+    wrapTxHash?: string | null
+    wrapStatus?: string | null
+    depositTxHash?: string | null
+    depositStatus?: string | null
+    destinationTxHash?: string | null
+    settlementEvidence?: string | null
+    refundTxHash?: string | null
+    refundEvidence?: string | null
+    status?: string
+    recoveryStatus?: string | null
+    recoveryState?: string | null
+    errorMessage?: string | null
+    metadata?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    reconciledAt?: Date | string | null
+    recoveryAttemptedAt?: Date | string | null
+  }
+
   export type ObjectivePlanUpdateWithoutObjectiveInput = {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
@@ -166560,6 +170955,147 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntentOperationUpdateWithoutObjectiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutIntentOperationsNestedInput
+    mandate?: MandateUpdateOneRequiredWithoutIntentOperationsNestedInput
+  }
+
+  export type IntentOperationUncheckedUpdateWithoutObjectiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    mandateId?: StringFieldUpdateOperationsInput | string
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntentOperationUncheckedUpdateManyWithoutObjectiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    mandateId?: StringFieldUpdateOperationsInput | string
+    executionId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    depositMode?: StringFieldUpdateOperationsInput | string
+    destinationChain?: StringFieldUpdateOperationsInput | string
+    sourceAsset?: StringFieldUpdateOperationsInput | string
+    sourceAmount?: StringFieldUpdateOperationsInput | string
+    destinationAsset?: StringFieldUpdateOperationsInput | string
+    expectedDestinationAmount?: StringFieldUpdateOperationsInput | string
+    minDestinationAmount?: StringFieldUpdateOperationsInput | string
+    slippageTolerance?: IntFieldUpdateOperationsInput | number
+    finalBeneficiary?: StringFieldUpdateOperationsInput | string
+    refundRecipient?: StringFieldUpdateOperationsInput | string
+    providerQuoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerPublicKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerSignature?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedQuoteEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    depositAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    depositMemo?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservationId?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedAmountYocto?: StringFieldUpdateOperationsInput | string
+    wrapTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    wrapStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    depositTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    depositStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    refundTxHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refundEvidence?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    recoveryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    recoveryState?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recoveryAttemptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ObjectivePlanStepCreateManyPlanInput = {
